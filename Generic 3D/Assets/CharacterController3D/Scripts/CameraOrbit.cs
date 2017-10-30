@@ -31,7 +31,8 @@ public class CameraOrbit : MonoBehaviour {
 
 
         //Acomodarse en la distancia necesaria
-        transform.position = realTarget + transform.forward * -1f * distance;
+        Vector3 desiredPosition = realTarget + transform.forward * -1f * distance;
+        transform.position = desiredPosition;
 
         if (Input.GetKeyDown(KeyCode.Z)) {
             Cursor.lockState = CursorLockMode.None;
