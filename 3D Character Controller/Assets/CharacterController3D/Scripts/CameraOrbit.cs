@@ -12,8 +12,11 @@ public class CameraOrbit : MonoBehaviour {
     [Header("Orbit Settings")]
     public float orbitSpeed = 10f;
 
+    Camera camera;
+
 	void Awake () {
         Cursor.lockState = CursorLockMode.Locked;
+        camera = GetComponent<Camera>();
 	}
 	
 	void LateUpdate () {
@@ -29,7 +32,6 @@ public class CameraOrbit : MonoBehaviour {
             0f);
         transform.localRotation = finalRotation;
 
-
         //Acomodarse en la distancia necesaria
         Vector3 desiredPosition = realTarget + transform.forward * -1f * distance;
         transform.position = desiredPosition;
@@ -37,5 +39,8 @@ public class CameraOrbit : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Z)) {
             Cursor.lockState = CursorLockMode.None;
         }
+
+        //Hacer zoom si se mueve la ruedita del ratón
+        distance = distance - Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * 100f;
 	}
 }

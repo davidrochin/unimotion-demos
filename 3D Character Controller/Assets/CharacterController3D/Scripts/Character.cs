@@ -15,7 +15,14 @@ public class Character : MonoBehaviour {
     public bool grounded = false;
     public bool walking = false;
     public bool running = false;
-    float yForce = 0f, xForce = 0f;
+    public float yForce = 0f, xForce = 0f;
+
+    //Estados
+    CharacterState currentState;
+    CharacterState previousState;
+
+    //Información del entorno
+    public float groundHeight;
 
     //Triggers
     bool jump;
@@ -32,12 +39,15 @@ public class Character : MonoBehaviour {
 	}
 	
 	void Update () {
-        CheckGrounded();
+        CheckGround();
         ApplyGravity();
         CheckForJump();
         CalculateMoveVector();
 
         characterController.Move(moveVector + inputVector * walkSpeed * Time.deltaTime);
+        grounded = characterController.isGrounded;
+        Debug.Log(grounded);
+
         moveVector = Vector3.zero;
         inputVector = Vector3.zero;
 
@@ -45,25 +55,28 @@ public class Character : MonoBehaviour {
     }
 
     void ApplyGravity() {
-        if (!grounded) {
-            yForce = yForce + (Physics2D.gravity.y * Time.deltaTime * 0.03f);
+        Debug.Log("grounded=" + grounded + ", yForce=" + yForce);
+        if (!grounded || yForce > 0) {
+            yForce = yForce + (Physics2D.gravity.y * Time.deltaTime);
         } else {
-            yForce = 0f;
+            yForce = -0.1f;
+            yForce = -1;
         }
     }
 
-    void CheckGrounded() {
-        RaycastHit hit = RaycastPastItself(transform.position + characterController.center, Vector3.down, characterController.height / 2f + 0.05f, mask);
+    void CheckGround() {
+
+        //Detectar la altura del piso
+        RaycastHit hit = RaycastPastItself(transform.position + characterController.center, Vector3.down, characterController.height / 2f + 4f, mask);
         if (hit.collider != null) {
-            grounded = true;
+            groundHeight = hit.point.y;
         } else {
-            grounded = false;
+            groundHeight = float.MinValue;
         }
     }
 
     void CalculateMoveVector() {
-        //Sumarle la gravedad
-        moveVector = moveVector + new Vector3(0f, yForce, 0f);
+        moveVector = moveVector + new Vector3(0f, yForce * Time.deltaTime, 0f);
     }
 
     void CheckForJump() {
@@ -122,5 +135,14 @@ public class Character : MonoBehaviour {
             }
         }
         return new RaycastHit();
+    }
+}
+
+public class CharacterState {
+    public bool grounded = false;
+    public float groundHeight = float.MinValue;
+
+    public CharacterState() {
+
     }
 }

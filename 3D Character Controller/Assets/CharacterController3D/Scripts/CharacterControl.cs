@@ -26,7 +26,6 @@ public class CharacterControl : MonoBehaviour {
 	}
 
     Vector3 GetInputVector() {
-
         Vector3 input = Vector3.zero;
 
         if(inputType == InputType.Normal) {
@@ -36,7 +35,12 @@ public class CharacterControl : MonoBehaviour {
             input = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
         }
 
-        return Camera.main.transform.TransformDirection(input).normalized;
+        //Transformar la direccion para que sea relativa a la camara.
+        Vector3 transDirection = Camera.main.transform.TransformDirection(input).normalized;
+
+        //Hacer que el Vector no apunte hacia arriba.
+        transDirection = new Vector3(transDirection.x, 0f, transDirection.z).normalized;
+        return transDirection;
     }
 
     public enum InputType { Normal, Raw }
