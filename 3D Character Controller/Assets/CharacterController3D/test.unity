@@ -253,6 +253,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eba208bd65abd2244a733a06dc0a0346, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  drawNodes: 0
+  drawNodeNormals: 0
+  drawTriangleNormals: 0
 --- !u!1 &431776635
 GameObject:
   m_ObjectHideFlags: 0
