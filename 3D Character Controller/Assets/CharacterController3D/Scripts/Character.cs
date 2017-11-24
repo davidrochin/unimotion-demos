@@ -46,7 +46,7 @@ public class Character : MonoBehaviour {
 
         characterController.Move(moveVector + inputVector * walkSpeed * Time.deltaTime);
         grounded = characterController.isGrounded;
-        Debug.Log(grounded);
+        //Debug.Log(grounded);
 
         moveVector = Vector3.zero;
         inputVector = Vector3.zero;
@@ -55,7 +55,7 @@ public class Character : MonoBehaviour {
     }
 
     void ApplyGravity() {
-        Debug.Log("grounded=" + grounded + ", yForce=" + yForce);
+        //Debug.Log("grounded=" + grounded + ", yForce=" + yForce);
         if (!grounded || yForce > 0) {
             yForce = yForce + (Physics2D.gravity.y * Time.deltaTime);
         } else {
