@@ -4,13 +4,11 @@ using UnityEngine;
 
 public class LedgeGrabber : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    //Lo saqué de internet. Falta entenderlo para continuar
+    public bool InSegmentRange(Vector3 start, Vector3 end, Vector3 point) {
+        float dx = end.x - start.x;
+        float dy = end.y - start.y;
+        float innerProduct = (point.x - start.x) * dx + (point.y - start.y) * dy;
+        return innerProduct >= 0 && innerProduct <= dx * dx + dy * dy;
+    }
 }

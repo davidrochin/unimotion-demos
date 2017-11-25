@@ -12,11 +12,15 @@ public class Ledge : MonoBehaviour {
     public List<LedgeNode> ledgeNodes;
     public List<LedgeTriangle> ledgeTriangles;
     public List<LedgeNode> outerNodes;
+    public List<Vector3> baseOfWallPositions;
 
     public void AutoCalculateNodes() {
+
+        //Inicializar las listas
         ledgeTriangles = new List<LedgeTriangle>();
         ledgeNodes = new List<LedgeNode>();
         outerNodes = new List<LedgeNode>();
+        baseOfWallPositions = new List<Vector3>();
 
         CalculateTriangles();
         DeleteNonLedges();
@@ -26,12 +30,17 @@ public class Ledge : MonoBehaviour {
         //ShowNodesText();
         //ShowTrianglesText();
         DeleteInnerEdges();
+        DeleteWallBaseConnections();
+        RemoveLooseNodes();
+
+        baseOfWallPositions = null;
     }
 
     public void ClearNodes() {
         ledgeNodes = null;
         ledgeTriangles = null;
         outerNodes = null;
+        baseOfWallPositions = null;
         TextDebug.DeleteAll(transform);
     }
 
@@ -54,9 +63,14 @@ public class Ledge : MonoBehaviour {
             int ind1 = triangles[x], ind2 = triangles[x + 1], ind3 = triangles[x + 2];
 
             //Convertir los vertices a LedgeNode
-            ln1 = new LedgeNode(RotateAroundPoint(vertices[ind1] + transform.position, transform.position, transform.rotation)); ln1.normal = transform.rotation * normals[ind1];
-            ln2 = new LedgeNode(RotateAroundPoint(vertices[ind2] + transform.position, transform.position, transform.rotation)); ln2.normal = transform.rotation * normals[ind2];
-            ln3 = new LedgeNode(RotateAroundPoint(vertices[ind3] + transform.position, transform.position, transform.rotation)); ln3.normal = transform.rotation * normals[ind3];
+            ln1 = new LedgeNode(Vector3Util.RotateAroundPoint(vertices[ind1] + transform.position, transform.position, transform.rotation));
+            ln2 = new LedgeNode(Vector3Util.RotateAroundPoint(vertices[ind2] + transform.position, transform.position, transform.rotation));
+            ln3 = new LedgeNode(Vector3Util.RotateAroundPoint(vertices[ind3] + transform.position, transform.position, transform.rotation));
+
+            //Extraer las normales
+            ln1.normal = transform.rotation * normals[ind1];
+            ln2.normal = transform.rotation * normals[ind2];
+            ln3.normal = transform.rotation * normals[ind3];
 
             //Definirles a que Ledge pertenecen
             ln1.ledge = this; ln2.ledge = this; ln3.ledge = this;
@@ -68,7 +82,9 @@ public class Ledge : MonoBehaviour {
                 ln3.connectedNodes = new int[] { ln1.id, ln2.id };
 
                 //Añadir el triangulo a la lista
-                ledgeTriangles.Add(new LedgeTriangle(new LedgeNode[] { ln1, ln2, ln3 }));
+                LedgeTriangle tri = new LedgeTriangle(new LedgeNode[] { ln1, ln2, ln3 });
+                tri.ledge = this;
+                ledgeTriangles.Add(tri);
             }
 
             //Agregar a la lista los vertices
@@ -88,19 +104,42 @@ public class Ledge : MonoBehaviour {
             bool delete = false;
             float angle = Vector3.Angle(Vector3.up, n.normal);
             //TextDebug.CreateText(n.position + n.normal, "" + angle);
-            if (angle >= 45f) { delete = true; }
+
+            //Si el angulo de la normal es más de 45 grados borrarlo
+            if (angle > 45f) {
+                delete = true;
+
+                //Revisar si es la base de un muro
+                foreach (int currentCon in n.connectedNodes) {
+                    if(GetNode(currentCon) != null) {
+                        Vector3 dirToNode = n.DirectionToNode(GetNode(currentCon));
+                        if (Vector3.Angle(Vector3.up, dirToNode) < 45f) {
+                            baseOfWallPositions.Add(n.position);
+                        }
+                    }
+                    
+                }
+            }
             if (delete) { ledgeNodes.Remove(n); }
         }
     }
 
     void JoinDuplicates() {
+
+        //Iterar por los nodos
         for (int x = 0; x < ledgeNodes.Count; x++) {
+
+            //Buscar los nodos que estan exactamente en el mismo lugar que el nodo actual
             LedgeNode[] nodesAtPos = SearchForNodesAtPosition(ledgeNodes[x].position);
+
             //Debug.Log("Node " + x + " has " + nodesAtPos.Length + " repeated nodes (incluiding itself).");
+
+            //Iterar por los nodos duplicados
             foreach (LedgeNode dupNode in nodesAtPos) {
                 if (dupNode != ledgeNodes[x]) {
+
                     //Debug.Log("Reconnecting node " + x);
-                    ledgeNodes[x].AddConnections(LedgeNode.GetNodes(dupNode.connectedNodes));
+                    ledgeNodes[x].AddConnections(GetNodes(dupNode.connectedNodes));
                     dupNode.ReconnectConnected(ledgeNodes[x]);
                     //nodesToDelete.Add(dupNode);
                     ReplaceNodesInTriangles(dupNode, ledgeNodes[x]);
@@ -117,9 +156,9 @@ public class Ledge : MonoBehaviour {
         toKeep.RemoveConnectedDuplicates();
 
         foreach (int n in toReplace.connectedNodes) {
-            for (int x = 0; x < LedgeNode.GetNode(n).connectedNodes.Length; x++) {
-                if (LedgeNode.GetNode(LedgeNode.GetNode(n).connectedNodes[x]) == toReplace) {
-                    LedgeNode.GetNode(n).connectedNodes[x] = toKeep.id;
+            for (int x = 0; x < GetNode(n).connectedNodes.Length; x++) {
+                if (GetNode(GetNode(n).connectedNodes[x]) == toReplace) {
+                    GetNode(n).connectedNodes[x] = toKeep.id;
                 }
             }
         }
@@ -172,9 +211,37 @@ public class Ledge : MonoBehaviour {
         }
 
         //Remover nodos sueltos
-        LedgeNode[] temp = ledgeNodes.ToArray();
+        /*LedgeNode[] temp = ledgeNodes.ToArray();
         foreach (LedgeNode node in temp) {
             if(node.connectedNodes.Length < 1) {
+                ledgeNodes.Remove(node);
+            }
+        }*/
+    }
+
+    void DeleteWallBaseConnections() {
+        LedgeNode[] temp = ledgeNodes.ToArray();
+        foreach (LedgeNode node in temp) {
+            //Revisar si es un nodo que está en la base de un muro
+            if (baseOfWallPositions.Find(a => a == node.position) != Vector3.zero) {
+                
+                //Revisar sus conexiones para ver si estan conectados con otro nodo de base de muro
+                foreach (int con in node.connectedNodes) {
+                    LedgeNode n = GetNode(con);
+                    if(n != node && baseOfWallPositions.Find(a => a == n.position) != Vector3.zero) {
+                        node.RemoveConnection(n);
+                    }
+                }
+
+            }
+        }
+    }
+
+    void RemoveLooseNodes() {
+        //Remover nodos sueltos
+        LedgeNode[] temp = ledgeNodes.ToArray();
+        foreach (LedgeNode node in temp) {
+            if (node.connectedNodes.Length < 1) {
                 ledgeNodes.Remove(node);
             }
         }
@@ -198,6 +265,24 @@ public class Ledge : MonoBehaviour {
             }
         }
         return false;
+    }
+
+    public LedgeNode GetNode(int id) {
+        foreach (LedgeNode ln in ledgeNodes) {
+            if(ln.id == id) {
+                return ln;
+            }
+        }
+        return null;
+    }
+
+    public LedgeNode[] GetNodes(int[] ids) {
+        List<LedgeNode> temp = new List<LedgeNode>();
+        foreach (int id in ids) {
+            LedgeNode n = GetNode(id);
+            if(n != null) { temp.Add(n); }
+        }
+        return temp.ToArray();
     }
 
     void ReplaceNodesInTriangles(LedgeNode toReplace, LedgeNode toKeep) {
@@ -262,7 +347,9 @@ public class Ledge : MonoBehaviour {
                 //Dibujar lineas hacia los nodos conectados
                 if (node.connectedNodes != null) {
                     foreach (int conNode in node.connectedNodes) {
-                        Gizmos.DrawLine(node.position, LedgeNode.GetNode(conNode).position);
+                        /*Debug.Log(node.position);
+                        Debug.Log(GetNode(conNode));*/
+                        Gizmos.DrawLine(node.position, GetNode(conNode).position);
                     }
                 }
 
@@ -274,13 +361,13 @@ public class Ledge : MonoBehaviour {
             }
         }
 
-        if (outerNodes != null) {
-            foreach (LedgeNode node in outerNodes) {
+        /*if (baseOfWallPositions != null) {
+            foreach (Vector3 pos in baseOfWallPositions) {
                 //Dibujar el nodo
                 Gizmos.color = Color.green;
-                Gizmos.DrawSphere(transform.position + node.position, 0.06f);
+                Gizmos.DrawSphere(transform.position + pos, 0.06f);
             }
-        }
+        }*/
 
         if (ledgeTriangles != null && drawTriangleNormals) {
             Gizmos.color = Color.green;
@@ -290,16 +377,12 @@ public class Ledge : MonoBehaviour {
         }
     }
 
-    public static Vector3 RotateAroundPoint(Vector3 point, Vector3 pivot, Quaternion rotation) {
-        return rotation * (point - pivot) + pivot;
-    }
 }
 
 [System.Serializable]
 public class LedgeNode {
 
     static int nextId = 0;
-    public static List<LedgeNode> allNodes;
 
     public int id;
     public Ledge ledge;
@@ -310,20 +393,13 @@ public class LedgeNode {
     public LedgeNode(Vector3 pos) {
         position = pos;
         id = nextId; nextId++;
-
-        if(allNodes != null) {
-            allNodes.Add(this);
-        } else {
-            allNodes = new List<LedgeNode>();
-            allNodes.Add(this);
-        }
     }
 
     public void RemoveConnectedDuplicates() {
         List<int> newConnected = new List<int>();
         foreach (int node in connectedNodes) {
             if (newConnected.Find(x => x == node) == -1) {
-                if (GetNode(node) != this) {
+                if (ledge.GetNode(node) != this) {
                     newConnected.Add(node);
                 }
             }
@@ -334,7 +410,7 @@ public class LedgeNode {
     public void PassConnectionsToNode(LedgeNode toNode) {
         List<int> newConnected = new List<int>();
         foreach (int node in connectedNodes) {
-            if (GetNode(node) != toNode) {
+            if (ledge.GetNode(node) != toNode) {
                 newConnected.Add(node);
             }
         }
@@ -366,30 +442,16 @@ public class LedgeNode {
     //Este metodo es para cambiar les reconnecciones en otros nodos que se conecten con este.
     public void ReconnectConnected(LedgeNode newNode) {
         foreach (int n in connectedNodes) {
-            for (int x = 0; x < GetNode(n).connectedNodes.Length; x++) {
-                if (GetNode(GetNode(n).connectedNodes[x]) == this) { GetNode(n).connectedNodes[x] = newNode.id; }
+            for (int x = 0; x < ledge.GetNode(n).connectedNodes.Length; x++) {
+                if (ledge.GetNode(ledge.GetNode(n).connectedNodes[x]) == this) { ledge.GetNode(n).connectedNodes[x] = newNode.id; }
             }
         }
     }
 
-    public static LedgeNode GetNode(int qid) {
-        foreach (LedgeNode n in allNodes) {
-            if(n.id == qid) {
-                return n;
-            }
-        }
-        return null;
-    }
-
-    public static LedgeNode[] GetNodes(int[] qids) {
-        List<LedgeNode> temp = new List<LedgeNode>();
-        foreach (int qid in qids) {
-            LedgeNode n = GetNode(qid);
-            if (n != null) {
-                temp.Add(n);
-            }
-        }
-        return temp.ToArray();
+    public Vector3 DirectionToNode(LedgeNode to) {
+        //Debug.Log("to=" + to); Debug.Log("pos=" + position);
+        Vector3 dir = to.position - position;
+        return dir.normalized;
     }
 
 }
@@ -402,6 +464,7 @@ public class LedgeTriangle {
     public LedgeNode[] nodes;
     public Vector3 normal;
     public Vector3 center;
+    public Ledge ledge;
 
     public LedgeTriangle(LedgeNode[] nds) {
         nodes = nds;
@@ -437,14 +500,14 @@ public class LedgeTriangle {
                 }
             }
         }
-        Debug.Log(sharedNodes.Count + " shared nodes found.");
+        //Debug.Log(sharedNodes.Count + " shared nodes found.");
         //Borrar las conexiones entre esos nodos
         foreach (int n in sharedNodes) {
-            foreach (int cn in LedgeNode.GetNode(n).connectedNodes) {
+            foreach (int cn in ledge.GetNode(n).connectedNodes) {
                 if (sharedNodes.Contains(cn) && n != cn) {
-                    Debug.Log("Removiendo conexiones");
-                    LedgeNode.GetNode(n).RemoveConnection(LedgeNode.GetNode(cn));
-                    LedgeNode.GetNode(cn).RemoveConnection(LedgeNode.GetNode(n));
+                    //Debug.Log("Removiendo conexiones");
+                    ledge.GetNode(n).RemoveConnection(ledge.GetNode(cn));
+                    ledge.GetNode(cn).RemoveConnection(ledge.GetNode(n));
                 }
             }
         }

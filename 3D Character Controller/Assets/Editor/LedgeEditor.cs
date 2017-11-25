@@ -23,6 +23,7 @@ public class LedgeEditor : Editor {
 
         if (GUILayout.Button("Clear all nodes")) {
             script.ClearNodes();
+            EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
         }
 
         GUILayout.EndHorizontal();
