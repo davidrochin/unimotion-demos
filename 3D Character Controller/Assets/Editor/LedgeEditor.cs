@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine.SceneManagement;
 
 [CustomEditor(typeof(Ledge))]
 public class LedgeEditor : Editor {
@@ -16,6 +18,7 @@ public class LedgeEditor : Editor {
 
         if (GUILayout.Button("Generate nodes")) {
             script.AutoCalculateNodes();
+            EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
         }
 
         if (GUILayout.Button("Clear all nodes")) {

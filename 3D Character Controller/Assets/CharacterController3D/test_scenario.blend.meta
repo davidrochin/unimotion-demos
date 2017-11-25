@@ -79,6 +79,8 @@ ModelImporter:
     100142: Toe_L
     100144: Toe_R
     100146: Cube
+    100148: Scenario_1
+    100150: Scenario_2
     400000: arm_protection
     400002: Armature
     400004: Chest
@@ -153,8 +155,14 @@ ModelImporter:
     400142: Toe_L
     400144: Toe_R
     400146: Cube
+    400148: Scenario_1
+    400150: Scenario_2
     2300000: Cube
+    2300002: Scenario_1
+    2300004: Scenario_2
     3300000: Cube
+    3300002: Scenario_1
+    3300004: Scenario_2
     4300000: ornaments
     4300002: face
     4300004: sack_001
@@ -174,6 +182,8 @@ ModelImporter:
     4300032: mesh16
     4300034: mesh9
     4300036: Cube
+    4300038: Scenario_1
+    4300040: Scenario_2
     7400000: Default Take
     7400002: ArmatureAction
     7400004: T_Pose
