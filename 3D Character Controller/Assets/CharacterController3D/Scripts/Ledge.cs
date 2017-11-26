@@ -6,11 +6,14 @@ public class Ledge : MonoBehaviour {
 
     [Header("Debug")]
     public bool drawNodes = false;
+    public bool drawEdges = false;
     public bool drawNodeNormals = false;
     public bool drawTriangleNormals = false;
 
     public List<LedgeNode> ledgeNodes;
     public List<LedgeTriangle> ledgeTriangles;
+    public List<LedgeEdge> ledgeEdges;
+
     public List<LedgeNode> outerNodes;
     public List<Vector3> baseOfWallPositions;
 
@@ -19,6 +22,8 @@ public class Ledge : MonoBehaviour {
         //Inicializar las listas
         ledgeTriangles = new List<LedgeTriangle>();
         ledgeNodes = new List<LedgeNode>();
+        ledgeEdges = new List<LedgeEdge>();
+
         outerNodes = new List<LedgeNode>();
         baseOfWallPositions = new List<Vector3>();
 
@@ -33,14 +38,18 @@ public class Ledge : MonoBehaviour {
         DeleteWallBaseConnections();
         RemoveLooseNodes();
 
+        GenerateEdges();
+
         baseOfWallPositions = null;
     }
 
     public void ClearNodes() {
         ledgeNodes = null;
         ledgeTriangles = null;
+        ledgeEdges = null;
         outerNodes = null;
         baseOfWallPositions = null;
+        LedgeNode.nextId = 0;
         TextDebug.DeleteAll(transform);
     }
 
@@ -247,6 +256,21 @@ public class Ledge : MonoBehaviour {
         }
     }
 
+    void GenerateEdges() {
+        foreach (LedgeNode x in ledgeNodes) {
+            foreach (LedgeNode y in GetNodes(x.connectedNodes)) {
+
+                //Revisar si ya existe un LedgeEdge con esta combinacion de nodos. Si no existe agregarla.
+                if (ledgeEdges.Find(j => (j.a == x || j.b == x) && (j.a == y || j.b == y)) == null) {
+                    LedgeEdge le = new LedgeEdge(x,y);
+                    le.ledge = this;
+                    ledgeEdges.Add(le);
+                }
+
+            }
+        }
+    }
+
     LedgeNode[] SearchForNodesAtPosition(Vector3 pos) {
         List<LedgeNode> nodesAtPos = new List<LedgeNode>();
 
@@ -375,6 +399,15 @@ public class Ledge : MonoBehaviour {
                 Gizmos.DrawRay(tri.center, tri.normal);
             }
         }
+
+        if(drawEdges && ledgeEdges != null) {
+            Gizmos.color = Color.blue;
+            foreach (LedgeEdge ledge in ledgeEdges) {
+                Gizmos.DrawLine(ledge.a.position, ledge.a.position + Vector3.up * 0.1f);
+                Gizmos.DrawLine(ledge.a.position + Vector3.up * 0.1f, ledge.b.position + Vector3.up * 0.1f);
+                Gizmos.DrawLine(ledge.b.position, ledge.b.position + Vector3.up * 0.1f);
+            }
+        }
     }
 
 }
@@ -382,7 +415,7 @@ public class Ledge : MonoBehaviour {
 [System.Serializable]
 public class LedgeNode {
 
-    static int nextId = 0;
+    public static int nextId = 0;
 
     public int id;
     public Ledge ledge;
@@ -511,5 +544,21 @@ public class LedgeTriangle {
                 }
             }
         }
+    }
+}
+
+[System.Serializable]
+public class LedgeEdge {
+    static int nextId = 0;
+
+    public int id;
+    public LedgeNode a;
+    public LedgeNode b;
+    public Ledge ledge;
+
+    public LedgeEdge(LedgeNode _a, LedgeNode _b) {
+        a = _a;
+        b = _b;
+        id = nextId; nextId++;
     }
 }

@@ -349,6 +349,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &834353304 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1907029367653570, guid: bf1a548a02b696044970f761cd25f17e,
+    type: 2}
+  m_PrefabInternal: {fileID: 66297544}
+--- !u!114 &834353309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 834353304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 200318b9f522e5249b6a72c873e28d66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grabPoint: {x: 0, y: 1.81, z: 0.46}
+  grabMaxDistance: 1
+  closestLedgePoint: {x: 0, y: 0, z: 0}
+  inLedgeRange: 0
 --- !u!1 &1003836565
 GameObject:
   m_ObjectHideFlags: 0
@@ -442,408 +462,409 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawNodes: 1
+  drawEdges: 1
   drawNodeNormals: 0
   drawTriangleNormals: 0
   ledgeNodes:
-  - id: 3852
+  - id: 60
     ledge: {fileID: 1003836569}
     position: {x: -3.996426, y: 1.1492816, z: -3.9964268}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 0d0f00002b0f0000
-  - id: 3853
+    connectedNodes: 3d0000005b000000
+  - id: 61
     ledge: {fileID: 1003836569}
     position: {x: -3.996426, y: 1.1492826, z: 3.9964263}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 0c0f00000e0f0000
-  - id: 3854
+    connectedNodes: 3c0000003e000000
+  - id: 62
     ledge: {fileID: 1003836569}
     position: {x: 3.996426, y: 1.1492826, z: 3.9964263}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 0d0f0000280f0000
-  - id: 3859
+    connectedNodes: 3d00000058000000
+  - id: 67
     ledge: {fileID: 1003836569}
     position: {x: 8.517746, y: 1.1492811, z: -8.517747}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 1a0f00001f0f0000
-  - id: 3862
+    connectedNodes: 4a0000004f000000
+  - id: 70
     ledge: {fileID: 1003836569}
     position: {x: 8.517746, y: 1.1492821, z: -0.52489215}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 220f0000250f0000
-  - id: 3866
+    connectedNodes: 5200000055000000
+  - id: 74
     ledge: {fileID: 1003836569}
     position: {x: 0.524892, y: 1.1492811, z: -8.517747}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 130f00002e0f0000
-  - id: 3871
+    connectedNodes: 430000005e000000
+  - id: 79
     ledge: {fileID: 1003836569}
     position: {x: 10.805004, y: 1.1492811, z: -8.517747}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 130f0000
-  - id: 3874
+    connectedNodes: 43000000
+  - id: 82
     ledge: {fileID: 1003836569}
     position: {x: 10.805004, y: 1.1492821, z: -0.52489215}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 160f0000
-  - id: 3877
+    connectedNodes: 46000000
+  - id: 85
     ledge: {fileID: 1003836569}
     position: {x: 14.310324, y: 1.1492827, z: 5.2676864}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 160f0000280f0000
-  - id: 3880
+    connectedNodes: 4600000058000000
+  - id: 88
     ledge: {fileID: 1003836569}
     position: {x: 9.789004, y: 1.1492833, z: 9.789005}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 0e0f0000250f0000
-  - id: 3883
+    connectedNodes: 3e00000055000000
+  - id: 91
     ledge: {fileID: 1003836569}
     position: {x: -5.338622, y: 1.1492815, z: -5.338623}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 0c0f0000d6100000
-  - id: 3886
+    connectedNodes: 3c00000006020000
+  - id: 94
     ledge: {fileID: 1003836569}
     position: {x: -0.817304, y: 1.1492809, z: -9.859943}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 1a0f0000d5100000
-  - id: 3918
+    connectedNodes: 4a00000005020000
+  - id: 126
     ledge: {fileID: 1003836569}
     position: {x: -7.936856, y: 1.981388, z: -1.9702145}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 4f0f0000530f0000
-  - id: 3919
+    connectedNodes: 7f00000083000000
+  - id: 127
     ledge: {fileID: 1003836569}
     position: {x: -7.936856, y: 1.9813884, z: 1.970214}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 4e0f0000500f0000
-  - id: 3920
+    connectedNodes: 7e00000080000000
+  - id: 128
     ledge: {fileID: 1003836569}
     position: {x: -3.996426, y: 1.9813884, z: 1.970214}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 4f0f0000530f0000
-  - id: 3923
+    connectedNodes: 7f00000083000000
+  - id: 131
     ledge: {fileID: 1003836569}
     position: {x: -3.996426, y: 1.981388, z: -1.9702145}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 4e0f0000500f0000
-  - id: 3954
+    connectedNodes: 7e00000080000000
+  - id: 162
     ledge: {fileID: 1003836569}
     position: {x: -11.877284, y: 3.4186642, z: -1.9702146}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 730f0000770f0000
-  - id: 3955
+    connectedNodes: a3000000a7000000
+  - id: 163
     ledge: {fileID: 1003836569}
     position: {x: -11.877284, y: 3.4186647, z: 1.9702139}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 720f0000740f0000
-  - id: 3956
+    connectedNodes: a2000000a4000000
+  - id: 164
     ledge: {fileID: 1003836569}
     position: {x: -7.936856, y: 3.4186647, z: 1.9702139}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 730f0000770f0000
-  - id: 3959
+    connectedNodes: a3000000a7000000
+  - id: 167
     ledge: {fileID: 1003836569}
     position: {x: -7.936856, y: 3.4186642, z: -1.9702146}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 720f0000740f0000
-  - id: 4152
+    connectedNodes: a2000000a4000000
+  - id: 360
     ledge: {fileID: 1003836569}
     position: {x: -5.342684, y: 1.149283, z: 7.432395}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 391000003d100000
-  - id: 4153
+    connectedNodes: 690100006d010000
+  - id: 361
     ledge: {fileID: 1003836569}
     position: {x: -5.342684, y: 1.1492835, z: 11.981685}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 381000003a100000
-  - id: 4154
+    connectedNodes: 680100006a010000
+  - id: 362
     ledge: {fileID: 1003836569}
     position: {x: 2.52506, y: 1.1492835, z: 11.981685}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 391000003d100000
-  - id: 4157
+    connectedNodes: 690100006d010000
+  - id: 365
     ledge: {fileID: 1003836569}
     position: {x: 2.52506, y: 1.149283, z: 7.432395}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 381000003a100000
-  - id: 4182
+    connectedNodes: 680100006a010000
+  - id: 390
     ledge: {fileID: 1003836569}
     position: {x: 3.996426, y: -5.086758, z: 3.9964273}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 57100000
-  - id: 4183
+    connectedNodes: 87010000
+  - id: 391
     ledge: {fileID: 1003836569}
     position: {x: -22.758438, y: -5.0867553, z: 30.751286}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 5610000058100000
-  - id: 4184
+    connectedNodes: 8601000088010000
+  - id: 392
     ledge: {fileID: 1003836569}
     position: {x: -16.96586, y: -5.0867543, z: 36.543865}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 5710000060100000
-  - id: 4187
+    connectedNodes: 8701000090010000
+  - id: 395
     ledge: {fileID: 1003836569}
     position: {x: 9.789004, y: -5.0867577, z: 9.789006}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 5d100000
-  - id: 4189
+    connectedNodes: 8d010000
+  - id: 397
     ledge: {fileID: 1003836569}
     position: {x: 20.860249, y: -5.086756, z: 20.860252}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 5b10000060100000
-  - id: 4192
+    connectedNodes: 8b01000090010000
+  - id: 400
     ledge: {fileID: 1003836569}
     position: {x: -5.894616, y: -5.086753, z: 47.615112}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 581000005d100000
-  - id: 4309
+    connectedNodes: 880100008d010000
+  - id: 517
     ledge: {fileID: 1003836569}
     position: {x: -2.136058, y: 1.8399509, z: -11.178698}
     normal: {x: 0.24556586, y: 0.9377606, z: 0.24556577}
-    connectedNodes: 2e0f000008110000
-  - id: 4310
+    connectedNodes: 5e00000038020000
+  - id: 518
     ledge: {fileID: 1003836569}
     position: {x: -6.657378, y: 1.8399514, z: -6.657377}
     normal: {x: 0.24556586, y: 0.9377606, z: 0.24556577}
-    connectedNodes: 2b0f000000110000
-  - id: 4351
+    connectedNodes: 5b00000030020000
+  - id: 559
     ledge: {fileID: 1003836569}
     position: {x: -5.457636, y: 1.8399504, z: -14.500274}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 0011000005110000
-  - id: 4352
+    connectedNodes: 3002000035020000
+  - id: 560
     ledge: {fileID: 1003836569}
     position: {x: -9.978954, y: 1.839951, z: -9.978953}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: ff100000d6100000
-  - id: 4357
+    connectedNodes: 2f02000006020000
+  - id: 565
     ledge: {fileID: 1003836569}
     position: {x: -4.57689, y: 1.8399503, z: -15.38102}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: ff1000000c110000
-  - id: 4360
+    connectedNodes: 2f0200003c020000
+  - id: 568
     ledge: {fileID: 1003836569}
     position: {x: -1.255314, y: 1.8399508, z: -12.059443}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: d51000000b110000
-  - id: 4363
+    connectedNodes: 050200003b020000
+  - id: 571
     ledge: {fileID: 1003836569}
     position: {x: 0.07381, y: 2.956997, z: -13.388568}
     normal: {x: -0.36124304, y: 0.8596552, z: 0.36124298}
-    connectedNodes: 081100001a110000
-  - id: 4364
+    connectedNodes: 380200004a020000
+  - id: 572
     ledge: {fileID: 1003836569}
     position: {x: -3.247766, y: 2.9569964, z: -16.710146}
     normal: {x: -0.36124304, y: 0.8596552, z: 0.36124298}
-    connectedNodes: 0511000012110000
-  - id: 4369
+    connectedNodes: 3502000042020000
+  - id: 577
     ledge: {fileID: 1003836569}
     position: {x: 3.60407, y: 2.9569964, z: -16.918829}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 1211000017110000
-  - id: 4370
+    connectedNodes: 4202000047020000
+  - id: 578
     ledge: {fileID: 1003836569}
     position: {x: 0.282494, y: 2.956996, z: -20.240408}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 111100000c110000
-  - id: 4375
+    connectedNodes: 410200003c020000
+  - id: 583
     ledge: {fileID: 1003836569}
     position: {x: 4.274558, y: 2.9569964, z: -16.248343}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 11110000
-  - id: 4378
+    connectedNodes: 41020000
+  - id: 586
     ledge: {fileID: 1003836569}
     position: {x: 0.744298, y: 2.956997, z: -12.718081}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 0b110000
-  - id: 4464
+    connectedNodes: 3b020000
+  - id: 672
     ledge: {fileID: 1003836569}
     position: {x: 3.958492, y: 4.7785034, z: -9.50389}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 7111000076110000
-  - id: 4465
+    connectedNodes: a1020000a6020000
+  - id: 673
     ledge: {fileID: 1003836569}
     position: {x: 13.409754, y: 4.7785034, z: -9.50389}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 7011000072110000
-  - id: 4466
+    connectedNodes: a0020000a2020000
+  - id: 674
     ledge: {fileID: 1003836569}
     position: {x: 13.409754, y: 4.778503, z: -13.03415}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 7111000075110000
-  - id: 4469
+    connectedNodes: a1020000a5020000
+  - id: 677
     ledge: {fileID: 1003836569}
     position: {x: 7.488752, y: 4.778503, z: -13.03415}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 721100007b110000
-  - id: 4470
+    connectedNodes: a2020000ab020000
+  - id: 678
     ledge: {fileID: 1003836569}
     position: {x: 2.015952, y: 4.778503, z: -11.44643}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 701100007b110000
-  - id: 4475
+    connectedNodes: a0020000ab020000
+  - id: 683
     ledge: {fileID: 1003836569}
     position: {x: 5.54621, y: 4.7785025, z: -14.97669}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 7611000075110000
-  - id: 4500
+    connectedNodes: a6020000a5020000
+  - id: 708
     ledge: {fileID: 1003836569}
     position: {x: 10.805004, y: 3.0673463, z: -0.5248924}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 9511000099110000
-  - id: 4501
+    connectedNodes: c5020000c9020000
+  - id: 709
     ledge: {fileID: 1003836569}
     position: {x: 13.642686, y: 3.0673463, z: -0.5248924}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 941100009b110000
-  - id: 4502
+    connectedNodes: c4020000cb020000
+  - id: 710
     ledge: {fileID: 1003836569}
     position: {x: 13.642686, y: 3.0673454, z: -8.517747}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 99110000
-  - id: 4505
+    connectedNodes: c9020000
+  - id: 713
     ledge: {fileID: 1003836569}
     position: {x: 10.805004, y: 3.0673454, z: -8.517747}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 9411000096110000
-  - id: 4507
+    connectedNodes: c4020000c6020000
+  - id: 715
     ledge: {fileID: 1003836569}
     position: {x: 13.642686, y: 3.0673468, z: 3.189168}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 951100009c110000
-  - id: 4508
+    connectedNodes: c5020000cc020000
+  - id: 716
     ledge: {fileID: 1003836569}
     position: {x: 18.20261, y: 3.0673468, z: 3.189168}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 9b110000a4110000
-  - id: 4511
+    connectedNodes: cb020000d4020000
+  - id: 719
     ledge: {fileID: 1003836569}
     position: {x: 18.20261, y: 3.0673463, z: -0.5248924}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: a1110000
-  - id: 4513
+    connectedNodes: d1020000
+  - id: 721
     ledge: {fileID: 1003836569}
     position: {x: 30.417904, y: 3.0673463, z: -0.5248924}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 9f110000a4110000
-  - id: 4516
+    connectedNodes: cf020000d4020000
+  - id: 724
     ledge: {fileID: 1003836569}
     position: {x: 30.417904, y: 3.0673468, z: 3.189168}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 9c110000a1110000
-  - id: 4536
+    connectedNodes: cc020000d1020000
+  - id: 744
     ledge: {fileID: 1003836569}
     position: {x: 13.642686, y: 6.1254683, z: -0.52489275}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: b9110000bd110000
-  - id: 4537
+    connectedNodes: e9020000ed020000
+  - id: 745
     ledge: {fileID: 1003836569}
     position: {x: 18.20261, y: 6.1254683, z: -0.52489275}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: b8110000c2110000
-  - id: 4538
+    connectedNodes: e8020000f2020000
+  - id: 746
     ledge: {fileID: 1003836569}
     position: {x: 18.20261, y: 6.1254673, z: -8.517748}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: bd110000bf110000
-  - id: 4541
+    connectedNodes: ed020000ef020000
+  - id: 749
     ledge: {fileID: 1003836569}
     position: {x: 13.642686, y: 6.1254673, z: -8.517748}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: b8110000ba110000
-  - id: 4543
+    connectedNodes: e8020000ea020000
+  - id: 751
     ledge: {fileID: 1003836569}
     position: {x: 25.17047, y: 6.1254673, z: -8.517748}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: ba110000c5110000
-  - id: 4546
+    connectedNodes: ea020000f5020000
+  - id: 754
     ledge: {fileID: 1003836569}
     position: {x: 25.17047, y: 6.1254683, z: -0.52489275}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: b9110000c8110000
-  - id: 4549
+    connectedNodes: e9020000f8020000
+  - id: 757
     ledge: {fileID: 1003836569}
     position: {x: 30.417904, y: 6.1254673, z: -8.517748}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: bf110000c8110000
-  - id: 4552
+    connectedNodes: ef020000f8020000
+  - id: 760
     ledge: {fileID: 1003836569}
     position: {x: 30.417904, y: 6.1254683, z: -0.52489275}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: c2110000c5110000
-  - id: 4590
+    connectedNodes: f2020000f5020000
+  - id: 798
     ledge: {fileID: 1003836569}
     position: {x: -8.899534, y: 1.149283, z: 7.432395}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: ef110000f3110000
-  - id: 4591
+    connectedNodes: 1f03000023030000
+  - id: 799
     ledge: {fileID: 1003836569}
     position: {x: -12.68913, y: 1.149283, z: 7.432395}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: ee110000f0110000
-  - id: 4592
+    connectedNodes: 1e03000020030000
+  - id: 800
     ledge: {fileID: 1003836569}
     position: {x: -12.68913, y: 1.1492835, z: 11.981685}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: ef110000f3110000
-  - id: 4595
+    connectedNodes: 1f03000023030000
+  - id: 803
     ledge: {fileID: 1003836569}
     position: {x: -8.899534, y: 1.1492835, z: 11.981685}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: ee110000f0110000
-  - id: 4663
+    connectedNodes: 1e03000020030000
+  - id: 871
     ledge: {fileID: 1003836569}
     position: {x: 3.801806, y: -2.1097198, z: 3.9724388}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 3812000040120000
-  - id: 4664
+    connectedNodes: 6803000070030000
+  - id: 872
     ledge: {fileID: 1003836569}
     position: {x: 9.812992, y: -2.109719, z: 9.983626}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 3712000046120000
-  - id: 4672
+    connectedNodes: 6703000076030000
+  - id: 880
     ledge: {fileID: 1003836569}
     position: {x: 8.493758, y: -2.1097202, z: -0.7195118}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 3712000046120000
-  - id: 4678
+    connectedNodes: 6703000076030000
+  - id: 886
     ledge: {fileID: 1003836569}
     position: {x: 14.504944, y: -2.1097195, z: 5.291675}
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-    connectedNodes: 4012000038120000
+    connectedNodes: 7003000068030000
   ledgeTriangles:
-  - id: 1284
+  - id: 336
     nodes:
-    - id: 3852
+    - id: 60
       ledge: {fileID: 1003836569}
       position: {x: -3.996426, y: 1.1492816, z: -3.9964268}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 0d0f00002b0f0000
-    - id: 3853
+      connectedNodes: 3d0000005b000000
+    - id: 61
       ledge: {fileID: 1003836569}
       position: {x: -3.996426, y: 1.1492826, z: 3.9964263}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 0c0f00000e0f0000
-    - id: 3854
+      connectedNodes: 3c0000003e000000
+    - id: 62
       ledge: {fileID: 1003836569}
       position: {x: 3.996426, y: 1.1492826, z: 3.9964263}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 0d0f0000280f0000
+      connectedNodes: 3d00000058000000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: -1.332142, y: 1.1492823, z: 1.332142}
     ledge: {fileID: 1003836569}
-  - id: 1285
+  - id: 337
     nodes:
-    - id: 3852
+    - id: 60
       ledge: {fileID: 1003836569}
       position: {x: -3.996426, y: 1.1492816, z: -3.9964268}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 0d0f00002b0f0000
-    - id: 3854
+      connectedNodes: 3d0000005b000000
+    - id: 62
       ledge: {fileID: 1003836569}
       position: {x: 3.996426, y: 1.1492826, z: 3.9964263}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 0d0f0000280f0000
-    - id: 3857
+      connectedNodes: 3d00000058000000
+    - id: 65
       ledge: {fileID: 1003836569}
       position: {x: 3.996426, y: 1.1492816, z: -3.9964268}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
@@ -851,19 +872,19 @@ MonoBehaviour:
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 1.332142, y: 1.149282, z: -1.3321425}
     ledge: {fileID: 1003836569}
-  - id: 1286
+  - id: 338
     nodes:
-    - id: 3854
+    - id: 62
       ledge: {fileID: 1003836569}
       position: {x: 3.996426, y: 1.1492826, z: 3.9964263}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 0d0f0000280f0000
-    - id: 3859
+      connectedNodes: 3d00000058000000
+    - id: 67
       ledge: {fileID: 1003836569}
       position: {x: 8.517746, y: 1.1492811, z: -8.517747}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 1a0f00001f0f0000
-    - id: 3857
+      connectedNodes: 4a0000004f000000
+    - id: 65
       ledge: {fileID: 1003836569}
       position: {x: 3.996426, y: 1.1492816, z: -3.9964268}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
@@ -871,1019 +892,1019 @@ MonoBehaviour:
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 5.5035324, y: 1.1492819, z: -2.839249}
     ledge: {fileID: 1003836569}
-  - id: 1287
+  - id: 339
     nodes:
-    - id: 3854
+    - id: 62
       ledge: {fileID: 1003836569}
       position: {x: 3.996426, y: 1.1492826, z: 3.9964263}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 0d0f0000280f0000
-    - id: 3862
+      connectedNodes: 3d00000058000000
+    - id: 70
       ledge: {fileID: 1003836569}
       position: {x: 8.517746, y: 1.1492821, z: -0.52489215}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 220f0000250f0000
-    - id: 3859
+      connectedNodes: 5200000055000000
+    - id: 67
       ledge: {fileID: 1003836569}
       position: {x: 8.517746, y: 1.1492811, z: -8.517747}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 1a0f00001f0f0000
+      connectedNodes: 4a0000004f000000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 7.010639, y: 1.149282, z: -1.6820709}
     ledge: {fileID: 1003836569}
-  - id: 1288
+  - id: 340
     nodes:
-    - id: 3857
+    - id: 65
       ledge: {fileID: 1003836569}
       position: {x: 3.996426, y: 1.1492816, z: -3.9964268}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
       connectedNodes: 
-    - id: 3859
+    - id: 67
       ledge: {fileID: 1003836569}
       position: {x: 8.517746, y: 1.1492811, z: -8.517747}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 1a0f00001f0f0000
-    - id: 3866
+      connectedNodes: 4a0000004f000000
+    - id: 74
       ledge: {fileID: 1003836569}
       position: {x: 0.524892, y: 1.1492811, z: -8.517747}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 130f00002e0f0000
+      connectedNodes: 430000005e000000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 4.3463545, y: 1.1492814, z: -7.0106406}
     ledge: {fileID: 1003836569}
-  - id: 1289
+  - id: 341
     nodes:
-    - id: 3857
+    - id: 65
       ledge: {fileID: 1003836569}
       position: {x: 3.996426, y: 1.1492816, z: -3.9964268}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
       connectedNodes: 
-    - id: 3866
+    - id: 74
       ledge: {fileID: 1003836569}
       position: {x: 0.524892, y: 1.1492811, z: -8.517747}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 130f00002e0f0000
-    - id: 3852
+      connectedNodes: 430000005e000000
+    - id: 60
       ledge: {fileID: 1003836569}
       position: {x: -3.996426, y: 1.1492816, z: -3.9964268}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 0d0f00002b0f0000
+      connectedNodes: 3d0000005b000000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 0.17496395, y: 1.1492815, z: -5.503534}
     ledge: {fileID: 1003836569}
-  - id: 1290
+  - id: 342
     nodes:
-    - id: 3862
+    - id: 70
       ledge: {fileID: 1003836569}
       position: {x: 8.517746, y: 1.1492821, z: -0.52489215}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 220f0000250f0000
-    - id: 3871
+      connectedNodes: 5200000055000000
+    - id: 79
       ledge: {fileID: 1003836569}
       position: {x: 10.805004, y: 1.1492811, z: -8.517747}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 130f0000
-    - id: 3859
+      connectedNodes: 43000000
+    - id: 67
       ledge: {fileID: 1003836569}
       position: {x: 8.517746, y: 1.1492811, z: -8.517747}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 1a0f00001f0f0000
+      connectedNodes: 4a0000004f000000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 9.280166, y: 1.1492815, z: -5.853462}
     ledge: {fileID: 1003836569}
-  - id: 1291
+  - id: 343
     nodes:
-    - id: 3862
+    - id: 70
       ledge: {fileID: 1003836569}
       position: {x: 8.517746, y: 1.1492821, z: -0.52489215}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 220f0000250f0000
-    - id: 3874
+      connectedNodes: 5200000055000000
+    - id: 82
       ledge: {fileID: 1003836569}
       position: {x: 10.805004, y: 1.1492821, z: -0.52489215}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 160f0000
-    - id: 3871
+      connectedNodes: 46000000
+    - id: 79
       ledge: {fileID: 1003836569}
       position: {x: 10.805004, y: 1.1492811, z: -8.517747}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 130f0000
+      connectedNodes: 43000000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 10.042584, y: 1.1492819, z: -3.1891773}
     ledge: {fileID: 1003836569}
-  - id: 1292
+  - id: 344
     nodes:
-    - id: 3854
+    - id: 62
       ledge: {fileID: 1003836569}
       position: {x: 3.996426, y: 1.1492826, z: 3.9964263}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 0d0f0000280f0000
-    - id: 3877
+      connectedNodes: 3d00000058000000
+    - id: 85
       ledge: {fileID: 1003836569}
       position: {x: 14.310324, y: 1.1492827, z: 5.2676864}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 160f0000280f0000
-    - id: 3862
+      connectedNodes: 4600000058000000
+    - id: 70
       ledge: {fileID: 1003836569}
       position: {x: 8.517746, y: 1.1492821, z: -0.52489215}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 220f0000250f0000
+      connectedNodes: 5200000055000000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 8.941499, y: 1.1492825, z: 2.9130735}
     ledge: {fileID: 1003836569}
-  - id: 1293
+  - id: 345
     nodes:
-    - id: 3854
+    - id: 62
       ledge: {fileID: 1003836569}
       position: {x: 3.996426, y: 1.1492826, z: 3.9964263}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 0d0f0000280f0000
-    - id: 3880
+      connectedNodes: 3d00000058000000
+    - id: 88
       ledge: {fileID: 1003836569}
       position: {x: 9.789004, y: 1.1492833, z: 9.789005}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 0e0f0000250f0000
-    - id: 3877
+      connectedNodes: 3e00000055000000
+    - id: 85
       ledge: {fileID: 1003836569}
       position: {x: 14.310324, y: 1.1492827, z: 5.2676864}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 160f0000280f0000
+      connectedNodes: 4600000058000000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 9.365252, y: 1.1492828, z: 6.3510394}
     ledge: {fileID: 1003836569}
-  - id: 1294
+  - id: 346
     nodes:
-    - id: 3866
+    - id: 74
       ledge: {fileID: 1003836569}
       position: {x: 0.524892, y: 1.1492811, z: -8.517747}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 130f00002e0f0000
-    - id: 3883
+      connectedNodes: 430000005e000000
+    - id: 91
       ledge: {fileID: 1003836569}
       position: {x: -5.338622, y: 1.1492815, z: -5.338623}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 0c0f0000d6100000
-    - id: 3852
+      connectedNodes: 3c00000006020000
+    - id: 60
       ledge: {fileID: 1003836569}
       position: {x: -3.996426, y: 1.1492816, z: -3.9964268}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 0d0f00002b0f0000
+      connectedNodes: 3d0000005b000000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: -2.9367187, y: 1.1492814, z: -5.950932}
     ledge: {fileID: 1003836569}
-  - id: 1295
+  - id: 347
     nodes:
-    - id: 3866
+    - id: 74
       ledge: {fileID: 1003836569}
       position: {x: 0.524892, y: 1.1492811, z: -8.517747}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 130f00002e0f0000
-    - id: 3886
+      connectedNodes: 430000005e000000
+    - id: 94
       ledge: {fileID: 1003836569}
       position: {x: -0.817304, y: 1.1492809, z: -9.859943}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 1a0f0000d5100000
-    - id: 3883
+      connectedNodes: 4a00000005020000
+    - id: 91
       ledge: {fileID: 1003836569}
       position: {x: -5.338622, y: 1.1492815, z: -5.338623}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 0c0f0000d6100000
+      connectedNodes: 3c00000006020000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: -1.8770113, y: 1.1492811, z: -7.9054375}
     ledge: {fileID: 1003836569}
-  - id: 1306
+  - id: 358
     nodes:
-    - id: 3918
+    - id: 126
       ledge: {fileID: 1003836569}
       position: {x: -7.936856, y: 1.981388, z: -1.9702145}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 4f0f0000530f0000
-    - id: 3919
+      connectedNodes: 7f00000083000000
+    - id: 127
       ledge: {fileID: 1003836569}
       position: {x: -7.936856, y: 1.9813884, z: 1.970214}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 4e0f0000500f0000
-    - id: 3920
+      connectedNodes: 7e00000080000000
+    - id: 128
       ledge: {fileID: 1003836569}
       position: {x: -3.996426, y: 1.9813884, z: 1.970214}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 4f0f0000530f0000
+      connectedNodes: 7f00000083000000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: -6.623379, y: 1.9813882, z: 0.65673786}
     ledge: {fileID: 1003836569}
-  - id: 1307
+  - id: 359
     nodes:
-    - id: 3918
+    - id: 126
       ledge: {fileID: 1003836569}
       position: {x: -7.936856, y: 1.981388, z: -1.9702145}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 4f0f0000530f0000
-    - id: 3920
+      connectedNodes: 7f00000083000000
+    - id: 128
       ledge: {fileID: 1003836569}
       position: {x: -3.996426, y: 1.9813884, z: 1.970214}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 4f0f0000530f0000
-    - id: 3923
+      connectedNodes: 7f00000083000000
+    - id: 131
       ledge: {fileID: 1003836569}
       position: {x: -3.996426, y: 1.981388, z: -1.9702145}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 4e0f0000500f0000
+      connectedNodes: 7e00000080000000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: -5.3099027, y: 1.9813881, z: -0.65673834}
     ledge: {fileID: 1003836569}
-  - id: 1318
+  - id: 370
     nodes:
-    - id: 3954
+    - id: 162
       ledge: {fileID: 1003836569}
       position: {x: -11.877284, y: 3.4186642, z: -1.9702146}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 730f0000770f0000
-    - id: 3955
+      connectedNodes: a3000000a7000000
+    - id: 163
       ledge: {fileID: 1003836569}
       position: {x: -11.877284, y: 3.4186647, z: 1.9702139}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 720f0000740f0000
-    - id: 3956
+      connectedNodes: a2000000a4000000
+    - id: 164
       ledge: {fileID: 1003836569}
       position: {x: -7.936856, y: 3.4186647, z: 1.9702139}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 730f0000770f0000
+      connectedNodes: a3000000a7000000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: -10.5638075, y: 3.4186647, z: 0.65673774}
     ledge: {fileID: 1003836569}
-  - id: 1319
+  - id: 371
     nodes:
-    - id: 3954
+    - id: 162
       ledge: {fileID: 1003836569}
       position: {x: -11.877284, y: 3.4186642, z: -1.9702146}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 730f0000770f0000
-    - id: 3956
+      connectedNodes: a3000000a7000000
+    - id: 164
       ledge: {fileID: 1003836569}
       position: {x: -7.936856, y: 3.4186647, z: 1.9702139}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 730f0000770f0000
-    - id: 3959
+      connectedNodes: a3000000a7000000
+    - id: 167
       ledge: {fileID: 1003836569}
       position: {x: -7.936856, y: 3.4186642, z: -1.9702146}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 720f0000740f0000
+      connectedNodes: a2000000a4000000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: -9.250332, y: 3.4186642, z: -0.65673846}
     ledge: {fileID: 1003836569}
-  - id: 1384
+  - id: 436
     nodes:
-    - id: 4152
+    - id: 360
       ledge: {fileID: 1003836569}
       position: {x: -5.342684, y: 1.149283, z: 7.432395}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 391000003d100000
-    - id: 4153
+      connectedNodes: 690100006d010000
+    - id: 361
       ledge: {fileID: 1003836569}
       position: {x: -5.342684, y: 1.1492835, z: 11.981685}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 381000003a100000
-    - id: 4154
+      connectedNodes: 680100006a010000
+    - id: 362
       ledge: {fileID: 1003836569}
       position: {x: 2.52506, y: 1.1492835, z: 11.981685}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 391000003d100000
+      connectedNodes: 690100006d010000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: -2.7201025, y: 1.1492834, z: 10.465255}
     ledge: {fileID: 1003836569}
-  - id: 1385
+  - id: 437
     nodes:
-    - id: 4152
+    - id: 360
       ledge: {fileID: 1003836569}
       position: {x: -5.342684, y: 1.149283, z: 7.432395}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 391000003d100000
-    - id: 4154
+      connectedNodes: 690100006d010000
+    - id: 362
       ledge: {fileID: 1003836569}
       position: {x: 2.52506, y: 1.1492835, z: 11.981685}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 391000003d100000
-    - id: 4157
+      connectedNodes: 690100006d010000
+    - id: 365
       ledge: {fileID: 1003836569}
       position: {x: 2.52506, y: 1.149283, z: 7.432395}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 381000003a100000
+      connectedNodes: 680100006a010000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: -0.097521305, y: 1.1492833, z: 8.948825}
     ledge: {fileID: 1003836569}
-  - id: 1394
+  - id: 446
     nodes:
-    - id: 4182
+    - id: 390
       ledge: {fileID: 1003836569}
       position: {x: 3.996426, y: -5.086758, z: 3.9964273}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 57100000
-    - id: 4183
+      connectedNodes: 87010000
+    - id: 391
       ledge: {fileID: 1003836569}
       position: {x: -22.758438, y: -5.0867553, z: 30.751286}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 5610000058100000
-    - id: 4184
+      connectedNodes: 8601000088010000
+    - id: 392
       ledge: {fileID: 1003836569}
       position: {x: -16.96586, y: -5.0867543, z: 36.543865}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 5710000060100000
+      connectedNodes: 8701000090010000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: -11.909291, y: -5.0867558, z: 23.76386}
     ledge: {fileID: 1003836569}
-  - id: 1395
+  - id: 447
     nodes:
-    - id: 4182
+    - id: 390
       ledge: {fileID: 1003836569}
       position: {x: 3.996426, y: -5.086758, z: 3.9964273}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 57100000
-    - id: 4184
+      connectedNodes: 87010000
+    - id: 392
       ledge: {fileID: 1003836569}
       position: {x: -16.96586, y: -5.0867543, z: 36.543865}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 5710000060100000
-    - id: 4187
+      connectedNodes: 8701000090010000
+    - id: 395
       ledge: {fileID: 1003836569}
       position: {x: 9.789004, y: -5.0867577, z: 9.789006}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 5d100000
+      connectedNodes: 8d010000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: -1.0601435, y: -5.0867567, z: 16.776432}
     ledge: {fileID: 1003836569}
-  - id: 1396
+  - id: 448
     nodes:
-    - id: 4184
+    - id: 392
       ledge: {fileID: 1003836569}
       position: {x: -16.96586, y: -5.0867543, z: 36.543865}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 5710000060100000
-    - id: 4189
+      connectedNodes: 8701000090010000
+    - id: 397
       ledge: {fileID: 1003836569}
       position: {x: 20.860249, y: -5.086756, z: 20.860252}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 5b10000060100000
-    - id: 4187
+      connectedNodes: 8b01000090010000
+    - id: 395
       ledge: {fileID: 1003836569}
       position: {x: 9.789004, y: -5.0867577, z: 9.789006}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 5d100000
+      connectedNodes: 8d010000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 4.561131, y: -5.086756, z: 22.397707}
     ledge: {fileID: 1003836569}
-  - id: 1397
+  - id: 449
     nodes:
-    - id: 4184
+    - id: 392
       ledge: {fileID: 1003836569}
       position: {x: -16.96586, y: -5.0867543, z: 36.543865}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 5710000060100000
-    - id: 4192
+      connectedNodes: 8701000090010000
+    - id: 400
       ledge: {fileID: 1003836569}
       position: {x: -5.894616, y: -5.086753, z: 47.615112}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 581000005d100000
-    - id: 4189
+      connectedNodes: 880100008d010000
+    - id: 397
       ledge: {fileID: 1003836569}
       position: {x: 20.860249, y: -5.086756, z: 20.860252}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 5b10000060100000
+      connectedNodes: 8b01000090010000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: -0.666743, y: -5.0867543, z: 35.006413}
     ledge: {fileID: 1003836569}
-  - id: 1436
+  - id: 488
     nodes:
-    - id: 3886
+    - id: 94
       ledge: {fileID: 1003836569}
       position: {x: -0.817304, y: 1.1492809, z: -9.859943}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 1a0f0000d5100000
-    - id: 4309
+      connectedNodes: 4a00000005020000
+    - id: 517
       ledge: {fileID: 1003836569}
       position: {x: -2.136058, y: 1.8399509, z: -11.178698}
       normal: {x: 0.24556586, y: 0.9377606, z: 0.24556577}
-      connectedNodes: 2e0f000008110000
-    - id: 4310
+      connectedNodes: 5e00000038020000
+    - id: 518
       ledge: {fileID: 1003836569}
       position: {x: -6.657378, y: 1.8399514, z: -6.657377}
       normal: {x: 0.24556586, y: 0.9377606, z: 0.24556577}
-      connectedNodes: 2b0f000000110000
+      connectedNodes: 5b00000030020000
     normal: {x: 0.24556585, y: 0.9377606, z: 0.24556577}
     center: {x: -3.2035801, y: 1.6097277, z: -9.232006}
     ledge: {fileID: 1003836569}
-  - id: 1437
+  - id: 489
     nodes:
-    - id: 3886
+    - id: 94
       ledge: {fileID: 1003836569}
       position: {x: -0.817304, y: 1.1492809, z: -9.859943}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 1a0f0000d5100000
-    - id: 4310
+      connectedNodes: 4a00000005020000
+    - id: 518
       ledge: {fileID: 1003836569}
       position: {x: -6.657378, y: 1.8399514, z: -6.657377}
       normal: {x: 0.24556586, y: 0.9377606, z: 0.24556577}
-      connectedNodes: 2b0f000000110000
-    - id: 3883
+      connectedNodes: 5b00000030020000
+    - id: 91
       ledge: {fileID: 1003836569}
       position: {x: -5.338622, y: 1.1492815, z: -5.338623}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 0c0f0000d6100000
+      connectedNodes: 3c00000006020000
     normal: {x: 0.24556585, y: 0.9377606, z: 0.24556577}
     center: {x: -4.2711015, y: 1.3795046, z: -7.2853146}
     ledge: {fileID: 1003836569}
-  - id: 1450
+  - id: 502
     nodes:
-    - id: 4309
+    - id: 517
       ledge: {fileID: 1003836569}
       position: {x: -2.136058, y: 1.8399509, z: -11.178698}
       normal: {x: 0.24556586, y: 0.9377606, z: 0.24556577}
-      connectedNodes: 2e0f000008110000
-    - id: 4351
+      connectedNodes: 5e00000038020000
+    - id: 559
       ledge: {fileID: 1003836569}
       position: {x: -5.457636, y: 1.8399504, z: -14.500274}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 0011000005110000
-    - id: 4352
+      connectedNodes: 3002000035020000
+    - id: 560
       ledge: {fileID: 1003836569}
       position: {x: -9.978954, y: 1.839951, z: -9.978953}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: ff100000d6100000
+      connectedNodes: 2f02000006020000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: -5.857549, y: 1.8399509, z: -11.885975}
     ledge: {fileID: 1003836569}
-  - id: 1451
+  - id: 503
     nodes:
-    - id: 4309
+    - id: 517
       ledge: {fileID: 1003836569}
       position: {x: -2.136058, y: 1.8399509, z: -11.178698}
       normal: {x: 0.24556586, y: 0.9377606, z: 0.24556577}
-      connectedNodes: 2e0f000008110000
-    - id: 4352
+      connectedNodes: 5e00000038020000
+    - id: 560
       ledge: {fileID: 1003836569}
       position: {x: -9.978954, y: 1.839951, z: -9.978953}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: ff100000d6100000
-    - id: 4310
+      connectedNodes: 2f02000006020000
+    - id: 518
       ledge: {fileID: 1003836569}
       position: {x: -6.657378, y: 1.8399514, z: -6.657377}
       normal: {x: 0.24556586, y: 0.9377606, z: 0.24556577}
-      connectedNodes: 2b0f000000110000
+      connectedNodes: 5b00000030020000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: -6.2574635, y: 1.8399512, z: -9.271676}
     ledge: {fileID: 1003836569}
-  - id: 1452
+  - id: 504
     nodes:
-    - id: 4309
+    - id: 517
       ledge: {fileID: 1003836569}
       position: {x: -2.136058, y: 1.8399509, z: -11.178698}
       normal: {x: 0.24556586, y: 0.9377606, z: 0.24556577}
-      connectedNodes: 2e0f000008110000
-    - id: 4357
+      connectedNodes: 5e00000038020000
+    - id: 565
       ledge: {fileID: 1003836569}
       position: {x: -4.57689, y: 1.8399503, z: -15.38102}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: ff1000000c110000
-    - id: 4351
+      connectedNodes: 2f0200003c020000
+    - id: 559
       ledge: {fileID: 1003836569}
       position: {x: -5.457636, y: 1.8399504, z: -14.500274}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 0011000005110000
+      connectedNodes: 3002000035020000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: -4.0568614, y: 1.8399506, z: -13.686664}
     ledge: {fileID: 1003836569}
-  - id: 1453
+  - id: 505
     nodes:
-    - id: 4309
+    - id: 517
       ledge: {fileID: 1003836569}
       position: {x: -2.136058, y: 1.8399509, z: -11.178698}
       normal: {x: 0.24556586, y: 0.9377606, z: 0.24556577}
-      connectedNodes: 2e0f000008110000
-    - id: 4360
+      connectedNodes: 5e00000038020000
+    - id: 568
       ledge: {fileID: 1003836569}
       position: {x: -1.255314, y: 1.8399508, z: -12.059443}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: d51000000b110000
-    - id: 4357
+      connectedNodes: 050200003b020000
+    - id: 565
       ledge: {fileID: 1003836569}
       position: {x: -4.57689, y: 1.8399503, z: -15.38102}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: ff1000000c110000
+      connectedNodes: 2f0200003c020000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: -2.6560874, y: 1.8399506, z: -12.873054}
     ledge: {fileID: 1003836569}
-  - id: 1454
+  - id: 506
     nodes:
-    - id: 4360
+    - id: 568
       ledge: {fileID: 1003836569}
       position: {x: -1.255314, y: 1.8399508, z: -12.059443}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: d51000000b110000
-    - id: 4363
+      connectedNodes: 050200003b020000
+    - id: 571
       ledge: {fileID: 1003836569}
       position: {x: 0.07381, y: 2.956997, z: -13.388568}
       normal: {x: -0.36124304, y: 0.8596552, z: 0.36124298}
-      connectedNodes: 081100001a110000
-    - id: 4364
+      connectedNodes: 380200004a020000
+    - id: 572
       ledge: {fileID: 1003836569}
       position: {x: -3.247766, y: 2.9569964, z: -16.710146}
       normal: {x: -0.36124304, y: 0.8596552, z: 0.36124298}
-      connectedNodes: 0511000012110000
+      connectedNodes: 3502000042020000
     normal: {x: -0.36124304, y: 0.8596552, z: 0.36124298}
     center: {x: -1.4764233, y: 2.584648, z: -14.052719}
     ledge: {fileID: 1003836569}
-  - id: 1455
+  - id: 507
     nodes:
-    - id: 4360
+    - id: 568
       ledge: {fileID: 1003836569}
       position: {x: -1.255314, y: 1.8399508, z: -12.059443}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: d51000000b110000
-    - id: 4364
+      connectedNodes: 050200003b020000
+    - id: 572
       ledge: {fileID: 1003836569}
       position: {x: -3.247766, y: 2.9569964, z: -16.710146}
       normal: {x: -0.36124304, y: 0.8596552, z: 0.36124298}
-      connectedNodes: 0511000012110000
-    - id: 4357
+      connectedNodes: 3502000042020000
+    - id: 565
       ledge: {fileID: 1003836569}
       position: {x: -4.57689, y: 1.8399503, z: -15.38102}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: ff1000000c110000
+      connectedNodes: 2f0200003c020000
     normal: {x: -0.36124304, y: 0.8596552, z: 0.36124298}
     center: {x: -3.0266564, y: 2.2122993, z: -14.716869}
     ledge: {fileID: 1003836569}
-  - id: 1456
+  - id: 508
     nodes:
-    - id: 4363
+    - id: 571
       ledge: {fileID: 1003836569}
       position: {x: 0.07381, y: 2.956997, z: -13.388568}
       normal: {x: -0.36124304, y: 0.8596552, z: 0.36124298}
-      connectedNodes: 081100001a110000
-    - id: 4369
+      connectedNodes: 380200004a020000
+    - id: 577
       ledge: {fileID: 1003836569}
       position: {x: 3.60407, y: 2.9569964, z: -16.918829}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 1211000017110000
-    - id: 4370
+      connectedNodes: 4202000047020000
+    - id: 578
       ledge: {fileID: 1003836569}
       position: {x: 0.282494, y: 2.956996, z: -20.240408}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 111100000c110000
+      connectedNodes: 410200003c020000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 1.3201247, y: 2.9569962, z: -16.849268}
     ledge: {fileID: 1003836569}
-  - id: 1457
+  - id: 509
     nodes:
-    - id: 4363
+    - id: 571
       ledge: {fileID: 1003836569}
       position: {x: 0.07381, y: 2.956997, z: -13.388568}
       normal: {x: -0.36124304, y: 0.8596552, z: 0.36124298}
-      connectedNodes: 081100001a110000
-    - id: 4370
+      connectedNodes: 380200004a020000
+    - id: 578
       ledge: {fileID: 1003836569}
       position: {x: 0.282494, y: 2.956996, z: -20.240408}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 111100000c110000
-    - id: 4364
+      connectedNodes: 410200003c020000
+    - id: 572
       ledge: {fileID: 1003836569}
       position: {x: -3.247766, y: 2.9569964, z: -16.710146}
       normal: {x: -0.36124304, y: 0.8596552, z: 0.36124298}
-      connectedNodes: 0511000012110000
+      connectedNodes: 3502000042020000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: -0.9638207, y: 2.9569962, z: -16.779707}
     ledge: {fileID: 1003836569}
-  - id: 1458
+  - id: 510
     nodes:
-    - id: 4363
+    - id: 571
       ledge: {fileID: 1003836569}
       position: {x: 0.07381, y: 2.956997, z: -13.388568}
       normal: {x: -0.36124304, y: 0.8596552, z: 0.36124298}
-      connectedNodes: 081100001a110000
-    - id: 4375
+      connectedNodes: 380200004a020000
+    - id: 583
       ledge: {fileID: 1003836569}
       position: {x: 4.274558, y: 2.9569964, z: -16.248343}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 11110000
-    - id: 4369
+      connectedNodes: 41020000
+    - id: 577
       ledge: {fileID: 1003836569}
       position: {x: 3.60407, y: 2.9569964, z: -16.918829}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 1211000017110000
+      connectedNodes: 4202000047020000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 2.6508129, y: 2.9569967, z: -15.51858}
     ledge: {fileID: 1003836569}
-  - id: 1459
+  - id: 511
     nodes:
-    - id: 4363
+    - id: 571
       ledge: {fileID: 1003836569}
       position: {x: 0.07381, y: 2.956997, z: -13.388568}
       normal: {x: -0.36124304, y: 0.8596552, z: 0.36124298}
-      connectedNodes: 081100001a110000
-    - id: 4378
+      connectedNodes: 380200004a020000
+    - id: 586
       ledge: {fileID: 1003836569}
       position: {x: 0.744298, y: 2.956997, z: -12.718081}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 0b110000
-    - id: 4375
+      connectedNodes: 3b020000
+    - id: 583
       ledge: {fileID: 1003836569}
       position: {x: 4.274558, y: 2.9569964, z: -16.248343}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 11110000
+      connectedNodes: 41020000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 1.6975554, y: 2.956997, z: -14.118331}
     ledge: {fileID: 1003836569}
-  - id: 1488
+  - id: 540
     nodes:
-    - id: 4464
+    - id: 672
       ledge: {fileID: 1003836569}
       position: {x: 3.958492, y: 4.7785034, z: -9.50389}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 7111000076110000
-    - id: 4465
+      connectedNodes: a1020000a6020000
+    - id: 673
       ledge: {fileID: 1003836569}
       position: {x: 13.409754, y: 4.7785034, z: -9.50389}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 7011000072110000
-    - id: 4466
+      connectedNodes: a0020000a2020000
+    - id: 674
       ledge: {fileID: 1003836569}
       position: {x: 13.409754, y: 4.778503, z: -13.03415}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 7111000075110000
+      connectedNodes: a1020000a5020000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 10.259334, y: 4.7785034, z: -10.680644}
     ledge: {fileID: 1003836569}
-  - id: 1489
+  - id: 541
     nodes:
-    - id: 4464
+    - id: 672
       ledge: {fileID: 1003836569}
       position: {x: 3.958492, y: 4.7785034, z: -9.50389}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 7111000076110000
-    - id: 4466
+      connectedNodes: a1020000a6020000
+    - id: 674
       ledge: {fileID: 1003836569}
       position: {x: 13.409754, y: 4.778503, z: -13.03415}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 7111000075110000
-    - id: 4469
+      connectedNodes: a1020000a5020000
+    - id: 677
       ledge: {fileID: 1003836569}
       position: {x: 7.488752, y: 4.778503, z: -13.03415}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 721100007b110000
+      connectedNodes: a2020000ab020000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 8.285666, y: 4.7785034, z: -11.857396}
     ledge: {fileID: 1003836569}
-  - id: 1490
+  - id: 542
     nodes:
-    - id: 4470
+    - id: 678
       ledge: {fileID: 1003836569}
       position: {x: 2.015952, y: 4.778503, z: -11.44643}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 701100007b110000
-    - id: 4464
+      connectedNodes: a0020000ab020000
+    - id: 672
       ledge: {fileID: 1003836569}
       position: {x: 3.958492, y: 4.7785034, z: -9.50389}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 7111000076110000
-    - id: 4469
+      connectedNodes: a1020000a6020000
+    - id: 677
       ledge: {fileID: 1003836569}
       position: {x: 7.488752, y: 4.778503, z: -13.03415}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 721100007b110000
+      connectedNodes: a2020000ab020000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 4.487732, y: 4.7785034, z: -11.328156}
     ledge: {fileID: 1003836569}
-  - id: 1491
+  - id: 543
     nodes:
-    - id: 4470
+    - id: 678
       ledge: {fileID: 1003836569}
       position: {x: 2.015952, y: 4.778503, z: -11.44643}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 701100007b110000
-    - id: 4469
+      connectedNodes: a0020000ab020000
+    - id: 677
       ledge: {fileID: 1003836569}
       position: {x: 7.488752, y: 4.778503, z: -13.03415}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 721100007b110000
-    - id: 4475
+      connectedNodes: a2020000ab020000
+    - id: 683
       ledge: {fileID: 1003836569}
       position: {x: 5.54621, y: 4.7785025, z: -14.97669}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 7611000075110000
+      connectedNodes: a6020000a5020000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 5.016971, y: 4.778503, z: -13.152423}
     ledge: {fileID: 1003836569}
-  - id: 1500
+  - id: 552
     nodes:
-    - id: 4500
+    - id: 708
       ledge: {fileID: 1003836569}
       position: {x: 10.805004, y: 3.0673463, z: -0.5248924}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 9511000099110000
-    - id: 4501
+      connectedNodes: c5020000c9020000
+    - id: 709
       ledge: {fileID: 1003836569}
       position: {x: 13.642686, y: 3.0673463, z: -0.5248924}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 941100009b110000
-    - id: 4502
+      connectedNodes: c4020000cb020000
+    - id: 710
       ledge: {fileID: 1003836569}
       position: {x: 13.642686, y: 3.0673454, z: -8.517747}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 99110000
+      connectedNodes: c9020000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 12.696792, y: 3.0673459, z: -3.1891773}
     ledge: {fileID: 1003836569}
-  - id: 1501
+  - id: 553
     nodes:
-    - id: 4500
+    - id: 708
       ledge: {fileID: 1003836569}
       position: {x: 10.805004, y: 3.0673463, z: -0.5248924}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 9511000099110000
-    - id: 4502
+      connectedNodes: c5020000c9020000
+    - id: 710
       ledge: {fileID: 1003836569}
       position: {x: 13.642686, y: 3.0673454, z: -8.517747}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 99110000
-    - id: 4505
+      connectedNodes: c9020000
+    - id: 713
       ledge: {fileID: 1003836569}
       position: {x: 10.805004, y: 3.0673454, z: -8.517747}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 9411000096110000
+      connectedNodes: c4020000c6020000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 11.750897, y: 3.0673456, z: -5.853462}
     ledge: {fileID: 1003836569}
-  - id: 1502
+  - id: 554
     nodes:
-    - id: 4501
+    - id: 709
       ledge: {fileID: 1003836569}
       position: {x: 13.642686, y: 3.0673463, z: -0.5248924}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 941100009b110000
-    - id: 4507
+      connectedNodes: c4020000cb020000
+    - id: 715
       ledge: {fileID: 1003836569}
       position: {x: 13.642686, y: 3.0673468, z: 3.189168}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 951100009c110000
-    - id: 4508
+      connectedNodes: c5020000cc020000
+    - id: 716
       ledge: {fileID: 1003836569}
       position: {x: 18.20261, y: 3.0673468, z: 3.189168}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 9b110000a4110000
+      connectedNodes: cb020000d4020000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 15.162662, y: 3.0673466, z: 1.9511479}
     ledge: {fileID: 1003836569}
-  - id: 1503
+  - id: 555
     nodes:
-    - id: 4501
+    - id: 709
       ledge: {fileID: 1003836569}
       position: {x: 13.642686, y: 3.0673463, z: -0.5248924}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 941100009b110000
-    - id: 4508
+      connectedNodes: c4020000cb020000
+    - id: 716
       ledge: {fileID: 1003836569}
       position: {x: 18.20261, y: 3.0673468, z: 3.189168}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 9b110000a4110000
-    - id: 4511
+      connectedNodes: cb020000d4020000
+    - id: 719
       ledge: {fileID: 1003836569}
       position: {x: 18.20261, y: 3.0673463, z: -0.5248924}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: a1110000
+      connectedNodes: d1020000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 16.682634, y: 3.0673466, z: 0.7131278}
     ledge: {fileID: 1003836569}
-  - id: 1504
+  - id: 556
     nodes:
-    - id: 4508
+    - id: 716
       ledge: {fileID: 1003836569}
       position: {x: 18.20261, y: 3.0673468, z: 3.189168}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 9b110000a4110000
-    - id: 4513
+      connectedNodes: cb020000d4020000
+    - id: 721
       ledge: {fileID: 1003836569}
       position: {x: 30.417904, y: 3.0673463, z: -0.5248924}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 9f110000a4110000
-    - id: 4511
+      connectedNodes: cf020000d4020000
+    - id: 719
       ledge: {fileID: 1003836569}
       position: {x: 18.20261, y: 3.0673463, z: -0.5248924}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: a1110000
+      connectedNodes: d1020000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 22.274374, y: 3.0673466, z: 0.7131278}
     ledge: {fileID: 1003836569}
-  - id: 1505
+  - id: 557
     nodes:
-    - id: 4508
+    - id: 716
       ledge: {fileID: 1003836569}
       position: {x: 18.20261, y: 3.0673468, z: 3.189168}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 9b110000a4110000
-    - id: 4516
+      connectedNodes: cb020000d4020000
+    - id: 724
       ledge: {fileID: 1003836569}
       position: {x: 30.417904, y: 3.0673468, z: 3.189168}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 9c110000a1110000
-    - id: 4513
+      connectedNodes: cc020000d1020000
+    - id: 721
       ledge: {fileID: 1003836569}
       position: {x: 30.417904, y: 3.0673463, z: -0.5248924}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 9f110000a4110000
+      connectedNodes: cf020000d4020000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 26.34614, y: 3.0673466, z: 1.9511479}
     ledge: {fileID: 1003836569}
-  - id: 1512
+  - id: 564
     nodes:
-    - id: 4536
+    - id: 744
       ledge: {fileID: 1003836569}
       position: {x: 13.642686, y: 6.1254683, z: -0.52489275}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: b9110000bd110000
-    - id: 4537
+      connectedNodes: e9020000ed020000
+    - id: 745
       ledge: {fileID: 1003836569}
       position: {x: 18.20261, y: 6.1254683, z: -0.52489275}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: b8110000c2110000
-    - id: 4538
+      connectedNodes: e8020000f2020000
+    - id: 746
       ledge: {fileID: 1003836569}
       position: {x: 18.20261, y: 6.1254673, z: -8.517748}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: bd110000bf110000
+      connectedNodes: ed020000ef020000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 16.682634, y: 6.125468, z: -3.1891778}
     ledge: {fileID: 1003836569}
-  - id: 1513
+  - id: 565
     nodes:
-    - id: 4536
+    - id: 744
       ledge: {fileID: 1003836569}
       position: {x: 13.642686, y: 6.1254683, z: -0.52489275}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: b9110000bd110000
-    - id: 4538
+      connectedNodes: e9020000ed020000
+    - id: 746
       ledge: {fileID: 1003836569}
       position: {x: 18.20261, y: 6.1254673, z: -8.517748}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: bd110000bf110000
-    - id: 4541
+      connectedNodes: ed020000ef020000
+    - id: 749
       ledge: {fileID: 1003836569}
       position: {x: 13.642686, y: 6.1254673, z: -8.517748}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: b8110000ba110000
+      connectedNodes: e8020000ea020000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 15.16266, y: 6.125468, z: -5.8534627}
     ledge: {fileID: 1003836569}
-  - id: 1514
+  - id: 566
     nodes:
-    - id: 4537
+    - id: 745
       ledge: {fileID: 1003836569}
       position: {x: 18.20261, y: 6.1254683, z: -0.52489275}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: b8110000c2110000
-    - id: 4543
+      connectedNodes: e8020000f2020000
+    - id: 751
       ledge: {fileID: 1003836569}
       position: {x: 25.17047, y: 6.1254673, z: -8.517748}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: ba110000c5110000
-    - id: 4538
+      connectedNodes: ea020000f5020000
+    - id: 746
       ledge: {fileID: 1003836569}
       position: {x: 18.20261, y: 6.1254673, z: -8.517748}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: bd110000bf110000
+      connectedNodes: ed020000ef020000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 20.525229, y: 6.125468, z: -5.8534627}
     ledge: {fileID: 1003836569}
-  - id: 1515
+  - id: 567
     nodes:
-    - id: 4537
+    - id: 745
       ledge: {fileID: 1003836569}
       position: {x: 18.20261, y: 6.1254683, z: -0.52489275}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: b8110000c2110000
-    - id: 4546
+      connectedNodes: e8020000f2020000
+    - id: 754
       ledge: {fileID: 1003836569}
       position: {x: 25.17047, y: 6.1254683, z: -0.52489275}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: b9110000c8110000
-    - id: 4543
+      connectedNodes: e9020000f8020000
+    - id: 751
       ledge: {fileID: 1003836569}
       position: {x: 25.17047, y: 6.1254673, z: -8.517748}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: ba110000c5110000
+      connectedNodes: ea020000f5020000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 22.847849, y: 6.125468, z: -3.1891778}
     ledge: {fileID: 1003836569}
-  - id: 1516
+  - id: 568
     nodes:
-    - id: 4546
+    - id: 754
       ledge: {fileID: 1003836569}
       position: {x: 25.17047, y: 6.1254683, z: -0.52489275}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: b9110000c8110000
-    - id: 4549
+      connectedNodes: e9020000f8020000
+    - id: 757
       ledge: {fileID: 1003836569}
       position: {x: 30.417904, y: 6.1254673, z: -8.517748}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: bf110000c8110000
-    - id: 4543
+      connectedNodes: ef020000f8020000
+    - id: 751
       ledge: {fileID: 1003836569}
       position: {x: 25.17047, y: 6.1254673, z: -8.517748}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: ba110000c5110000
+      connectedNodes: ea020000f5020000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 26.919615, y: 6.125468, z: -5.8534627}
     ledge: {fileID: 1003836569}
-  - id: 1517
+  - id: 569
     nodes:
-    - id: 4546
+    - id: 754
       ledge: {fileID: 1003836569}
       position: {x: 25.17047, y: 6.1254683, z: -0.52489275}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: b9110000c8110000
-    - id: 4552
+      connectedNodes: e9020000f8020000
+    - id: 760
       ledge: {fileID: 1003836569}
       position: {x: 30.417904, y: 6.1254683, z: -0.52489275}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: c2110000c5110000
-    - id: 4549
+      connectedNodes: f2020000f5020000
+    - id: 757
       ledge: {fileID: 1003836569}
       position: {x: 30.417904, y: 6.1254673, z: -8.517748}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: bf110000c8110000
+      connectedNodes: ef020000f8020000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 28.668756, y: 6.125468, z: -3.1891778}
     ledge: {fileID: 1003836569}
-  - id: 1530
+  - id: 582
     nodes:
-    - id: 4590
+    - id: 798
       ledge: {fileID: 1003836569}
       position: {x: -8.899534, y: 1.149283, z: 7.432395}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: ef110000f3110000
-    - id: 4591
+      connectedNodes: 1f03000023030000
+    - id: 799
       ledge: {fileID: 1003836569}
       position: {x: -12.68913, y: 1.149283, z: 7.432395}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: ee110000f0110000
-    - id: 4592
+      connectedNodes: 1e03000020030000
+    - id: 800
       ledge: {fileID: 1003836569}
       position: {x: -12.68913, y: 1.1492835, z: 11.981685}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: ef110000f3110000
+      connectedNodes: 1f03000023030000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: -11.425931, y: 1.1492833, z: 8.948825}
     ledge: {fileID: 1003836569}
-  - id: 1531
+  - id: 583
     nodes:
-    - id: 4590
+    - id: 798
       ledge: {fileID: 1003836569}
       position: {x: -8.899534, y: 1.149283, z: 7.432395}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: ef110000f3110000
-    - id: 4592
+      connectedNodes: 1f03000023030000
+    - id: 800
       ledge: {fileID: 1003836569}
       position: {x: -12.68913, y: 1.1492835, z: 11.981685}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: ef110000f3110000
-    - id: 4595
+      connectedNodes: 1f03000023030000
+    - id: 803
       ledge: {fileID: 1003836569}
       position: {x: -8.899534, y: 1.1492835, z: 11.981685}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: ee110000f0110000
+      connectedNodes: 1e03000020030000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: -10.162733, y: 1.1492834, z: 10.465255}
     ledge: {fileID: 1003836569}
-  - id: 1554
+  - id: 606
     nodes:
-    - id: 4662
+    - id: 870
       ledge: {fileID: 1003836569}
       position: {x: 3.996426, y: -2.1097198, z: 3.9964268}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
       connectedNodes: 
-    - id: 4663
+    - id: 871
       ledge: {fileID: 1003836569}
       position: {x: 3.801806, y: -2.1097198, z: 3.9724388}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 3812000040120000
-    - id: 4664
+      connectedNodes: 6803000070030000
+    - id: 872
       ledge: {fileID: 1003836569}
       position: {x: 9.812992, y: -2.109719, z: 9.983626}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 3712000046120000
+      connectedNodes: 6703000076030000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 5.8704085, y: -2.1097195, z: 5.9841638}
     ledge: {fileID: 1003836569}
-  - id: 1555
+  - id: 607
     nodes:
-    - id: 4662
+    - id: 870
       ledge: {fileID: 1003836569}
       position: {x: 3.996426, y: -2.1097198, z: 3.9964268}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
       connectedNodes: 
-    - id: 4664
+    - id: 872
       ledge: {fileID: 1003836569}
       position: {x: 9.812992, y: -2.109719, z: 9.983626}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 3712000046120000
-    - id: 4667
+      connectedNodes: 6703000076030000
+    - id: 875
       ledge: {fileID: 1003836569}
       position: {x: 9.789004, y: -2.109719, z: 9.789005}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
@@ -1891,19 +1912,19 @@ MonoBehaviour:
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 7.866141, y: -2.1097193, z: 7.9230194}
     ledge: {fileID: 1003836569}
-  - id: 1556
+  - id: 608
     nodes:
-    - id: 4668
+    - id: 876
       ledge: {fileID: 1003836569}
       position: {x: 8.517746, y: -2.1097202, z: -0.5248918}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
       connectedNodes: 
-    - id: 4663
+    - id: 871
       ledge: {fileID: 1003836569}
       position: {x: 3.801806, y: -2.1097198, z: 3.9724388}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 3812000040120000
-    - id: 4662
+      connectedNodes: 6803000070030000
+    - id: 870
       ledge: {fileID: 1003836569}
       position: {x: 3.996426, y: -2.1097198, z: 3.9964268}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
@@ -1911,39 +1932,39 @@ MonoBehaviour:
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 5.438659, y: -2.10972, z: 2.4813244}
     ledge: {fileID: 1003836569}
-  - id: 1557
+  - id: 609
     nodes:
-    - id: 4668
+    - id: 876
       ledge: {fileID: 1003836569}
       position: {x: 8.517746, y: -2.1097202, z: -0.5248918}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
       connectedNodes: 
-    - id: 4672
+    - id: 880
       ledge: {fileID: 1003836569}
       position: {x: 8.493758, y: -2.1097202, z: -0.7195118}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 3712000046120000
-    - id: 4663
+      connectedNodes: 6703000076030000
+    - id: 871
       ledge: {fileID: 1003836569}
       position: {x: 3.801806, y: -2.1097198, z: 3.9724388}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 3812000040120000
+      connectedNodes: 6803000070030000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 6.9377704, y: -2.10972, z: 0.9093451}
     ledge: {fileID: 1003836569}
-  - id: 1558
+  - id: 610
     nodes:
-    - id: 4674
+    - id: 882
       ledge: {fileID: 1003836569}
       position: {x: 14.310324, y: -2.1097195, z: 5.267687}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
       connectedNodes: 
-    - id: 4672
+    - id: 880
       ledge: {fileID: 1003836569}
       position: {x: 8.493758, y: -2.1097202, z: -0.7195118}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 3712000046120000
-    - id: 4668
+      connectedNodes: 6703000076030000
+    - id: 876
       ledge: {fileID: 1003836569}
       position: {x: 8.517746, y: -2.1097202, z: -0.5248918}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
@@ -1951,65 +1972,1032 @@ MonoBehaviour:
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 10.440609, y: -2.10972, z: 1.3410944}
     ledge: {fileID: 1003836569}
-  - id: 1559
+  - id: 611
     nodes:
-    - id: 4674
+    - id: 882
       ledge: {fileID: 1003836569}
       position: {x: 14.310324, y: -2.1097195, z: 5.267687}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
       connectedNodes: 
-    - id: 4678
+    - id: 886
       ledge: {fileID: 1003836569}
       position: {x: 14.504944, y: -2.1097195, z: 5.291675}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 4012000038120000
-    - id: 4672
+      connectedNodes: 7003000068030000
+    - id: 880
       ledge: {fileID: 1003836569}
       position: {x: 8.493758, y: -2.1097202, z: -0.7195118}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 3712000046120000
+      connectedNodes: 6703000076030000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 12.436341, y: -2.1097198, z: 3.2799501}
     ledge: {fileID: 1003836569}
-  - id: 1560
+  - id: 612
     nodes:
-    - id: 4667
+    - id: 875
       ledge: {fileID: 1003836569}
       position: {x: 9.789004, y: -2.109719, z: 9.789005}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
       connectedNodes: 
-    - id: 4664
+    - id: 872
       ledge: {fileID: 1003836569}
       position: {x: 9.812992, y: -2.109719, z: 9.983626}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 3712000046120000
-    - id: 4678
+      connectedNodes: 6703000076030000
+    - id: 886
       ledge: {fileID: 1003836569}
       position: {x: 14.504944, y: -2.1097195, z: 5.291675}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 4012000038120000
+      connectedNodes: 7003000068030000
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 11.36898, y: -2.1097193, z: 8.35477}
     ledge: {fileID: 1003836569}
-  - id: 1561
+  - id: 613
     nodes:
-    - id: 4667
+    - id: 875
       ledge: {fileID: 1003836569}
       position: {x: 9.789004, y: -2.109719, z: 9.789005}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
       connectedNodes: 
-    - id: 4678
+    - id: 886
       ledge: {fileID: 1003836569}
       position: {x: 14.504944, y: -2.1097195, z: 5.291675}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
-      connectedNodes: 4012000038120000
-    - id: 4674
+      connectedNodes: 7003000068030000
+    - id: 882
       ledge: {fileID: 1003836569}
       position: {x: 14.310324, y: -2.1097195, z: 5.267687}
       normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
       connectedNodes: 
     normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
     center: {x: 12.868091, y: -2.1097193, z: 6.782789}
+    ledge: {fileID: 1003836569}
+  ledgeEdges:
+  - id: 69
+    a:
+      id: 60
+      ledge: {fileID: 1003836569}
+      position: {x: -3.996426, y: 1.1492816, z: -3.9964268}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 3d0000005b000000
+    b:
+      id: 61
+      ledge: {fileID: 1003836569}
+      position: {x: -3.996426, y: 1.1492826, z: 3.9964263}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 3c0000003e000000
+    ledge: {fileID: 1003836569}
+  - id: 70
+    a:
+      id: 60
+      ledge: {fileID: 1003836569}
+      position: {x: -3.996426, y: 1.1492816, z: -3.9964268}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 3d0000005b000000
+    b:
+      id: 91
+      ledge: {fileID: 1003836569}
+      position: {x: -5.338622, y: 1.1492815, z: -5.338623}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 3c00000006020000
+    ledge: {fileID: 1003836569}
+  - id: 71
+    a:
+      id: 61
+      ledge: {fileID: 1003836569}
+      position: {x: -3.996426, y: 1.1492826, z: 3.9964263}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 3c0000003e000000
+    b:
+      id: 62
+      ledge: {fileID: 1003836569}
+      position: {x: 3.996426, y: 1.1492826, z: 3.9964263}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 3d00000058000000
+    ledge: {fileID: 1003836569}
+  - id: 72
+    a:
+      id: 62
+      ledge: {fileID: 1003836569}
+      position: {x: 3.996426, y: 1.1492826, z: 3.9964263}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 3d00000058000000
+    b:
+      id: 88
+      ledge: {fileID: 1003836569}
+      position: {x: 9.789004, y: 1.1492833, z: 9.789005}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 3e00000055000000
+    ledge: {fileID: 1003836569}
+  - id: 73
+    a:
+      id: 67
+      ledge: {fileID: 1003836569}
+      position: {x: 8.517746, y: 1.1492811, z: -8.517747}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 4a0000004f000000
+    b:
+      id: 74
+      ledge: {fileID: 1003836569}
+      position: {x: 0.524892, y: 1.1492811, z: -8.517747}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 430000005e000000
+    ledge: {fileID: 1003836569}
+  - id: 74
+    a:
+      id: 67
+      ledge: {fileID: 1003836569}
+      position: {x: 8.517746, y: 1.1492811, z: -8.517747}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 4a0000004f000000
+    b:
+      id: 79
+      ledge: {fileID: 1003836569}
+      position: {x: 10.805004, y: 1.1492811, z: -8.517747}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 43000000
+    ledge: {fileID: 1003836569}
+  - id: 75
+    a:
+      id: 70
+      ledge: {fileID: 1003836569}
+      position: {x: 8.517746, y: 1.1492821, z: -0.52489215}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 5200000055000000
+    b:
+      id: 82
+      ledge: {fileID: 1003836569}
+      position: {x: 10.805004, y: 1.1492821, z: -0.52489215}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 46000000
+    ledge: {fileID: 1003836569}
+  - id: 76
+    a:
+      id: 70
+      ledge: {fileID: 1003836569}
+      position: {x: 8.517746, y: 1.1492821, z: -0.52489215}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 5200000055000000
+    b:
+      id: 85
+      ledge: {fileID: 1003836569}
+      position: {x: 14.310324, y: 1.1492827, z: 5.2676864}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 4600000058000000
+    ledge: {fileID: 1003836569}
+  - id: 77
+    a:
+      id: 74
+      ledge: {fileID: 1003836569}
+      position: {x: 0.524892, y: 1.1492811, z: -8.517747}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 430000005e000000
+    b:
+      id: 94
+      ledge: {fileID: 1003836569}
+      position: {x: -0.817304, y: 1.1492809, z: -9.859943}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 4a00000005020000
+    ledge: {fileID: 1003836569}
+  - id: 78
+    a:
+      id: 85
+      ledge: {fileID: 1003836569}
+      position: {x: 14.310324, y: 1.1492827, z: 5.2676864}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 4600000058000000
+    b:
+      id: 88
+      ledge: {fileID: 1003836569}
+      position: {x: 9.789004, y: 1.1492833, z: 9.789005}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 3e00000055000000
+    ledge: {fileID: 1003836569}
+  - id: 79
+    a:
+      id: 91
+      ledge: {fileID: 1003836569}
+      position: {x: -5.338622, y: 1.1492815, z: -5.338623}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 3c00000006020000
+    b:
+      id: 518
+      ledge: {fileID: 1003836569}
+      position: {x: -6.657378, y: 1.8399514, z: -6.657377}
+      normal: {x: 0.24556586, y: 0.9377606, z: 0.24556577}
+      connectedNodes: 5b00000030020000
+    ledge: {fileID: 1003836569}
+  - id: 80
+    a:
+      id: 94
+      ledge: {fileID: 1003836569}
+      position: {x: -0.817304, y: 1.1492809, z: -9.859943}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 4a00000005020000
+    b:
+      id: 517
+      ledge: {fileID: 1003836569}
+      position: {x: -2.136058, y: 1.8399509, z: -11.178698}
+      normal: {x: 0.24556586, y: 0.9377606, z: 0.24556577}
+      connectedNodes: 5e00000038020000
+    ledge: {fileID: 1003836569}
+  - id: 81
+    a:
+      id: 126
+      ledge: {fileID: 1003836569}
+      position: {x: -7.936856, y: 1.981388, z: -1.9702145}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 7f00000083000000
+    b:
+      id: 127
+      ledge: {fileID: 1003836569}
+      position: {x: -7.936856, y: 1.9813884, z: 1.970214}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 7e00000080000000
+    ledge: {fileID: 1003836569}
+  - id: 82
+    a:
+      id: 126
+      ledge: {fileID: 1003836569}
+      position: {x: -7.936856, y: 1.981388, z: -1.9702145}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 7f00000083000000
+    b:
+      id: 131
+      ledge: {fileID: 1003836569}
+      position: {x: -3.996426, y: 1.981388, z: -1.9702145}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 7e00000080000000
+    ledge: {fileID: 1003836569}
+  - id: 83
+    a:
+      id: 127
+      ledge: {fileID: 1003836569}
+      position: {x: -7.936856, y: 1.9813884, z: 1.970214}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 7e00000080000000
+    b:
+      id: 128
+      ledge: {fileID: 1003836569}
+      position: {x: -3.996426, y: 1.9813884, z: 1.970214}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 7f00000083000000
+    ledge: {fileID: 1003836569}
+  - id: 84
+    a:
+      id: 128
+      ledge: {fileID: 1003836569}
+      position: {x: -3.996426, y: 1.9813884, z: 1.970214}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 7f00000083000000
+    b:
+      id: 131
+      ledge: {fileID: 1003836569}
+      position: {x: -3.996426, y: 1.981388, z: -1.9702145}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 7e00000080000000
+    ledge: {fileID: 1003836569}
+  - id: 85
+    a:
+      id: 162
+      ledge: {fileID: 1003836569}
+      position: {x: -11.877284, y: 3.4186642, z: -1.9702146}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: a3000000a7000000
+    b:
+      id: 163
+      ledge: {fileID: 1003836569}
+      position: {x: -11.877284, y: 3.4186647, z: 1.9702139}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: a2000000a4000000
+    ledge: {fileID: 1003836569}
+  - id: 86
+    a:
+      id: 162
+      ledge: {fileID: 1003836569}
+      position: {x: -11.877284, y: 3.4186642, z: -1.9702146}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: a3000000a7000000
+    b:
+      id: 167
+      ledge: {fileID: 1003836569}
+      position: {x: -7.936856, y: 3.4186642, z: -1.9702146}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: a2000000a4000000
+    ledge: {fileID: 1003836569}
+  - id: 87
+    a:
+      id: 163
+      ledge: {fileID: 1003836569}
+      position: {x: -11.877284, y: 3.4186647, z: 1.9702139}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: a2000000a4000000
+    b:
+      id: 164
+      ledge: {fileID: 1003836569}
+      position: {x: -7.936856, y: 3.4186647, z: 1.9702139}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: a3000000a7000000
+    ledge: {fileID: 1003836569}
+  - id: 88
+    a:
+      id: 164
+      ledge: {fileID: 1003836569}
+      position: {x: -7.936856, y: 3.4186647, z: 1.9702139}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: a3000000a7000000
+    b:
+      id: 167
+      ledge: {fileID: 1003836569}
+      position: {x: -7.936856, y: 3.4186642, z: -1.9702146}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: a2000000a4000000
+    ledge: {fileID: 1003836569}
+  - id: 89
+    a:
+      id: 360
+      ledge: {fileID: 1003836569}
+      position: {x: -5.342684, y: 1.149283, z: 7.432395}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 690100006d010000
+    b:
+      id: 361
+      ledge: {fileID: 1003836569}
+      position: {x: -5.342684, y: 1.1492835, z: 11.981685}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 680100006a010000
+    ledge: {fileID: 1003836569}
+  - id: 90
+    a:
+      id: 360
+      ledge: {fileID: 1003836569}
+      position: {x: -5.342684, y: 1.149283, z: 7.432395}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 690100006d010000
+    b:
+      id: 365
+      ledge: {fileID: 1003836569}
+      position: {x: 2.52506, y: 1.149283, z: 7.432395}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 680100006a010000
+    ledge: {fileID: 1003836569}
+  - id: 91
+    a:
+      id: 361
+      ledge: {fileID: 1003836569}
+      position: {x: -5.342684, y: 1.1492835, z: 11.981685}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 680100006a010000
+    b:
+      id: 362
+      ledge: {fileID: 1003836569}
+      position: {x: 2.52506, y: 1.1492835, z: 11.981685}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 690100006d010000
+    ledge: {fileID: 1003836569}
+  - id: 92
+    a:
+      id: 362
+      ledge: {fileID: 1003836569}
+      position: {x: 2.52506, y: 1.1492835, z: 11.981685}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 690100006d010000
+    b:
+      id: 365
+      ledge: {fileID: 1003836569}
+      position: {x: 2.52506, y: 1.149283, z: 7.432395}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 680100006a010000
+    ledge: {fileID: 1003836569}
+  - id: 93
+    a:
+      id: 390
+      ledge: {fileID: 1003836569}
+      position: {x: 3.996426, y: -5.086758, z: 3.9964273}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 87010000
+    b:
+      id: 391
+      ledge: {fileID: 1003836569}
+      position: {x: -22.758438, y: -5.0867553, z: 30.751286}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 8601000088010000
+    ledge: {fileID: 1003836569}
+  - id: 94
+    a:
+      id: 391
+      ledge: {fileID: 1003836569}
+      position: {x: -22.758438, y: -5.0867553, z: 30.751286}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 8601000088010000
+    b:
+      id: 392
+      ledge: {fileID: 1003836569}
+      position: {x: -16.96586, y: -5.0867543, z: 36.543865}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 8701000090010000
+    ledge: {fileID: 1003836569}
+  - id: 95
+    a:
+      id: 392
+      ledge: {fileID: 1003836569}
+      position: {x: -16.96586, y: -5.0867543, z: 36.543865}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 8701000090010000
+    b:
+      id: 400
+      ledge: {fileID: 1003836569}
+      position: {x: -5.894616, y: -5.086753, z: 47.615112}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 880100008d010000
+    ledge: {fileID: 1003836569}
+  - id: 96
+    a:
+      id: 395
+      ledge: {fileID: 1003836569}
+      position: {x: 9.789004, y: -5.0867577, z: 9.789006}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 8d010000
+    b:
+      id: 397
+      ledge: {fileID: 1003836569}
+      position: {x: 20.860249, y: -5.086756, z: 20.860252}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 8b01000090010000
+    ledge: {fileID: 1003836569}
+  - id: 97
+    a:
+      id: 397
+      ledge: {fileID: 1003836569}
+      position: {x: 20.860249, y: -5.086756, z: 20.860252}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 8b01000090010000
+    b:
+      id: 400
+      ledge: {fileID: 1003836569}
+      position: {x: -5.894616, y: -5.086753, z: 47.615112}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 880100008d010000
+    ledge: {fileID: 1003836569}
+  - id: 98
+    a:
+      id: 517
+      ledge: {fileID: 1003836569}
+      position: {x: -2.136058, y: 1.8399509, z: -11.178698}
+      normal: {x: 0.24556586, y: 0.9377606, z: 0.24556577}
+      connectedNodes: 5e00000038020000
+    b:
+      id: 568
+      ledge: {fileID: 1003836569}
+      position: {x: -1.255314, y: 1.8399508, z: -12.059443}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 050200003b020000
+    ledge: {fileID: 1003836569}
+  - id: 99
+    a:
+      id: 518
+      ledge: {fileID: 1003836569}
+      position: {x: -6.657378, y: 1.8399514, z: -6.657377}
+      normal: {x: 0.24556586, y: 0.9377606, z: 0.24556577}
+      connectedNodes: 5b00000030020000
+    b:
+      id: 560
+      ledge: {fileID: 1003836569}
+      position: {x: -9.978954, y: 1.839951, z: -9.978953}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 2f02000006020000
+    ledge: {fileID: 1003836569}
+  - id: 100
+    a:
+      id: 559
+      ledge: {fileID: 1003836569}
+      position: {x: -5.457636, y: 1.8399504, z: -14.500274}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 3002000035020000
+    b:
+      id: 560
+      ledge: {fileID: 1003836569}
+      position: {x: -9.978954, y: 1.839951, z: -9.978953}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 2f02000006020000
+    ledge: {fileID: 1003836569}
+  - id: 101
+    a:
+      id: 559
+      ledge: {fileID: 1003836569}
+      position: {x: -5.457636, y: 1.8399504, z: -14.500274}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 3002000035020000
+    b:
+      id: 565
+      ledge: {fileID: 1003836569}
+      position: {x: -4.57689, y: 1.8399503, z: -15.38102}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 2f0200003c020000
+    ledge: {fileID: 1003836569}
+  - id: 102
+    a:
+      id: 565
+      ledge: {fileID: 1003836569}
+      position: {x: -4.57689, y: 1.8399503, z: -15.38102}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 2f0200003c020000
+    b:
+      id: 572
+      ledge: {fileID: 1003836569}
+      position: {x: -3.247766, y: 2.9569964, z: -16.710146}
+      normal: {x: -0.36124304, y: 0.8596552, z: 0.36124298}
+      connectedNodes: 3502000042020000
+    ledge: {fileID: 1003836569}
+  - id: 103
+    a:
+      id: 568
+      ledge: {fileID: 1003836569}
+      position: {x: -1.255314, y: 1.8399508, z: -12.059443}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 050200003b020000
+    b:
+      id: 571
+      ledge: {fileID: 1003836569}
+      position: {x: 0.07381, y: 2.956997, z: -13.388568}
+      normal: {x: -0.36124304, y: 0.8596552, z: 0.36124298}
+      connectedNodes: 380200004a020000
+    ledge: {fileID: 1003836569}
+  - id: 104
+    a:
+      id: 571
+      ledge: {fileID: 1003836569}
+      position: {x: 0.07381, y: 2.956997, z: -13.388568}
+      normal: {x: -0.36124304, y: 0.8596552, z: 0.36124298}
+      connectedNodes: 380200004a020000
+    b:
+      id: 586
+      ledge: {fileID: 1003836569}
+      position: {x: 0.744298, y: 2.956997, z: -12.718081}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 3b020000
+    ledge: {fileID: 1003836569}
+  - id: 105
+    a:
+      id: 572
+      ledge: {fileID: 1003836569}
+      position: {x: -3.247766, y: 2.9569964, z: -16.710146}
+      normal: {x: -0.36124304, y: 0.8596552, z: 0.36124298}
+      connectedNodes: 3502000042020000
+    b:
+      id: 578
+      ledge: {fileID: 1003836569}
+      position: {x: 0.282494, y: 2.956996, z: -20.240408}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 410200003c020000
+    ledge: {fileID: 1003836569}
+  - id: 106
+    a:
+      id: 577
+      ledge: {fileID: 1003836569}
+      position: {x: 3.60407, y: 2.9569964, z: -16.918829}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 4202000047020000
+    b:
+      id: 578
+      ledge: {fileID: 1003836569}
+      position: {x: 0.282494, y: 2.956996, z: -20.240408}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 410200003c020000
+    ledge: {fileID: 1003836569}
+  - id: 107
+    a:
+      id: 577
+      ledge: {fileID: 1003836569}
+      position: {x: 3.60407, y: 2.9569964, z: -16.918829}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 4202000047020000
+    b:
+      id: 583
+      ledge: {fileID: 1003836569}
+      position: {x: 4.274558, y: 2.9569964, z: -16.248343}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 41020000
+    ledge: {fileID: 1003836569}
+  - id: 108
+    a:
+      id: 672
+      ledge: {fileID: 1003836569}
+      position: {x: 3.958492, y: 4.7785034, z: -9.50389}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: a1020000a6020000
+    b:
+      id: 673
+      ledge: {fileID: 1003836569}
+      position: {x: 13.409754, y: 4.7785034, z: -9.50389}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: a0020000a2020000
+    ledge: {fileID: 1003836569}
+  - id: 109
+    a:
+      id: 672
+      ledge: {fileID: 1003836569}
+      position: {x: 3.958492, y: 4.7785034, z: -9.50389}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: a1020000a6020000
+    b:
+      id: 678
+      ledge: {fileID: 1003836569}
+      position: {x: 2.015952, y: 4.778503, z: -11.44643}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: a0020000ab020000
+    ledge: {fileID: 1003836569}
+  - id: 110
+    a:
+      id: 673
+      ledge: {fileID: 1003836569}
+      position: {x: 13.409754, y: 4.7785034, z: -9.50389}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: a0020000a2020000
+    b:
+      id: 674
+      ledge: {fileID: 1003836569}
+      position: {x: 13.409754, y: 4.778503, z: -13.03415}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: a1020000a5020000
+    ledge: {fileID: 1003836569}
+  - id: 111
+    a:
+      id: 674
+      ledge: {fileID: 1003836569}
+      position: {x: 13.409754, y: 4.778503, z: -13.03415}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: a1020000a5020000
+    b:
+      id: 677
+      ledge: {fileID: 1003836569}
+      position: {x: 7.488752, y: 4.778503, z: -13.03415}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: a2020000ab020000
+    ledge: {fileID: 1003836569}
+  - id: 112
+    a:
+      id: 677
+      ledge: {fileID: 1003836569}
+      position: {x: 7.488752, y: 4.778503, z: -13.03415}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: a2020000ab020000
+    b:
+      id: 683
+      ledge: {fileID: 1003836569}
+      position: {x: 5.54621, y: 4.7785025, z: -14.97669}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: a6020000a5020000
+    ledge: {fileID: 1003836569}
+  - id: 113
+    a:
+      id: 678
+      ledge: {fileID: 1003836569}
+      position: {x: 2.015952, y: 4.778503, z: -11.44643}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: a0020000ab020000
+    b:
+      id: 683
+      ledge: {fileID: 1003836569}
+      position: {x: 5.54621, y: 4.7785025, z: -14.97669}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: a6020000a5020000
+    ledge: {fileID: 1003836569}
+  - id: 114
+    a:
+      id: 708
+      ledge: {fileID: 1003836569}
+      position: {x: 10.805004, y: 3.0673463, z: -0.5248924}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: c5020000c9020000
+    b:
+      id: 709
+      ledge: {fileID: 1003836569}
+      position: {x: 13.642686, y: 3.0673463, z: -0.5248924}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: c4020000cb020000
+    ledge: {fileID: 1003836569}
+  - id: 115
+    a:
+      id: 708
+      ledge: {fileID: 1003836569}
+      position: {x: 10.805004, y: 3.0673463, z: -0.5248924}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: c5020000c9020000
+    b:
+      id: 713
+      ledge: {fileID: 1003836569}
+      position: {x: 10.805004, y: 3.0673454, z: -8.517747}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: c4020000c6020000
+    ledge: {fileID: 1003836569}
+  - id: 116
+    a:
+      id: 709
+      ledge: {fileID: 1003836569}
+      position: {x: 13.642686, y: 3.0673463, z: -0.5248924}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: c4020000cb020000
+    b:
+      id: 715
+      ledge: {fileID: 1003836569}
+      position: {x: 13.642686, y: 3.0673468, z: 3.189168}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: c5020000cc020000
+    ledge: {fileID: 1003836569}
+  - id: 117
+    a:
+      id: 710
+      ledge: {fileID: 1003836569}
+      position: {x: 13.642686, y: 3.0673454, z: -8.517747}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: c9020000
+    b:
+      id: 713
+      ledge: {fileID: 1003836569}
+      position: {x: 10.805004, y: 3.0673454, z: -8.517747}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: c4020000c6020000
+    ledge: {fileID: 1003836569}
+  - id: 118
+    a:
+      id: 715
+      ledge: {fileID: 1003836569}
+      position: {x: 13.642686, y: 3.0673468, z: 3.189168}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: c5020000cc020000
+    b:
+      id: 716
+      ledge: {fileID: 1003836569}
+      position: {x: 18.20261, y: 3.0673468, z: 3.189168}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: cb020000d4020000
+    ledge: {fileID: 1003836569}
+  - id: 119
+    a:
+      id: 716
+      ledge: {fileID: 1003836569}
+      position: {x: 18.20261, y: 3.0673468, z: 3.189168}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: cb020000d4020000
+    b:
+      id: 724
+      ledge: {fileID: 1003836569}
+      position: {x: 30.417904, y: 3.0673468, z: 3.189168}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: cc020000d1020000
+    ledge: {fileID: 1003836569}
+  - id: 120
+    a:
+      id: 719
+      ledge: {fileID: 1003836569}
+      position: {x: 18.20261, y: 3.0673463, z: -0.5248924}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: d1020000
+    b:
+      id: 721
+      ledge: {fileID: 1003836569}
+      position: {x: 30.417904, y: 3.0673463, z: -0.5248924}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: cf020000d4020000
+    ledge: {fileID: 1003836569}
+  - id: 121
+    a:
+      id: 721
+      ledge: {fileID: 1003836569}
+      position: {x: 30.417904, y: 3.0673463, z: -0.5248924}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: cf020000d4020000
+    b:
+      id: 724
+      ledge: {fileID: 1003836569}
+      position: {x: 30.417904, y: 3.0673468, z: 3.189168}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: cc020000d1020000
+    ledge: {fileID: 1003836569}
+  - id: 122
+    a:
+      id: 744
+      ledge: {fileID: 1003836569}
+      position: {x: 13.642686, y: 6.1254683, z: -0.52489275}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: e9020000ed020000
+    b:
+      id: 745
+      ledge: {fileID: 1003836569}
+      position: {x: 18.20261, y: 6.1254683, z: -0.52489275}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: e8020000f2020000
+    ledge: {fileID: 1003836569}
+  - id: 123
+    a:
+      id: 744
+      ledge: {fileID: 1003836569}
+      position: {x: 13.642686, y: 6.1254683, z: -0.52489275}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: e9020000ed020000
+    b:
+      id: 749
+      ledge: {fileID: 1003836569}
+      position: {x: 13.642686, y: 6.1254673, z: -8.517748}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: e8020000ea020000
+    ledge: {fileID: 1003836569}
+  - id: 124
+    a:
+      id: 745
+      ledge: {fileID: 1003836569}
+      position: {x: 18.20261, y: 6.1254683, z: -0.52489275}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: e8020000f2020000
+    b:
+      id: 754
+      ledge: {fileID: 1003836569}
+      position: {x: 25.17047, y: 6.1254683, z: -0.52489275}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: e9020000f8020000
+    ledge: {fileID: 1003836569}
+  - id: 125
+    a:
+      id: 746
+      ledge: {fileID: 1003836569}
+      position: {x: 18.20261, y: 6.1254673, z: -8.517748}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: ed020000ef020000
+    b:
+      id: 749
+      ledge: {fileID: 1003836569}
+      position: {x: 13.642686, y: 6.1254673, z: -8.517748}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: e8020000ea020000
+    ledge: {fileID: 1003836569}
+  - id: 126
+    a:
+      id: 746
+      ledge: {fileID: 1003836569}
+      position: {x: 18.20261, y: 6.1254673, z: -8.517748}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: ed020000ef020000
+    b:
+      id: 751
+      ledge: {fileID: 1003836569}
+      position: {x: 25.17047, y: 6.1254673, z: -8.517748}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: ea020000f5020000
+    ledge: {fileID: 1003836569}
+  - id: 127
+    a:
+      id: 751
+      ledge: {fileID: 1003836569}
+      position: {x: 25.17047, y: 6.1254673, z: -8.517748}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: ea020000f5020000
+    b:
+      id: 757
+      ledge: {fileID: 1003836569}
+      position: {x: 30.417904, y: 6.1254673, z: -8.517748}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: ef020000f8020000
+    ledge: {fileID: 1003836569}
+  - id: 128
+    a:
+      id: 754
+      ledge: {fileID: 1003836569}
+      position: {x: 25.17047, y: 6.1254683, z: -0.52489275}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: e9020000f8020000
+    b:
+      id: 760
+      ledge: {fileID: 1003836569}
+      position: {x: 30.417904, y: 6.1254683, z: -0.52489275}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: f2020000f5020000
+    ledge: {fileID: 1003836569}
+  - id: 129
+    a:
+      id: 757
+      ledge: {fileID: 1003836569}
+      position: {x: 30.417904, y: 6.1254673, z: -8.517748}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: ef020000f8020000
+    b:
+      id: 760
+      ledge: {fileID: 1003836569}
+      position: {x: 30.417904, y: 6.1254683, z: -0.52489275}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: f2020000f5020000
+    ledge: {fileID: 1003836569}
+  - id: 130
+    a:
+      id: 798
+      ledge: {fileID: 1003836569}
+      position: {x: -8.899534, y: 1.149283, z: 7.432395}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 1f03000023030000
+    b:
+      id: 799
+      ledge: {fileID: 1003836569}
+      position: {x: -12.68913, y: 1.149283, z: 7.432395}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 1e03000020030000
+    ledge: {fileID: 1003836569}
+  - id: 131
+    a:
+      id: 798
+      ledge: {fileID: 1003836569}
+      position: {x: -8.899534, y: 1.149283, z: 7.432395}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 1f03000023030000
+    b:
+      id: 803
+      ledge: {fileID: 1003836569}
+      position: {x: -8.899534, y: 1.1492835, z: 11.981685}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 1e03000020030000
+    ledge: {fileID: 1003836569}
+  - id: 132
+    a:
+      id: 799
+      ledge: {fileID: 1003836569}
+      position: {x: -12.68913, y: 1.149283, z: 7.432395}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 1e03000020030000
+    b:
+      id: 800
+      ledge: {fileID: 1003836569}
+      position: {x: -12.68913, y: 1.1492835, z: 11.981685}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 1f03000023030000
+    ledge: {fileID: 1003836569}
+  - id: 133
+    a:
+      id: 800
+      ledge: {fileID: 1003836569}
+      position: {x: -12.68913, y: 1.1492835, z: 11.981685}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 1f03000023030000
+    b:
+      id: 803
+      ledge: {fileID: 1003836569}
+      position: {x: -8.899534, y: 1.1492835, z: 11.981685}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 1e03000020030000
+    ledge: {fileID: 1003836569}
+  - id: 134
+    a:
+      id: 871
+      ledge: {fileID: 1003836569}
+      position: {x: 3.801806, y: -2.1097198, z: 3.9724388}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 6803000070030000
+    b:
+      id: 872
+      ledge: {fileID: 1003836569}
+      position: {x: 9.812992, y: -2.109719, z: 9.983626}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 6703000076030000
+    ledge: {fileID: 1003836569}
+  - id: 135
+    a:
+      id: 871
+      ledge: {fileID: 1003836569}
+      position: {x: 3.801806, y: -2.1097198, z: 3.9724388}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 6803000070030000
+    b:
+      id: 880
+      ledge: {fileID: 1003836569}
+      position: {x: 8.493758, y: -2.1097202, z: -0.7195118}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 6703000076030000
+    ledge: {fileID: 1003836569}
+  - id: 136
+    a:
+      id: 872
+      ledge: {fileID: 1003836569}
+      position: {x: 9.812992, y: -2.109719, z: 9.983626}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 6703000076030000
+    b:
+      id: 886
+      ledge: {fileID: 1003836569}
+      position: {x: 14.504944, y: -2.1097195, z: 5.291675}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 7003000068030000
+    ledge: {fileID: 1003836569}
+  - id: 137
+    a:
+      id: 880
+      ledge: {fileID: 1003836569}
+      position: {x: 8.493758, y: -2.1097202, z: -0.7195118}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 6703000076030000
+    b:
+      id: 886
+      ledge: {fileID: 1003836569}
+      position: {x: 14.504944, y: -2.1097195, z: 5.291675}
+      normal: {x: 0, y: 1.0000001, z: -0.00000011920929}
+      connectedNodes: 7003000068030000
     ledge: {fileID: 1003836569}
   outerNodes: []
   baseOfWallPositions: []
