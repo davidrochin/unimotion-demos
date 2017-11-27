@@ -984,6 +984,7 @@ GameObject:
   - component: {fileID: 143346512489590616}
   - component: {fileID: 114724867350098986}
   - component: {fileID: 114027745370018576}
+  - component: {fileID: 114034823472624126}
   m_Layer: 0
   m_Name: link
   m_TagString: Untagged
@@ -2120,6 +2121,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputType: 0
+--- !u!114 &114034823472624126
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1907029367653570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 200318b9f522e5249b6a72c873e28d66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grabPoint: {x: 0, y: 1.92, z: 0.27}
+  grabMaxDistance: 0.3
+  closestLedgePoint: {x: 0, y: 0, z: 0}
+  ledgeEdge:
+    id: 0
+    a:
+      id: 0
+      ledge: {fileID: 0}
+      position: {x: 0, y: 0, z: 0}
+      normal: {x: 0, y: 0, z: 0}
+      connectedNodes: 
+    b:
+      id: 0
+      ledge: {fileID: 0}
+      position: {x: 0, y: 0, z: 0}
+      normal: {x: 0, y: 0, z: 0}
+      connectedNodes: 
+    ledge: {fileID: 0}
+  inLedgeRange: 0
 --- !u!114 &114724867350098986
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2131,15 +2162,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee4659e43e29d674e9e5debb5301643e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  state: 0
   walkSpeed: 2
   runMultiplier: 3
-  jumpForce: 0.25
+  jumpForce: 6
   mask:
     serializedVersion: 2
     m_Bits: 1
+  rollForwardSpeed: 4
   grounded: 1
   walking: 0
   running: 0
+  yForce: 0
+  xForce: 0
+  groundHeight: 0
 --- !u!137 &137110971551963762
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

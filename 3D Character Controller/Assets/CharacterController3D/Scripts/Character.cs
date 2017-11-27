@@ -4,17 +4,25 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 [SelectionBase]
-[RequireComponent(typeof (CharacterController))]
+[RequireComponent(typeof(CharacterController))]
 public class Character : MonoBehaviour {
 
+    public State state;
+
+    [Header("Walking and Running")]
     public float walkSpeed = 2f;
     public float runMultiplier = 2f;
     public float jumpForce = 0.17f;
     public LayerMask mask;
 
+    [Header("Rolling")]
+    public float rollForwardSpeed = 1f;
+
+    [Header("Debug")]
     public bool grounded = false;
     public bool walking = false;
     public bool running = false;
+    public bool climbing = false;
     public float yForce = 0f, xForce = 0f;
 
     //Estados
@@ -32,26 +40,100 @@ public class Character : MonoBehaviour {
 
     CharacterController characterController;
     Animator animator;
+    LedgeGrabber ledgeGrabber;
 
-	void Awake () {
+    void Awake() {
         characterController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
-	}
-	
-	void Update () {
-        CheckGround();
-        ApplyGravity();
-        CheckForJump();
-        CalculateMoveVector();
+        ledgeGrabber = GetComponent<LedgeGrabber>();
+    }
 
-        characterController.Move(moveVector + inputVector * walkSpeed * Time.deltaTime);
-        grounded = characterController.isGrounded;
-        //Debug.Log(grounded);
+    void Update() {
+
+        UpdateAnimator();
+
+        switch (state) {
+            //SUELO O AIRE
+            case State.OnGround:
+            case State.OnAir: {
+                    CheckGroundHeight();
+                    ApplyGravity();
+                    CheckForJump();
+                    CalculateMoveVector();
+
+                    //Mover el CharacterController y detectar si está en el piso (es necesario moverlo primero por cosas de Unity)
+                    characterController.Move(moveVector + inputVector * walkSpeed * Time.deltaTime);
+                    grounded = characterController.isGrounded;
+                    if (grounded) { state = State.OnGround; } else { state = State.OnAir; }
+
+                    //Si el personaje está en el aire y tratando de moverse
+                    if (state == State.OnAir && inputVector != Vector3.zero && yForce <= 0f) {
+                        ledgeGrabber.GetClosestLedgePoint();
+                        if (ledgeGrabber.inLedgeRange) {
+                            transform.position = ledgeGrabber.closestLedgePoint - transform.rotation * ledgeGrabber.grabPoint;
+                            state = State.OnLedge;
+                        }
+                    }
+                    break;
+                }
+
+            //AGARRADO DE UNA LADERA
+            case State.OnLedge: {
+                    //Rotar hacia la ladera
+                    ForceRotateTowards((LedgeGrabber.ProjectOnLedgeEdge(transform.position, ledgeGrabber.ledgeEdge) - transform.position).normalized);
+
+                    //Pegar el punto de agarrado a la ladera
+                    transform.position = ledgeGrabber.closestLedgePoint - transform.rotation * ledgeGrabber.grabPoint;
+
+                    //CheckForJump();
+                    if (jump) {
+                        climbing = true;
+                    }
+                    break;
+                }
+
+            //ESCALANDO UN BORDE
+            case State.ClimbingLedge: {
+                    climbTimer += Time.deltaTime;
+                    characterController.enabled = false;
+
+                    //Revisar si ya se acabó la animación
+                    if (climbTimer >= animator.GetCurrentAnimatorStateInfo(0).length) {
+                        state = State.OnGround;
+                        
+                        CheckGroundHeight();
+                        SetFeet(new Vector3(transform.position.x, groundHeight, transform.position.z));
+                        characterController.enabled = true;
+                    }
+                    break;
+                }
+
+            //RODANDO
+            case State.Rolling: {
+                    rollTimer += Time.deltaTime;
+
+                    CheckGroundHeight();
+                    ApplyGravity();
+                    CalculateMoveVector();
+
+                    moveVector += transform.forward * rollForwardSpeed * Time.deltaTime;
+                    inputVector = Vector3.zero;
+
+                    //Mover el CharacterController y detectar si está en el piso (es necesario moverlo primero por cosas de Unity)
+                    characterController.Move(moveVector + inputVector * walkSpeed * Time.deltaTime);
+                    grounded = characterController.isGrounded;
+                    if (grounded) { state = State.Rolling; } else { state = State.OnAir; }
+
+                    //Revisar si ya se acabó la animacion
+                    if (rollTimer >= animator.GetCurrentAnimatorStateInfo(0).length) {
+                        state = State.OnGround;
+                    }
+                    break;
+                }
+        }
 
         moveVector = Vector3.zero;
         inputVector = Vector3.zero;
-
-        UpdateAnimator();
     }
 
     void ApplyGravity() {
@@ -64,7 +146,7 @@ public class Character : MonoBehaviour {
         }
     }
 
-    void CheckGround() {
+    void CheckGroundHeight() {
 
         //Detectar la altura del piso
         RaycastHit hit = RaycastPastItself(transform.position + characterController.center, Vector3.down, characterController.height / 2f + 4f, mask);
@@ -89,11 +171,58 @@ public class Character : MonoBehaviour {
 
     void UpdateAnimator() {
 
-        animator.SetBool("walking", walking);
-        animator.SetBool("running", running);
-        animator.SetBool("grounded", grounded);
+        /*Debido a la cantidad de estados que planeo implementar en el animator, decidí controlar
+         las transiciones desde el script. Aun así uso un animator porque creo que hace la tarea
+         de cambiar animaciones más facil. En el Animator hay varios parametros booleanos, pero
+         solo uno puede estar activo a la vez; de esta manera, activo la animación que yo quiera
+         desde script.*/
+
+        //Poner todos los bools de animator a false
+        SetAllAnimatorBoolsToFalse();
+
+        switch (state) {
+            case State.OnGround: {
+                    animator.applyRootMotion = true;
+                    if (running) {
+                        animator.SetBool("running", true);
+                    } else if (walking) {
+                        animator.SetBool("walking", true);
+                    } else {
+                        animator.SetBool("idle", true);
+                    }
+                    break;
+                }
+            case State.OnAir: {
+                    animator.applyRootMotion = false;
+                    animator.SetBool("falling", true);
+                    break;
+                }
+            case State.OnLedge: {
+                    animator.applyRootMotion = false;
+                    animator.SetBool("hanging", true);
+                    break;
+                }
+            case State.ClimbingLedge: {
+                    animator.applyRootMotion = true;
+                    animator.SetBool("climbing", true);
+                    break;
+                }
+            case State.Rolling: {
+                    animator.applyRootMotion = false;
+                    animator.SetBool("rolling", true);
+                    break;
+                }
+        }
 
         walking = false; running = false;
+    }
+
+    void SetAllAnimatorBoolsToFalse() {
+        for (int x = 0; x < animator.parameterCount; x++) {
+            if (animator.parameters[x].type == AnimatorControllerParameterType.Bool) {
+                animator.SetBool(animator.parameters[x].nameHash, false);
+            }
+        }
     }
 
     //Acciones
@@ -101,29 +230,58 @@ public class Character : MonoBehaviour {
         inputVector = inputVector + direction;
 
         if (direction != Vector3.zero) {
-            RotateTowardsDirection(direction);
+            RotateTowards(direction);
             walking = true;
         }
-        
     }
 
     public void Run(Vector3 direction) {
         direction = direction * runMultiplier;
         Walk(direction);
 
-        if(direction != Vector3.zero) {
+        if (direction != Vector3.zero) {
             running = true;
         }
-        
     }
 
     public void Jump() {
-        jump = true;
+        if (state == State.OnGround) {
+            jump = true;
+            state = State.OnAir;
+        }
     }
 
-    public void RotateTowardsDirection(Vector3 direction) {
+    float climbTimer = 0f;
+    public void Climb() {
+        if (state == State.OnLedge) {
+            state = State.ClimbingLedge;
+            climbTimer = 0f;
+        }
+    }
+
+    float rollTimer = 0f;
+    public void Roll() {
+        if (state == State.OnGround) {
+            state = State.Rolling;
+            rollTimer = 0f;
+        }
+    }
+
+    public void RotateTowards(Vector3 direction) {
+        if (state == State.OnGround || state == State.OnAir) {
+            ForceRotateTowards(direction);
+        }
+    }
+
+    public void ForceRotateTowards(Vector3 direction) {
         Vector3 procesedDirection = new Vector3(direction.x, 0f, direction.z);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(procesedDirection), 400f * Time.deltaTime);
+    }
+
+    public void SetFeet(Vector3 pos) {
+        Vector3 realCenter = transform.position + characterController.center;
+        Vector3 feetPosition = new Vector3(realCenter.x, characterController.bounds.min.y, realCenter.z);
+        transform.position = pos + (transform.position - feetPosition);
     }
 
     //Este metodo es para hacer un Raycast ignorando el colisionador de este mismo objeto
@@ -136,6 +294,8 @@ public class Character : MonoBehaviour {
         }
         return new RaycastHit();
     }
+
+    public enum State { OnGround, OnAir, OnLedge, Rolling, ClimbingLedge, Dead }
 }
 
 public class CharacterState {

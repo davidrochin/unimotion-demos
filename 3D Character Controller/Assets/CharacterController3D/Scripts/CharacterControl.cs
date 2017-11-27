@@ -21,7 +21,15 @@ public class CharacterControl : MonoBehaviour {
         }
 
         if (Input.GetKeyDown(KeyCode.Space)) {
-            character.Jump();
+            if(character.state == Character.State.OnLedge) {
+                character.Climb();
+            } else {
+                character.Jump();
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.C)) {
+            character.Roll();
         }
 	}
 

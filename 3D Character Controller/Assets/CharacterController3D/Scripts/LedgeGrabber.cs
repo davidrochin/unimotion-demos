@@ -8,6 +8,7 @@ public class LedgeGrabber : MonoBehaviour {
     public float grabMaxDistance = 2f;
 
     public Vector3 closestLedgePoint;
+    public LedgeEdge ledgeEdge;
     public bool inLedgeRange = false;
 
     private void Update() {
@@ -35,6 +36,7 @@ public class LedgeGrabber : MonoBehaviour {
                         if (Vector3.Distance(realGrabPoint, point) <= grabMaxDistance) {
                             closestLedgePoint = point;
                             inLedgeRange = true;
+                            ledgeEdge = edge;
                             return;
                         }
                     }
@@ -50,6 +52,10 @@ public class LedgeGrabber : MonoBehaviour {
         Vector3 delta = end - start;
         float innerProduct = (point.x - start.x) * delta.x + (point.y - start.y) * delta.y + (point.z - start.z) * delta.z;
         return innerProduct >= 0 && innerProduct <= delta.x * delta.x + delta.y * delta.y + delta.z * delta.z;
+    }
+
+    public static Vector3 ProjectOnLedgeEdge(Vector3 point, LedgeEdge le) {
+        return Vector3.Project(point - le.a.position, (le.b.position - le.a.position).normalized) + le.a.position;
     }
 
     private void OnDrawGizmosSelected() {

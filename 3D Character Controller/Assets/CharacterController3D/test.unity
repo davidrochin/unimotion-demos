@@ -151,11 +151,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 114724867350098986, guid: bf1a548a02b696044970f761cd25f17e,
-        type: 2}
-      propertyPath: jumpForce
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bf1a548a02b696044970f761cd25f17e, type: 2}
   m_IsPrefabParent: 0
@@ -349,26 +344,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &834353304 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1907029367653570, guid: bf1a548a02b696044970f761cd25f17e,
-    type: 2}
-  m_PrefabInternal: {fileID: 66297544}
---- !u!114 &834353309
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 834353304}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 200318b9f522e5249b6a72c873e28d66, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grabPoint: {x: 0, y: 1.81, z: 0.46}
-  grabMaxDistance: 1
-  closestLedgePoint: {x: 0, y: 0, z: 0}
-  inLedgeRange: 0
 --- !u!1 &1003836565
 GameObject:
   m_ObjectHideFlags: 0
