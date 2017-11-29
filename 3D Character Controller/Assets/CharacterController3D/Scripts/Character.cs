@@ -79,6 +79,17 @@ public class Character : MonoBehaviour {
 
             //AGARRADO DE UNA LADERA
             case State.OnLedge: {
+                    
+                    //Moverse por la ladera de ser necesario
+                    if(ledgeMovingDirection != Vector3.zero) {
+                        if (ledgeMovingDirection == Vector3.right) { moveVector = Quaternion.Euler(0f, 90f, 0f) * transform.forward; }
+                        if (ledgeMovingDirection == Vector3.left) { moveVector = Quaternion.Euler(0f, -90f, 0f) * transform.forward; }
+                        Debug.Log(ledgeMovingDirection + ", " + moveVector);
+                        characterController.Move(moveVector * 0.8f * Time.deltaTime);
+                        ledgeMovingDirection = Vector3.zero;
+                        ledgeGrabber.closestLedgePoint = LedgeGrabber.ProjectOnLedgeEdge(transform.position, ledgeGrabber.ledgeEdge);
+                    }
+
                     //Rotar hacia la ladera
                     ForceRotateTowards((LedgeGrabber.ProjectOnLedgeEdge(transform.position, ledgeGrabber.ledgeEdge) - transform.position).normalized);
 
@@ -100,9 +111,11 @@ public class Character : MonoBehaviour {
                     //Revisar si ya se acabó la animación
                     if (climbTimer >= animator.GetCurrentAnimatorStateInfo(0).length) {
                         state = State.OnGround;
-                        
+
                         CheckGroundHeight();
-                        SetFeet(new Vector3(transform.position.x, groundHeight, transform.position.z));
+                        if (groundHeight != float.MinValue) {
+                            SetFeet(new Vector3(transform.position.x, groundHeight, transform.position.z));
+                        }
                         characterController.enabled = true;
                     }
                     break;
@@ -199,7 +212,14 @@ public class Character : MonoBehaviour {
                 }
             case State.OnLedge: {
                     animator.applyRootMotion = false;
-                    animator.SetBool("hanging", true);
+                    if (ledgeMovingDirection == Vector3.zero) {
+                        animator.SetBool("hanging", true);
+                        animator.SetFloat("ledgeMovingDirection", 0f);
+                    } 
+                    else {
+                        animator.SetBool("movingAlongEdge", true);
+                        animator.SetFloat("ledgeMovingDirection", ledgeMovingDirection.x);
+                    }
                     break;
                 }
             case State.ClimbingLedge: {
@@ -225,7 +245,8 @@ public class Character : MonoBehaviour {
         }
     }
 
-    //Acciones
+    #region Acciones Básicas
+
     public void Walk(Vector3 direction) {
         inputVector = inputVector + direction;
 
@@ -283,6 +304,13 @@ public class Character : MonoBehaviour {
         Vector3 feetPosition = new Vector3(realCenter.x, characterController.bounds.min.y, realCenter.z);
         transform.position = pos + (transform.position - feetPosition);
     }
+
+    Vector3 ledgeMovingDirection;
+    public void LedgeMove(Vector3 direction) {
+        ledgeMovingDirection = direction;
+    }
+
+    #endregion
 
     //Este metodo es para hacer un Raycast ignorando el colisionador de este mismo objeto
     RaycastHit RaycastPastItself(Vector3 startPos, Vector3 direction, float lenght, LayerMask mask) {

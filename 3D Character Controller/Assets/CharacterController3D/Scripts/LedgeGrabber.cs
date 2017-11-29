@@ -23,7 +23,7 @@ public class LedgeGrabber : MonoBehaviour {
         foreach (Ledge ledge in FindObjectsOfType<Ledge>()) {
 
             //Iterar por todos los Edge del Ledge
-            if(ledge.ledgeEdges != null) {
+            if (ledge.ledgeEdges != null) {
                 foreach (LedgeEdge edge in ledge.ledgeEdges) {
 
                     //Revisar si está en rango del segmento del Edge
@@ -46,6 +46,10 @@ public class LedgeGrabber : MonoBehaviour {
 
         //No se encontró nada
         inLedgeRange = false;
+    }
+
+    public void MoveClosestLedgePoint(Vector3 direction, float distance) {
+
     }
 
     public bool InSegmentRange(Vector3 start, Vector3 end, Vector3 point) {

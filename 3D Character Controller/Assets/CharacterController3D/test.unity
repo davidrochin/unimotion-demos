@@ -133,23 +133,27 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4304988878223912, guid: bf1a548a02b696044970f761cd25f17e, type: 2}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4304988878223912, guid: bf1a548a02b696044970f761cd25f17e, type: 2}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 4304988878223912, guid: bf1a548a02b696044970f761cd25f17e, type: 2}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4304988878223912, guid: bf1a548a02b696044970f761cd25f17e, type: 2}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: -0.0000016689298
       objectReference: {fileID: 0}
     - target: {fileID: 4304988878223912, guid: bf1a548a02b696044970f761cd25f17e, type: 2}
       propertyPath: m_RootOrder
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4304988878223912, guid: bf1a548a02b696044970f761cd25f17e, type: 2}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -179.99998
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bf1a548a02b696044970f761cd25f17e, type: 2}
@@ -315,6 +319,9 @@ MonoBehaviour:
   distance: 2.94
   targetOffset: {x: 0, y: 1.09, z: 0}
   orbitSpeed: 50
+  obstructionLayer:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!1 &446837489
 GameObject:
   m_ObjectHideFlags: 0

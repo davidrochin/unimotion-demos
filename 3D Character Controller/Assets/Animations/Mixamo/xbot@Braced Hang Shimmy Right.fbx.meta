@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 50530010a04ccab459a3d19daa5f3d92
-timeCreated: 1511757314
+guid: d384c36467dd3184dbb72ab25d797492
+timeCreated: 1511914631
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
@@ -141,7 +141,7 @@ ModelImporter:
     400130: mixamorig:Spine1
     400132: mixamorig:Spine2
     400134: //RootNode
-    7400000: Orc Idle
+    7400000: Braced Hang Shimmy Right
     9500000: //RootNode
   externalObjects: {}
   materials:
@@ -171,21 +171,21 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Orc Idle
+      name: Braced Hang Shimmy Right
       takeName: mixamo.com
       firstFrame: 0
-      lastFrame: 200
+      lastFrame: 35
       wrapMode: 0
       orientationOffsetY: 0
-      level: 0
+      level: 0.75
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 0
       keepOriginalPositionY: 1
       keepOriginalPositionXZ: 0

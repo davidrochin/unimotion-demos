@@ -20,6 +20,14 @@ public class CharacterControl : MonoBehaviour {
             character.Walk(GetInputVector());
         }
 
+        if (character.state == Character.State.OnLedge) {
+            if (Input.GetAxisRaw("Horizontal") > 0f) {
+                character.LedgeMove(Vector3.right);
+            } else if (Input.GetAxisRaw("Horizontal") < 0f) {
+                character.LedgeMove(Vector3.left);
+            }
+        }
+
         if (Input.GetKeyDown(KeyCode.Space)) {
             if(character.state == Character.State.OnLedge) {
                 character.Climb();

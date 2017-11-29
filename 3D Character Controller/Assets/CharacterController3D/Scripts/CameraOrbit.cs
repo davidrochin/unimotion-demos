@@ -11,6 +11,7 @@ public class CameraOrbit : MonoBehaviour {
 
     [Header("Orbit Settings")]
     public float orbitSpeed = 10f;
+    public LayerMask obstructionLayer;
 
     Camera camera;
 
@@ -32,8 +33,19 @@ public class CameraOrbit : MonoBehaviour {
             0f);
         transform.localRotation = finalRotation;
 
+        //Antes de acomodarse en la distancia necesaria, revisar si hay una obstrucción para no pasar de ella
+        RaycastHit hit = RaycastUtil.RaycastPastItself(target.gameObject, realTarget, transform.forward * -1f, distance, obstructionLayer);
+
+        float realDistance = 0f;
+        if (hit.collider != null) {
+            realDistance = hit.distance;
+        } else {
+            realDistance = distance;
+        }
+        
+
         //Acomodarse en la distancia necesaria
-        Vector3 desiredPosition = realTarget + transform.forward * -1f * distance;
+        Vector3 desiredPosition = realTarget + transform.forward * -1f * realDistance;
         transform.position = desiredPosition;
 
         if (Input.GetKeyDown(KeyCode.Z)) {
