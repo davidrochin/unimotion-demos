@@ -46,6 +46,7 @@ public class Character : MonoBehaviour {
         characterController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         ledgeGrabber = GetComponent<LedgeGrabber>();
+        Debug.Log("Shift result = " + Vector3Util.Shift(Vector3.forward, Vector3.left));
     }
 
     void Update() {
@@ -82,24 +83,21 @@ public class Character : MonoBehaviour {
                     
                     //Moverse por la ladera de ser necesario
                     if(ledgeMovingDirection != Vector3.zero) {
-                        if (ledgeMovingDirection == Vector3.right) { moveVector = Quaternion.Euler(0f, 90f, 0f) * transform.forward; }
-                        if (ledgeMovingDirection == Vector3.left) { moveVector = Quaternion.Euler(0f, -90f, 0f) * transform.forward; }
-                        Debug.Log(ledgeMovingDirection + ", " + moveVector);
-                        characterController.Move(moveVector * 0.8f * Time.deltaTime);
+
+                        if (ledgeMovingDirection == Vector3.right) {
+                            ledgeGrabber.MoveAlongEdge(transform.position + characterController.center, Quaternion.Euler(0f, 90f, 0f) * transform.forward, 1f * Time.deltaTime, Vector3.right);
+                        }
+                        else if (ledgeMovingDirection == Vector3.left) {
+                            ledgeGrabber.MoveAlongEdge(transform.position + characterController.center, Quaternion.Euler(0f, -90f, 0f) * transform.forward, 1f * Time.deltaTime, Vector3.left);
+                        }
                         ledgeMovingDirection = Vector3.zero;
-                        ledgeGrabber.closestLedgePoint = LedgeGrabber.ProjectOnLedgeEdge(transform.position, ledgeGrabber.ledgeEdge);
                     }
 
                     //Rotar hacia la ladera
-                    ForceRotateTowards((LedgeGrabber.ProjectOnLedgeEdge(transform.position, ledgeGrabber.ledgeEdge) - transform.position).normalized);
+                    ForceRotateTowards((LedgeGrabber.ProjectOnLedgeEdge(transform.position, ledgeGrabber.ledgeEdge) - transform.position).normalized, 20000f * Time.deltaTime);
 
                     //Pegar el punto de agarrado a la ladera
                     transform.position = ledgeGrabber.closestLedgePoint - transform.rotation * ledgeGrabber.grabPoint;
-
-                    //CheckForJump();
-                    if (jump) {
-                        climbing = true;
-                    }
                     break;
                 }
 
@@ -251,7 +249,7 @@ public class Character : MonoBehaviour {
         inputVector = inputVector + direction;
 
         if (direction != Vector3.zero) {
-            RotateTowards(direction);
+            RotateTowards(direction, 400f * Time.deltaTime);
             walking = true;
         }
     }
@@ -288,15 +286,15 @@ public class Character : MonoBehaviour {
         }
     }
 
-    public void RotateTowards(Vector3 direction) {
+    public void RotateTowards(Vector3 direction, float speed) {
         if (state == State.OnGround || state == State.OnAir) {
-            ForceRotateTowards(direction);
+            ForceRotateTowards(direction, speed);
         }
     }
 
-    public void ForceRotateTowards(Vector3 direction) {
+    public void ForceRotateTowards(Vector3 direction, float speed) {
         Vector3 procesedDirection = new Vector3(direction.x, 0f, direction.z);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(procesedDirection), 400f * Time.deltaTime);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(procesedDirection), speed);
     }
 
     public void SetFeet(Vector3 pos) {

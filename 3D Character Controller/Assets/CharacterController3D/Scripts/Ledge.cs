@@ -309,6 +309,17 @@ public class Ledge : MonoBehaviour {
         return temp.ToArray();
     }
 
+    public LedgeEdge GetEdge(LedgeNode x, LedgeNode y) {
+        //Debug.Log("x = " + x.id + ", y = " + y.id);
+        foreach (LedgeEdge edge in ledgeEdges) {
+            //Debug.Log(edge.a.id + ", " + edge.b.id);
+            if ((edge.a.id == x.id && edge.b.id == y.id) || (edge.a.id == y.id && edge.b.id == x.id)) {
+                return edge; 
+            }
+        }
+        return null;
+    }
+
     void ReplaceNodesInTriangles(LedgeNode toReplace, LedgeNode toKeep) {
         //Debug.Log("Voy a reemplazar el nodo " + toReplace.id + " por el nodo " + toKeep.id);
         for (int x = 0; x < ledgeTriangles.Count; x++) {
