@@ -10,13 +10,15 @@ public class Character : MonoBehaviour {
     public State state;
 
     [Header("Walking and Running")]
-    public float walkSpeed = 2f;
-    public float runMultiplier = 2f;
+    public float speed = 2f;
     public float jumpForce = 0.17f;
     public LayerMask mask;
 
     [Header("Rolling")]
     public float rollForwardSpeed = 1f;
+
+    [Header("Ledge Climbing")]
+    public bool handIK = false;
 
     [Header("Debug")]
     public bool grounded = false;
@@ -24,10 +26,9 @@ public class Character : MonoBehaviour {
     public bool running = false;
     public bool climbing = false;
     public float yForce = 0f, xForce = 0f;
+    public Vector3 velocity;
 
-    //Estados
-    CharacterState currentState;
-    CharacterState previousState;
+    public CharacterStateInfo stateInfo;
 
     //Información del entorno
     public float groundHeight;
@@ -51,21 +52,26 @@ public class Character : MonoBehaviour {
 
     void Update() {
 
-        UpdateAnimator();
+        //Guardar la posicion inicial para calcular la velocidad al final
+        Vector3 initPos = transform.position;
 
         switch (state) {
             //SUELO O AIRE
             case State.OnGround:
             case State.OnAir: {
+
+                    //Activar el CharacterController de Unity
+                    characterController.enabled = true;
+
                     CheckGroundHeight();
                     ApplyGravity();
                     CheckForJump();
                     CalculateMoveVector();
 
                     //Mover el CharacterController y detectar si está en el piso (es necesario moverlo primero por cosas de Unity)
-                    characterController.Move(moveVector + inputVector * walkSpeed * Time.deltaTime);
+                    characterController.Move(moveVector + inputVector * speed * Time.deltaTime);
                     grounded = characterController.isGrounded;
-                    if (grounded) { state = State.OnGround; } else { state = State.OnAir; }
+                    if (grounded) { state = State.OnGround; stateInfo.grounded = true; } else { state = State.OnAir; stateInfo.grounded = false; }
 
                     //Si el personaje está en el aire y tratando de moverse
                     if (state == State.OnAir && inputVector != Vector3.zero && yForce <= 0f) {
@@ -80,7 +86,10 @@ public class Character : MonoBehaviour {
 
             //AGARRADO DE UNA LADERA
             case State.OnLedge: {
-                    
+
+                    //Desactivar el CharacterController de Unity
+                    characterController.enabled = false;
+
                     //Moverse por la ladera de ser necesario
                     if(ledgeMovingDirection != Vector3.zero) {
 
@@ -98,6 +107,7 @@ public class Character : MonoBehaviour {
 
                     //Pegar el punto de agarrado a la ladera
                     transform.position = ledgeGrabber.closestLedgePoint - transform.rotation * ledgeGrabber.grabPoint;
+
                     break;
                 }
 
@@ -131,7 +141,7 @@ public class Character : MonoBehaviour {
                     inputVector = Vector3.zero;
 
                     //Mover el CharacterController y detectar si está en el piso (es necesario moverlo primero por cosas de Unity)
-                    characterController.Move(moveVector + inputVector * walkSpeed * Time.deltaTime);
+                    characterController.Move(moveVector + inputVector * speed * Time.deltaTime);
                     grounded = characterController.isGrounded;
                     if (grounded) { state = State.Rolling; } else { state = State.OnAir; }
 
@@ -143,8 +153,30 @@ public class Character : MonoBehaviour {
                 }
         }
 
+        UpdateAnimator();
+
+        //Resetear todo lo que se tiene que resetear
+        if (inputVector == Vector3.zero) { stateInfo.forwardMove = Mathf.MoveTowards(stateInfo.forwardMove, 0f, 2f * Time.deltaTime); }
         moveVector = Vector3.zero;
         inputVector = Vector3.zero;
+
+        //Calcular la velocidad
+        velocity = transform.position - initPos;
+    }
+
+    #region Acciones Internas
+
+    void OnAnimatorIK(int layerIndex) {
+        //Pegar las manos a la ladera mediante IK
+        if (handIK && state == State.ClimbingLedge) {
+            animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1f); animator.SetIKRotationWeight(AvatarIKGoal.RightHand, 1f);
+            animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1f); animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, 1f);
+            animator.SetIKPosition(AvatarIKGoal.RightHand, ledgeGrabber.closestLedgePoint + Quaternion.Euler(0f, 90f, 0f) * transform.forward * ledgeGrabber.handSeparation);
+            animator.SetIKPosition(AvatarIKGoal.LeftHand, ledgeGrabber.closestLedgePoint + Quaternion.Euler(0f, -90f, 0f) * transform.forward * ledgeGrabber.handSeparation);
+        } else {
+            animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 0f); animator.SetIKRotationWeight(AvatarIKGoal.RightHand, 0f);
+            animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 0f); animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, 0f);
+        }
     }
 
     void ApplyGravity() {
@@ -160,7 +192,7 @@ public class Character : MonoBehaviour {
     void CheckGroundHeight() {
 
         //Detectar la altura del piso
-        RaycastHit hit = RaycastPastItself(transform.position + characterController.center, Vector3.down, characterController.height / 2f + 4f, mask);
+        RaycastHit hit = RaycastUtil.RaycastPastItself(gameObject, transform.position + characterController.center, Vector3.down, characterController.height / 2f + 4f, mask);
         if (hit.collider != null) {
             groundHeight = hit.point.y;
         } else {
@@ -181,58 +213,7 @@ public class Character : MonoBehaviour {
     }
 
     void UpdateAnimator() {
-
-        /*Debido a la cantidad de estados que planeo implementar en el animator, decidí controlar
-         las transiciones desde el script. Aun así uso un animator porque creo que hace la tarea
-         de cambiar animaciones más facil. En el Animator hay varios parametros booleanos, pero
-         solo uno puede estar activo a la vez; de esta manera, activo la animación que yo quiera
-         desde script.*/
-
-        //Poner todos los bools de animator a false
-        SetAllAnimatorBoolsToFalse();
-
-        switch (state) {
-            case State.OnGround: {
-                    animator.applyRootMotion = true;
-                    if (running) {
-                        animator.SetBool("running", true);
-                    } else if (walking) {
-                        animator.SetBool("walking", true);
-                    } else {
-                        animator.SetBool("idle", true);
-                    }
-                    break;
-                }
-            case State.OnAir: {
-                    animator.applyRootMotion = false;
-                    animator.SetBool("falling", true);
-                    break;
-                }
-            case State.OnLedge: {
-                    animator.applyRootMotion = false;
-                    if (ledgeMovingDirection == Vector3.zero) {
-                        animator.SetBool("hanging", true);
-                        animator.SetFloat("ledgeMovingDirection", 0f);
-                    } 
-                    else {
-                        animator.SetBool("movingAlongEdge", true);
-                        animator.SetFloat("ledgeMovingDirection", ledgeMovingDirection.x);
-                    }
-                    break;
-                }
-            case State.ClimbingLedge: {
-                    animator.applyRootMotion = true;
-                    animator.SetBool("climbing", true);
-                    break;
-                }
-            case State.Rolling: {
-                    animator.applyRootMotion = false;
-                    animator.SetBool("rolling", true);
-                    break;
-                }
-        }
-
-        walking = false; running = false;
+        stateInfo.UpdateToAnimator(animator);
     }
 
     void SetAllAnimatorBoolsToFalse() {
@@ -243,24 +224,16 @@ public class Character : MonoBehaviour {
         }
     }
 
+    #endregion
+
     #region Acciones Básicas
 
-    public void Walk(Vector3 direction) {
-        inputVector = inputVector + direction;
-
-        if (direction != Vector3.zero) {
-            RotateTowards(direction, 400f * Time.deltaTime);
-            walking = true;
-        }
-    }
-
-    public void Run(Vector3 direction) {
-        direction = direction * runMultiplier;
-        Walk(direction);
-
-        if (direction != Vector3.zero) {
-            running = true;
-        }
+    public void Move(Vector3 direction, float speed) {
+        inputVector = direction.normalized * speed;
+        Vector3 i = transform.InverseTransformDirection(inputVector);
+        stateInfo.forwardMove = Mathf.MoveTowards(stateInfo.forwardMove, i.z, 2f * Time.deltaTime);
+        //stateInfo.forwardMove = i.z;
+        stateInfo.rightMove = i.x;
     }
 
     public void Jump() {
@@ -294,6 +267,7 @@ public class Character : MonoBehaviour {
 
     public void ForceRotateTowards(Vector3 direction, float speed) {
         Vector3 procesedDirection = new Vector3(direction.x, 0f, direction.z);
+        //Debug.Log("Procesed Dir = " + procesedDirection + ", Raw dir = " + direction);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(procesedDirection), speed);
     }
 
@@ -310,25 +284,34 @@ public class Character : MonoBehaviour {
 
     #endregion
 
-    //Este metodo es para hacer un Raycast ignorando el colisionador de este mismo objeto
-    RaycastHit RaycastPastItself(Vector3 startPos, Vector3 direction, float lenght, LayerMask mask) {
-        RaycastHit[] rayHits = Physics.RaycastAll(startPos, direction, lenght, mask);
-        foreach (RaycastHit hit in rayHits) {
-            if (hit.collider.gameObject != gameObject) {
-                return hit;
-            }
-        }
-        return new RaycastHit();
-    }
-
     public enum State { OnGround, OnAir, OnLedge, Rolling, ClimbingLedge, Dead }
 }
 
-public class CharacterState {
-    public bool grounded = false;
+[System.Serializable]
+public class CharacterStateInfo {
+    public float forwardMove;
+    public float rightMove;
+    public float ledgeMove;
+
+    public bool grounded;
     public float groundHeight = float.MinValue;
 
-    public CharacterState() {
+    public bool onLedge;
 
+    public CharacterStateInfo() {
+
+    }
+
+    public void UpdateToAnimator(Animator anim) {
+        anim.SetFloat("forwardMove", forwardMove);
+        anim.SetFloat("rightMove", rightMove);
+        anim.SetFloat("ledgeMove", ledgeMove);
+        anim.SetBool("grounded", grounded);
+    }
+
+    public void Reset() {
+        forwardMove = 0f;
+        rightMove = 0f;
+        ledgeMove = 0f;
     }
 }

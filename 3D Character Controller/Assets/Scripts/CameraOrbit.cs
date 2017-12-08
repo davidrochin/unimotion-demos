@@ -24,11 +24,12 @@ public class CameraOrbit : MonoBehaviour {
         //Obtener el objetivo real (sumarle el offset)
         Vector3 realTarget = target.position + targetOffset;
 
-        //Obtener un vector a partir del movimiento del mouse
-        Vector3 input = new Vector3(Input.GetAxis("Mouse X") , Input.GetAxis("Mouse Y"), 0f);
+        //Obtener un vector a partir del movimiento del mouse y del Joystick
+        Vector3 input = new Vector3(Input.GetAxis("Mouse X") , -Input.GetAxis("Mouse Y"), 0f);
+        input = input + new Vector3(Input.GetAxis("Camera Horizontal") * 2f, Input.GetAxis("Camera Vertical") * 2f, 0f);
 
         Quaternion finalRotation = Quaternion.Euler(
-            transform.rotation.eulerAngles.x + input.y * Time.deltaTime * orbitSpeed * -1f, 
+            transform.rotation.eulerAngles.x + input.y * Time.deltaTime * orbitSpeed, 
             transform.rotation.eulerAngles.y + input.x * Time.deltaTime * orbitSpeed, 
             0f);
         transform.localRotation = finalRotation;

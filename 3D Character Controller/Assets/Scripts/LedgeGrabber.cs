@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class LedgeGrabber : MonoBehaviour {
 
+    [Header("Hands")]
+    [Tooltip("Define que tan separadas estarán las manos del punto de agarrado.")]
+    public float handSeparation = 0.4f;
+
+    [Header("Debug")]
     public bool canGrab = true;
 
     public Vector3 grabPoint;
@@ -135,13 +140,20 @@ public class LedgeGrabber : MonoBehaviour {
 
     private void OnDrawGizmosSelected() {
 
+        //Calcular el punto de agarrado real
+        Vector3 realGrabPoint = transform.position + transform.rotation * grabPoint;
+
         //Dibujar el punto de agarrado
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position + transform.rotation * grabPoint, 0.05f);
 
+        //Dibujar la separación desde el punto de agarrado
+        Gizmos.DrawLine(realGrabPoint, realGrabPoint + Quaternion.Euler(0f, 90f, 0f) * transform.forward * handSeparation);
+        Gizmos.DrawLine(realGrabPoint, realGrabPoint + Quaternion.Euler(0f, -90f, 0f) * transform.forward * handSeparation);
+
         //Dibujar una linea del punto de agarrado hacia la ladera más cercana
         if (inLedgeRange) {
-            Gizmos.DrawLine(transform.position + transform.rotation * grabPoint, closestLedgePoint);
+            Gizmos.DrawLine(realGrabPoint, closestLedgePoint);
         }
     }
 }

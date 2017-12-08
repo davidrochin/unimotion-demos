@@ -14,12 +14,18 @@ public class CharacterControl : MonoBehaviour {
 	
 	void Update () {
 
-        if (Input.GetKey(KeyCode.LeftShift)) {
-            character.Run(GetInputVector());
-        } else {
-            character.Walk(GetInputVector());
+        //Caminar y correr
+        if(character.state == Character.State.OnGround || character.state == Character.State.OnAir) {
+            if (GetInputVector() != Vector3.zero) {
+                character.RotateTowards(GetInputVector(), 400f * Time.deltaTime);
+                float speed = Vector3.ClampMagnitude(GetInputVector(), 1f).magnitude;
+                if (Input.GetButton("Walk")) { speed = Mathf.Clamp(speed, 0f, 0.5f); } 
+                else { speed = Mathf.Clamp(speed, 0.4f, 1f); }
+                character.Move(transform.forward, speed);
+            }
         }
 
+        //Movimiento sobre ladera
         if (character.state == Character.State.OnLedge) {
             if (Input.GetAxisRaw("Horizontal") > 0f) {
                 character.LedgeMove(Vector3.right);
@@ -28,7 +34,7 @@ public class CharacterControl : MonoBehaviour {
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        if (Input.GetButtonDown("Jump")) {
             if(character.state == Character.State.OnLedge) {
                 character.Climb();
             } else {
@@ -52,10 +58,10 @@ public class CharacterControl : MonoBehaviour {
         }
 
         //Transformar la direccion para que sea relativa a la camara.
-        Vector3 transDirection = Camera.main.transform.TransformDirection(input).normalized;
+        Vector3 transDirection = Camera.main.transform.TransformDirection(input);
 
         //Hacer que el Vector no apunte hacia arriba.
-        transDirection = new Vector3(transDirection.x, 0f, transDirection.z).normalized;
+        transDirection = new Vector3(transDirection.x, 0f, transDirection.z);
         return transDirection;
     }
 

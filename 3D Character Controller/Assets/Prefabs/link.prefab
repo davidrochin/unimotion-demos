@@ -1371,7 +1371,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1907029367653570}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -1, z: -0, w: -0.0000016689298}
   m_LocalPosition: {x: 3.1918335, y: 1.998, z: 2.509}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1396,7 +1396,7 @@ Transform:
   - {fileID: 4553568511322656}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -179.99998, z: 0}
 --- !u!4 &4323770871911082
 Transform:
   m_ObjectHideFlags: 1
@@ -2132,6 +2132,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 200318b9f522e5249b6a72c873e28d66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  handSeparation: 0.35
+  canGrab: 1
   grabPoint: {x: 0, y: 1.92, z: 0.27}
   grabMaxDistance: 0.3
   closestLedgePoint: {x: 0, y: 0, z: 0}
@@ -2163,18 +2165,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: 0
-  walkSpeed: 2
-  runMultiplier: 3
-  jumpForce: 6
+  speed: 6
+  jumpForce: 5
   mask:
     serializedVersion: 2
     m_Bits: 1
   rollForwardSpeed: 4
+  handIK: 1
   grounded: 1
   walking: 0
   running: 0
+  climbing: 0
   yForce: 0
   xForce: 0
+  velocity: {x: 0, y: 0, z: 0}
+  stateInfo:
+    forwardMove: 0
+    rightMove: 0
+    ledgeMove: 0
+    grounded: 0
+    groundHeight: -3.4028235e+38
+    onLedge: 0
   groundHeight: 0
 --- !u!137 &137110971551963762
 SkinnedMeshRenderer:
