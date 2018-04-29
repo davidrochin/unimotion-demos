@@ -252,6 +252,7 @@ ModelImporter:
     100488: body_a
     100490: outfit_araragi
     100492: hair_araragi
+    100494: Plane
     400000: //RootNode
     400002: body
     400004: face
@@ -499,12 +500,15 @@ ModelImporter:
     400488: body_a
     400490: outfit_araragi
     400492: hair_araragi
+    400494: Plane
     2300000: //RootNode
     2300002: body
     2300004: face
+    2300006: Plane
     3300000: //RootNode
     3300002: body
     3300004: face
+    3300006: Plane
     4300000: Cube
     4300002: body
     4300004: face
@@ -515,6 +519,7 @@ ModelImporter:
     4300014: body_a
     4300016: outfit_araragi
     4300018: hair_araragi
+    4300020: Plane
     7400000: Armature|Fall
     7400002: Armature|Fall.001
     7400004: Armature|Run
@@ -535,6 +540,9 @@ ModelImporter:
     7400034: man_running_forward
     7400036: man_tpose
     7400038: man_idle
+    7400040: man_hanging_idle
+    7400042: man_falling
+    7400044: man_hanging_climb
     9500000: //RootNode
     13700000: body
     13700002: hair_link
@@ -565,7 +573,16 @@ ModelImporter:
     rigImportErrors: 
     rigImportWarnings: 
     animationImportErrors: 
-    animationImportWarnings: 
+    animationImportWarnings: "\nClip 'Armature|man_hanging_climb' has import animation
+      warnings that might lower retargeting quality:\nNote: Activate translation DOF
+      on avatar to improve retargeting quality.\n\t'Chest' is inbetween humanoid transforms
+      and has rotation animation that will be discarded.\n\t'UpperLeg.L' has scale
+      animation that will be discarded.\n\t'Foot.L' has scale animation that will
+      be discarded.\n\t'UpperLeg.R' has scale animation that will be discarded.\n\nClip
+      'Armature|man_running_forward' has import animation warnings that might lower
+      retargeting quality:\nNote: Activate translation DOF on avatar to improve retargeting
+      quality.\n\t'Chest' is inbetween humanoid transforms and has rotation animation
+      that will be discarded.\n"
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -637,6 +654,34 @@ ModelImporter:
       name: man_idle
       takeName: Armature|man_idle
       firstFrame: 0
+      lastFrame: 36
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: man_hanging_idle
+      takeName: Armature|man_hanging_idle
+      firstFrame: 0
       lastFrame: 1
       wrapMode: 0
       orientationOffsetY: 0
@@ -649,6 +694,62 @@ ModelImporter:
       loopBlendOrientation: 1
       loopBlendPositionY: 1
       loopBlendPositionXZ: 1
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: man_falling
+      takeName: Armature|man_falling
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: man_hanging_climb
+      takeName: Armature|man_hanging_climb
+      firstFrame: 0
+      lastFrame: 59
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
       keepOriginalOrientation: 0
       keepOriginalPositionY: 1
       keepOriginalPositionXZ: 0

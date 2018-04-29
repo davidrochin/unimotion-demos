@@ -60,6 +60,8 @@ public class Character : MonoBehaviour {
             case State.OnGround:
             case State.OnAir: {
 
+                    stateInfo.onLedge = false;
+
                     //Activar el CharacterController de Unity
                     characterController.enabled = true;
 
@@ -87,6 +89,8 @@ public class Character : MonoBehaviour {
             //AGARRADO DE UNA LADERA
             case State.OnLedge: {
 
+                    stateInfo.onLedge = true;
+
                     //Desactivar el CharacterController de Unity
                     characterController.enabled = false;
 
@@ -113,19 +117,9 @@ public class Character : MonoBehaviour {
 
             //ESCALANDO UN BORDE
             case State.ClimbingLedge: {
-                    climbTimer += Time.deltaTime;
+
                     characterController.enabled = false;
 
-                    //Revisar si ya se acabó la animación
-                    if (climbTimer >= animator.GetCurrentAnimatorStateInfo(0).length) {
-                        state = State.OnGround;
-
-                        CheckGroundHeight();
-                        if (groundHeight != float.MinValue) {
-                            SetFeet(new Vector3(transform.position.x, groundHeight, transform.position.z));
-                        }
-                        characterController.enabled = true;
-                    }
                     break;
                 }
 
@@ -247,7 +241,7 @@ public class Character : MonoBehaviour {
     public void Climb() {
         if (state == State.OnLedge) {
             state = State.ClimbingLedge;
-            climbTimer = 0f;
+            animator.SetTrigger("climbLedge");
         }
     }
 
@@ -307,6 +301,7 @@ public class CharacterStateInfo {
         anim.SetFloat("rightMove", rightMove);
         anim.SetFloat("ledgeMove", ledgeMove);
         anim.SetBool("grounded", grounded);
+        anim.SetBool("onLedge", onLedge);
     }
 
     public void Reset() {
