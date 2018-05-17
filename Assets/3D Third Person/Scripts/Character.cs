@@ -4,8 +4,6 @@
 [RequireComponent(typeof(CharacterController))]
 public class Character : MonoBehaviour {
 
-    public State state;
-
     [Header("Movement")]
 
     [Range(0.01f, 10f)]
@@ -17,13 +15,11 @@ public class Character : MonoBehaviour {
     public LayerMask mask;
     public float rollSpeed = 1f;
 
-    [Header("Locks")]
-    public CharacterLockState lockState;
-
     [Header("Debug")]
     public bool grounded = false;
     public bool walking = false;
     public bool running = false;
+    public bool rolling = false;
     public float yForce = 0f, xForce = 0f;
     public Vector3 velocity;
 
@@ -34,6 +30,10 @@ public class Character : MonoBehaviour {
 
     //Triggers
     bool jump;
+
+    //Events
+    public Action OnJump;
+    public Action OnHighFall;
 
     Vector3 moveVector;
     Vector3 inputVector;
@@ -49,73 +49,38 @@ public class Character : MonoBehaviour {
 
     void Update() {
 
-        //Guardar la posicion inicial para calcular la velocidad al final
+        //Save initial position to calculate velocity later
         Vector3 initPos = transform.position;
 
-        switch (state) {
-            //SUELO O AIRE
-            case State.OnGround:
-            case State.OnAir: {
+        CheckGroundHeight();
+        ApplyGravity();
+        CheckForJump();
+        CalculateMoveVector();
 
-                    //Activar el CharacterController de Unity
-                    characterController.enabled = true;
+        //Move Unity's CharacterController and detect if it is grounded (it's necessary to move first, because Unity)
+        characterController.Move(moveVector + inputVector * speed * Time.deltaTime);
+        grounded = characterController.isGrounded;
+        if (grounded) { stateInfo.grounded = true; } else { stateInfo.grounded = false; }
 
-                    CheckGroundHeight();
-                    ApplyGravity();
-                    CheckForJump();
-                    CalculateMoveVector();
+        //IF ROLLING
+        if (rolling) {
+            rollTimer += Time.deltaTime;
 
-                    //Mover el CharacterController y detectar si está en el piso (es necesario moverlo primero por cosas de Unity)
-                    characterController.Move(moveVector + inputVector * speed * Time.deltaTime);
-                    grounded = characterController.isGrounded;
-                    if (grounded) { state = State.OnGround; stateInfo.grounded = true; } else { state = State.OnAir; stateInfo.grounded = false; }
+            CheckGroundHeight();
+            ApplyGravity();
+            CalculateMoveVector();
 
-                    //Si el personaje está en el aire y tratando de moverse
-                    /*if (state == State.OnAir && inputVector != Vector3.zero && yForce <= 0f) {
-                        ledgeGrabber.GetClosestLedgePoint();
-                        if (ledgeGrabber.inLedgeRange) {
-                            transform.position = ledgeGrabber.closestLedgePoint - transform.rotation * ledgeGrabber.grabPoint;
-                            state = State.OnLedge;
-                        }
-                    }*/
-                    break;
-                }
+            moveVector += transform.forward * rollSpeed * Time.deltaTime;
+            inputVector = Vector3.zero;
 
-            //ESCALANDO UN BORDE
-            case State.ClimbingLedge: {
+            //Mover el CharacterController y detectar si está en el piso (es necesario moverlo primero por cosas de Unity)
+            characterController.Move(moveVector + inputVector * speed * Time.deltaTime);
+            grounded = characterController.isGrounded;
+            //if (grounded) { state = State.Rolling; } else { state = State.OnAir; }
 
-                    characterController.enabled = false;
-
-                    break;
-                }
-
-            //RODANDO
-            case State.Rolling: {
-                    rollTimer += Time.deltaTime;
-
-                    CheckGroundHeight();
-                    ApplyGravity();
-                    CalculateMoveVector();
-
-                    moveVector += transform.forward * rollSpeed * Time.deltaTime;
-                    inputVector = Vector3.zero;
-
-                    //Mover el CharacterController y detectar si está en el piso (es necesario moverlo primero por cosas de Unity)
-                    characterController.Move(moveVector + inputVector * speed * Time.deltaTime);
-                    grounded = characterController.isGrounded;
-                    if (grounded) { state = State.Rolling; } else { state = State.OnAir; }
-
-                    //Revisar si ya se acabó la animacion
-                    if (rollTimer >= animator.GetCurrentAnimatorStateInfo(0).length) {
-                        state = State.OnGround;
-                    }
-                    break;
-                }
-
-            //DEAD
-            case State.Dead: {
-                    
-                    break;
+            //Revisar si ya se acabó la animacion
+            if (rollTimer >= animator.GetCurrentAnimatorStateInfo(0).length) {
+                //state = State.OnGround;
             }
         }
 
@@ -144,7 +109,7 @@ public class Character : MonoBehaviour {
 
     void CheckGroundHeight() {
 
-        //Detectar la altura del piso
+        //Measure how high is the floor
         RaycastHit hit = RaycastUtil.RaycastPastItself(gameObject, transform.position + characterController.center, Vector3.down, characterController.height / 2f + 4f, mask);
         if (hit.collider != null) {
             groundHeight = hit.point.y;
@@ -169,14 +134,6 @@ public class Character : MonoBehaviour {
         stateInfo.UpdateToAnimator(animator);
     }
 
-    void SetAllAnimatorBoolsToFalse() {
-        for (int x = 0; x < animator.parameterCount; x++) {
-            if (animator.parameters[x].type == AnimatorControllerParameterType.Bool) {
-                animator.SetBool(animator.parameters[x].nameHash, false);
-            }
-        }
-    }
-
     #endregion
 
     #region Acciones Básicas
@@ -190,32 +147,21 @@ public class Character : MonoBehaviour {
     }
 
     public void Jump() {
-        if (state == State.OnGround) {
+        if (grounded) {
             jump = true;
-            state = State.OnAir;
-        }
-    }
-
-    float climbTimer = 0f;
-    public void Climb() {
-        if (state == State.OnLedge) {
-            state = State.ClimbingLedge;
-            animator.SetTrigger("climbLedge");
         }
     }
 
     float rollTimer = 0f;
     public void Roll() {
-        if (state == State.OnGround) {
-            state = State.Rolling;
+        if (grounded) {
+            rolling = true;
             rollTimer = 0f;
         }
     }
 
     public void RotateTowards(Vector3 direction, float speed) {
-        if (state == State.OnGround || state == State.OnAir) {
-            ForceRotateTowards(direction, speed);
-        }
+        ForceRotateTowards(direction, speed);
     }
 
     public void ForceRotateTowards(Vector3 direction, float speed) {
@@ -267,14 +213,4 @@ public class CharacterStateInfo {
     }
 }
 
-[System.Serializable]
-public class CharacterLockState {
-    public bool canMove = true;
-    public bool canTurn = true;
-    public bool canJump = true;
-    public bool canRoll = true;
-
-    public CharacterLockState() {
-
-    }
-}
+public delegate void Action();

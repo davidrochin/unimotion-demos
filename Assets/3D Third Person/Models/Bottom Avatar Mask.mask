@@ -1,0 +1,178 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Bottom Avatar Mask
+  m_Mask: 01000000000000000000000001000000010000000000000000000000000000000000000001000000010000000000000000000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: Armature
+    m_Weight: 1
+  - m_Path: Armature/HandIK.L
+    m_Weight: 1
+  - m_Path: Armature/HandIK.L/HandIK.L_end
+    m_Weight: 1
+  - m_Path: Armature/HandIK.R
+    m_Weight: 1
+  - m_Path: Armature/HandIK.R/HandIK.R_end
+    m_Weight: 1
+  - m_Path: Armature/HandPoleTarget.L
+    m_Weight: 1
+  - m_Path: Armature/HandPoleTarget.L/HandPoleTarget.L_end
+    m_Weight: 1
+  - m_Path: Armature/HandPoleTarget.R
+    m_Weight: 1
+  - m_Path: Armature/HandPoleTarget.R/HandPoleTarget.R_end
+    m_Weight: 1
+  - m_Path: Armature/LegIK.L
+    m_Weight: 1
+  - m_Path: Armature/LegIK.L/LegIK.L_end
+    m_Weight: 1
+  - m_Path: Armature/LegIK.R
+    m_Weight: 1
+  - m_Path: Armature/LegIK.R/LegIK.R_end
+    m_Weight: 1
+  - m_Path: Armature/PoleTarget.L
+    m_Weight: 1
+  - m_Path: Armature/PoleTarget.L/PoleTarget.L_end
+    m_Weight: 1
+  - m_Path: Armature/PoleTarget.R
+    m_Weight: 1
+  - m_Path: Armature/PoleTarget.R/PoleTarget.R_end
+    m_Weight: 1
+  - m_Path: Armature/Root
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/UpperLeg.L
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/UpperLeg.L/LowerLeg.L
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/UpperLeg.L/LowerLeg.L/Foot.L
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/UpperLeg.L/LowerLeg.L/Foot.L/Toe.L
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/UpperLeg.L/LowerLeg.L/Foot.L/Toe.L/Toe.L_end
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/UpperLeg.R
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/UpperLeg.R/LowerLeg.R
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/UpperLeg.R/LowerLeg.R/Foot.R
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/UpperLeg.R/LowerLeg.R/Foot.R/Toe.R
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/UpperLeg.R/LowerLeg.R/Foot.R/Toe.R/Toe.R_end
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Neck
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Neck/Head
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Neck/Head/Head_end
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L/UpperArm.L
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L/UpperArm.L/LowerArm.L
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/IndexProximal.L
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/IndexProximal.L/IndexIntermediate.L
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/IndexProximal.L/IndexIntermediate.L/IndexDistal.L
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/IndexProximal.L/IndexIntermediate.L/IndexDistal.L/IndexDistal.L_end
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/LittleProximal.L
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/LittleProximal.L/LittleIntermediate.L
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/LittleProximal.L/LittleIntermediate.L/LittleDistal.L
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/LittleProximal.L/LittleIntermediate.L/LittleDistal.L/LittleDistal.L_end
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/MiddleProximal.L
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/MiddleProximal.L/MiddleIntermediate.L
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/MiddleProximal.L/MiddleIntermediate.L/MiddleDistal.L
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/MiddleProximal.L/MiddleIntermediate.L/MiddleDistal.L/MiddleDistal.L_end
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/RingProximal.L
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/RingProximal.L/RingIntermediate.L
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/RingProximal.L/RingIntermediate.L/RingDistal.L
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/RingProximal.L/RingIntermediate.L/RingDistal.L/RingDistal.L_end
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/ThumbProximal.L
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/ThumbProximal.L/ThumbIntermediate.L
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/ThumbProximal.L/ThumbIntermediate.L/Thumb.L
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/ThumbProximal.L/ThumbIntermediate.L/Thumb.L/Thumb.L_end
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/IndexProximal.R
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/IndexProximal.R/IndexIntermediate.R
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/IndexProximal.R/IndexIntermediate.R/IndexDistal.R
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/IndexProximal.R/IndexIntermediate.R/IndexDistal.R/IndexDistal.R_end
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/LittleProximal.R
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/LittleProximal.R/LittleIntermediate.R
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/LittleProximal.R/LittleIntermediate.R/LittleDistal.R
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/LittleProximal.R/LittleIntermediate.R/LittleDistal.R/LittleDistal.R_end
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/MiddleProximal.R
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/MiddleProximal.R/MiddleIntermediate.R
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/MiddleProximal.R/MiddleIntermediate.R/MiddleDistal.R
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/MiddleProximal.R/MiddleIntermediate.R/MiddleDistal.R/MiddleDistal.R_end
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/RingProximal.R
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/RingProximal.R/RingIntermediate.R
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/RingProximal.R/RingIntermediate.R/RingDistal.R
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/RingProximal.R/RingIntermediate.R/RingDistal.R/RingDistal.R_end
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/ThumbProximal.R
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/ThumbProximal.R/ThumbIntermediate.R
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/ThumbProximal.R/ThumbIntermediate.R/Thumb.R
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/ThumbProximal.R/ThumbIntermediate.R/Thumb.R/Thumb.R_end
+    m_Weight: 1
+  - m_Path: body
+    m_Weight: 1

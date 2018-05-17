@@ -13,4 +13,12 @@ namespace Util {
         }
 
     }
+
+    public class Physics {
+
+        public static RaycastHit CapsuleCastPastItself(Vector3 point1, Vector3 point2, float radius, Vector3 direction) {
+            return new RaycastHit();
+        }
+
+    }
 }

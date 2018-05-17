@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c330ccf90db0fa94e9f2efc0ac00cca0, type: 3}
+  m_Name: Small Sword
+  m_EditorClassIdentifier: 
+  name: Small Sword
+  description: A little sword made for testing.
+  cost: 300
+  prefab: {fileID: 1098723971400448, guid: 4d444026f95ef1b4ca515656aa26cefb, type: 2}
+  sprite: {fileID: 0}
+  damage: 70

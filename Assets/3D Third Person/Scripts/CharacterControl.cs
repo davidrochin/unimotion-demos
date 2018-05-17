@@ -4,46 +4,40 @@ using UnityEngine;
 
 public class CharacterControl : MonoBehaviour {
 
-    public InputType inputType;
+    public InputType inputType; 
 
+    public ControlLockState lockState;
+
+    //References
     Character character;
+    Equipment equipment;
 
-	void Awake () {
+    void Awake () {
         character = GetComponent<Character>();
-	}
+        equipment = GetComponent<Equipment>();
+    }
 	
 	void Update () {
 
         //Caminar y correr
-        if(character.state == Character.State.OnGround || character.state == Character.State.OnAir) {
-            if (GetInputVector() != Vector3.zero) {
-                character.RotateTowards(GetInputVector(), 400f * Time.deltaTime);
-                //float speed = Vector3.ClampMagnitude(GetInputVector(), 1f).magnitude;
-                //if (Input.GetButton("Walk")) { speed = Mathf.Clamp(speed, 0f, 0.5f); } 
-                //else { speed = Mathf.Clamp(speed, 0.4f, 1f); }
-                character.Move(transform.forward, GetInputMagnitude());
-            }
-        }
-
-        //Movimiento sobre ladera
-        if (character.state == Character.State.OnLedge) {
-            if (Input.GetAxisRaw("Horizontal") > 0f) {
-                character.LedgeMove(Vector3.right);
-            } else if (Input.GetAxisRaw("Horizontal") < 0f) {
-                character.LedgeMove(Vector3.left);
-            }
+        if (lockState.canMove && GetInputVector() != Vector3.zero) {
+            character.RotateTowards(GetInputVector(), 400f * Time.deltaTime);
+            //float speed = Vector3.ClampMagnitude(GetInputVector(), 1f).magnitude;
+            //if (Input.GetButton("Walk")) { speed = Mathf.Clamp(speed, 0f, 0.5f); } 
+            //else { speed = Mathf.Clamp(speed, 0.4f, 1f); }
+            character.Move(transform.forward, GetInputMagnitude());
         }
 
         if (Input.GetButtonDown("Jump")) {
-            if(character.state == Character.State.OnLedge) {
-                character.Climb();
-            } else {
-                character.Jump();
-            }
+            character.Jump();
         }
 
         if (Input.GetKeyDown(KeyCode.C)) {
             character.Roll();
+        }
+
+        if (Input.GetMouseButtonDown(0)) {
+            equipment.UseRightHandItem();
         }
 	}
 
@@ -83,4 +77,16 @@ public class CharacterControl : MonoBehaviour {
     }
 
     public enum InputType { Normal, Raw }
+}
+
+[System.Serializable]
+public class ControlLockState {
+    public bool canMove = true;
+    public bool canTurn = true;
+    public bool canJump = true;
+    public bool canRoll = true;
+
+    public ControlLockState() {
+
+    }
 }
