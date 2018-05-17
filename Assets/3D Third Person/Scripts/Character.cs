@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Networking;
+﻿using UnityEngine;
 
 [SelectionBase]
 [RequireComponent(typeof(CharacterController))]
@@ -9,22 +6,24 @@ public class Character : MonoBehaviour {
 
     public State state;
 
-    [Header("Walking and Running")]
-    public float speed = 2f;
-    public float jumpForce = 0.17f;
+    [Header("Movement")]
+
+    [Range(0.01f, 10f)]
+    public float speed = 5f;
+
+    [Range(1f, 10f)]
+    public float jumpForce = 5f;
+
     public LayerMask mask;
+    public float rollSpeed = 1f;
 
-    [Header("Rolling")]
-    public float rollForwardSpeed = 1f;
-
-    [Header("Ledge Climbing")]
-    public bool handIK = false;
+    [Header("Locks")]
+    public CharacterLockState lockState;
 
     [Header("Debug")]
     public bool grounded = false;
     public bool walking = false;
     public bool running = false;
-    public bool climbing = false;
     public float yForce = 0f, xForce = 0f;
     public Vector3 velocity;
 
@@ -46,8 +45,6 @@ public class Character : MonoBehaviour {
     void Awake() {
         characterController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
-        ledgeGrabber = GetComponent<LedgeGrabber>();
-        Debug.Log("Shift result = " + Vector3Util.Shift(Vector3.forward, Vector3.left));
     }
 
     void Update() {
@@ -59,8 +56,6 @@ public class Character : MonoBehaviour {
             //SUELO O AIRE
             case State.OnGround:
             case State.OnAir: {
-
-                    stateInfo.onLedge = false;
 
                     //Activar el CharacterController de Unity
                     characterController.enabled = true;
@@ -76,42 +71,13 @@ public class Character : MonoBehaviour {
                     if (grounded) { state = State.OnGround; stateInfo.grounded = true; } else { state = State.OnAir; stateInfo.grounded = false; }
 
                     //Si el personaje está en el aire y tratando de moverse
-                    if (state == State.OnAir && inputVector != Vector3.zero && yForce <= 0f) {
+                    /*if (state == State.OnAir && inputVector != Vector3.zero && yForce <= 0f) {
                         ledgeGrabber.GetClosestLedgePoint();
                         if (ledgeGrabber.inLedgeRange) {
                             transform.position = ledgeGrabber.closestLedgePoint - transform.rotation * ledgeGrabber.grabPoint;
                             state = State.OnLedge;
                         }
-                    }
-                    break;
-                }
-
-            //AGARRADO DE UNA LADERA
-            case State.OnLedge: {
-
-                    stateInfo.onLedge = true;
-
-                    //Desactivar el CharacterController de Unity
-                    characterController.enabled = false;
-
-                    //Moverse por la ladera de ser necesario
-                    if(ledgeMovingDirection != Vector3.zero) {
-
-                        if (ledgeMovingDirection == Vector3.right) {
-                            ledgeGrabber.MoveAlongEdge(transform.position + characterController.center, Quaternion.Euler(0f, 90f, 0f) * transform.forward, 1f * Time.deltaTime, Vector3.right);
-                        }
-                        else if (ledgeMovingDirection == Vector3.left) {
-                            ledgeGrabber.MoveAlongEdge(transform.position + characterController.center, Quaternion.Euler(0f, -90f, 0f) * transform.forward, 1f * Time.deltaTime, Vector3.left);
-                        }
-                        ledgeMovingDirection = Vector3.zero;
-                    }
-
-                    //Rotar hacia la ladera
-                    ForceRotateTowards((LedgeGrabber.ProjectOnLedgeEdge(transform.position, ledgeGrabber.ledgeEdge) - transform.position).normalized, 20000f * Time.deltaTime);
-
-                    //Pegar el punto de agarrado a la ladera
-                    transform.position = ledgeGrabber.closestLedgePoint - transform.rotation * ledgeGrabber.grabPoint;
-
+                    }*/
                     break;
                 }
 
@@ -131,7 +97,7 @@ public class Character : MonoBehaviour {
                     ApplyGravity();
                     CalculateMoveVector();
 
-                    moveVector += transform.forward * rollForwardSpeed * Time.deltaTime;
+                    moveVector += transform.forward * rollSpeed * Time.deltaTime;
                     inputVector = Vector3.zero;
 
                     //Mover el CharacterController y detectar si está en el piso (es necesario moverlo primero por cosas de Unity)
@@ -145,6 +111,12 @@ public class Character : MonoBehaviour {
                     }
                     break;
                 }
+
+            //DEAD
+            case State.Dead: {
+                    
+                    break;
+            }
         }
 
         UpdateAnimator();
@@ -159,19 +131,6 @@ public class Character : MonoBehaviour {
     }
 
     #region Acciones Internas
-
-    void OnAnimatorIK(int layerIndex) {
-        //Pegar las manos a la ladera mediante IK
-        if (handIK && state == State.ClimbingLedge) {
-            animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1f); animator.SetIKRotationWeight(AvatarIKGoal.RightHand, 1f);
-            animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1f); animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, 1f);
-            animator.SetIKPosition(AvatarIKGoal.RightHand, ledgeGrabber.closestLedgePoint + Quaternion.Euler(0f, 90f, 0f) * transform.forward * ledgeGrabber.handSeparation);
-            animator.SetIKPosition(AvatarIKGoal.LeftHand, ledgeGrabber.closestLedgePoint + Quaternion.Euler(0f, -90f, 0f) * transform.forward * ledgeGrabber.handSeparation);
-        } else {
-            animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 0f); animator.SetIKRotationWeight(AvatarIKGoal.RightHand, 0f);
-            animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 0f); animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, 0f);
-        }
-    }
 
     void ApplyGravity() {
         //Debug.Log("grounded=" + grounded + ", yForce=" + yForce);
@@ -285,12 +244,11 @@ public class Character : MonoBehaviour {
 public class CharacterStateInfo {
     public float forwardMove;
     public float rightMove;
-    public float ledgeMove;
 
     public bool grounded;
     public float groundHeight = float.MinValue;
 
-    public bool onLedge;
+    public bool dead;
 
     public CharacterStateInfo() {
 
@@ -299,14 +257,24 @@ public class CharacterStateInfo {
     public void UpdateToAnimator(Animator anim) {
         anim.SetFloat("forwardMove", forwardMove);
         anim.SetFloat("rightMove", rightMove);
-        anim.SetFloat("ledgeMove", ledgeMove);
         anim.SetBool("grounded", grounded);
-        anim.SetBool("onLedge", onLedge);
+        anim.SetBool("dead", dead);
     }
 
     public void Reset() {
         forwardMove = 0f;
         rightMove = 0f;
-        ledgeMove = 0f;
+    }
+}
+
+[System.Serializable]
+public class CharacterLockState {
+    public bool canMove = true;
+    public bool canTurn = true;
+    public bool canJump = true;
+    public bool canRoll = true;
+
+    public CharacterLockState() {
+
     }
 }

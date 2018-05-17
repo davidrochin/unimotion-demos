@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 
 namespace FirstPersonController {
     public class FirstPersonControl : MonoBehaviour {
@@ -14,6 +15,8 @@ namespace FirstPersonController {
         public Camera rightEyeCam;
 
         public Transform headTransform;
+
+        public PostProcessProfile postProcessProfile;
 
 
         void Awake() {
@@ -70,6 +73,19 @@ namespace FirstPersonController {
             //Establecer las rectas de las camaras para que una se renderize de un lado y la otra del otro
             leftEyeCam.rect = new Rect(0f, 0f, 0.5f, 1f);
             rightEyeCam.rect = new Rect(0.5f, 0f, 0.5f, 1f);
+
+            //Añadir el componente Post Process Layer a ambas camaras y configurarlo
+            PostProcessLayer leftLayer = leftEyeCam.gameObject.AddComponent<PostProcessLayer>();
+            PostProcessLayer rightLayer = rightEyeCam.gameObject.AddComponent<PostProcessLayer>();
+
+            leftLayer.volumeTrigger = leftLayer.transform;
+            rightLayer.volumeTrigger = rightLayer.transform;
+
+            leftLayer.volumeLayer = LayerMask.GetMask("Post Processing"); 
+            rightLayer.volumeLayer = LayerMask.GetMask("Post Processing");
+
+            leftEyeCam.clearFlags = CameraClearFlags.SolidColor; leftEyeCam.backgroundColor = Color.black;
+            rightEyeCam.clearFlags = CameraClearFlags.SolidColor; rightEyeCam.backgroundColor = Color.black;
         }
 
         public Vector3[] GetCameraPositions() {
