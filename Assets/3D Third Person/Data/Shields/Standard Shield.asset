@@ -8,12 +8,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c330ccf90db0fa94e9f2efc0ac00cca0, type: 3}
-  m_Name: Shield
+  m_Script: {fileID: 11500000, guid: df4e43c8e529fc7439e982a738632394, type: 3}
+  m_Name: Standard Shield
   m_EditorClassIdentifier: 
-  name: Small Sword
-  description: A little sword made for testing.
+  name: Standard Shield
+  description: 
   cost: 300
   prefab: {fileID: 1098723971400448, guid: 4eb60e7703de5784fb54eb69758bf2d5, type: 2}
   sprite: {fileID: 0}
-  damage: 70
+  protection: 1

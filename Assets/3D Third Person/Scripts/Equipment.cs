@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Character))]
 public class Equipment : MonoBehaviour {
 
     [Header("Hands")]
     public Item leftHandItem;
     public Item rightHandItem;
 
-    public GameObject leftHandItemOb;
+    public GameObject leftHandItemOb; 
     public GameObject rightHandItemOb;
 
     [Header("Body")]
@@ -24,9 +25,11 @@ public class Equipment : MonoBehaviour {
     Animator animator;
     Transform leftHandle;
     Transform rightHandle;
+    Health health;
 
     void Awake() {
         animator = GetComponent<Animator>();
+        health = GetComponent<Health>();
         leftHandle = animator.GetBoneTransform(HumanBodyBones.LeftHand).Find("Handle.L");
         rightHandle = animator.GetBoneTransform(HumanBodyBones.RightHand).Find("Handle.R");
     }
@@ -40,11 +43,17 @@ public class Equipment : MonoBehaviour {
     }
 
     public void UseLeftHandItem() {
+        if(leftHandItem is Weapon) {
 
+        } else if (leftHandItem is Shield) {
+
+        }
     }
 
     public void UseRightHandItem() {
-        GetComponent<Animator>().SetTrigger("punch");
+        if (rightHandItem is Weapon) {
+            GetComponent<Animator>().SetTrigger("hit");
+        }
     }
 
     void UpdateHandItems() {

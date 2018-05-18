@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Character))]
 public class CharacterControl : MonoBehaviour {
 
     public InputType inputType; 
@@ -11,10 +12,12 @@ public class CharacterControl : MonoBehaviour {
     //References
     Character character;
     Equipment equipment;
+    Health health;
 
     void Awake () {
         character = GetComponent<Character>();
         equipment = GetComponent<Equipment>();
+        health = GetComponent<Health>();
     }
 	
 	void Update () {
@@ -38,6 +41,12 @@ public class CharacterControl : MonoBehaviour {
 
         if (Input.GetMouseButtonDown(0)) {
             equipment.UseRightHandItem();
+        }
+
+        if (Input.GetMouseButton(1)) {
+            GetComponent<Animator>().SetBool("shieldUp", true);
+        } else {
+            GetComponent<Animator>().SetBool("shieldUp", false);
         }
 	}
 

@@ -81,6 +81,7 @@ ModelImporter:
     100146: Cube
     100148: Scenario_1
     100150: Scenario_2
+    100152: wall_big
     400000: arm_protection
     400002: Armature
     400004: Chest
@@ -157,12 +158,15 @@ ModelImporter:
     400146: Cube
     400148: Scenario_1
     400150: Scenario_2
+    400152: wall_big
     2300000: Cube
     2300002: Scenario_1
     2300004: Scenario_2
+    2300006: wall_big
     3300000: Cube
     3300002: Scenario_1
     3300004: Scenario_2
+    3300006: wall_big
     4300000: ornaments
     4300002: face
     4300004: sack_001
@@ -184,6 +188,7 @@ ModelImporter:
     4300036: Cube
     4300038: Scenario_1
     4300040: Scenario_2
+    4300042: wall_big
     7400000: Default Take
     7400002: ArmatureAction
     7400004: T_Pose
@@ -269,6 +274,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: None__Untitled
+    second: {fileID: 2100000, guid: 291e0d0c22895934b8f89bf7739f1bf3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: unnamed
     second: {fileID: 2100000, guid: 03e06964f38613242a81865d88acc4d3, type: 2}
   materials:
@@ -341,6 +351,8 @@ ModelImporter:
     optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88

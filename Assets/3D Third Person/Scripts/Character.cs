@@ -41,10 +41,12 @@ public class Character : MonoBehaviour {
     CharacterController characterController;
     Animator animator;
     LedgeGrabber ledgeGrabber;
+    Health health;
 
     void Awake() {
         characterController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
+        health = GetComponent<Health>();
     }
 
     void Update() {
@@ -59,9 +61,13 @@ public class Character : MonoBehaviour {
 
         //Move Unity's CharacterController and detect if it is grounded (it's necessary to move first, because Unity)
         characterController.Move(moveVector + inputVector * speed * Time.deltaTime);
+        if (!grounded && characterController.isGrounded && Mathf.Abs(velocity.y) / Time.deltaTime > 15f) {
+            if (OnHighFall != null) OnHighFall();
+        }
         grounded = characterController.isGrounded;
-        if (grounded) { stateInfo.grounded = true; } else { stateInfo.grounded = false; }
 
+        if (grounded) { stateInfo.grounded = true; } else { stateInfo.grounded = false; }
+        stateInfo.forwardSpeed = inputVector.magnitude * speed;
         //IF ROLLING
         if (rolling) {
             rollTimer += Time.deltaTime;
@@ -139,29 +145,36 @@ public class Character : MonoBehaviour {
     #region Acciones Básicas
 
     public void Move(Vector3 direction, float speed) {
-        inputVector = direction.normalized * speed;
-        Vector3 i = transform.InverseTransformDirection(inputVector);
-        stateInfo.forwardMove = Mathf.MoveTowards(stateInfo.forwardMove, i.z, 2f * Time.deltaTime);
-        //stateInfo.forwardMove = i.z;
-        stateInfo.rightMove = i.x;
+        if(health == null || health.isAlive) {
+            inputVector = direction.normalized * speed;
+            Vector3 i = transform.InverseTransformDirection(inputVector);
+            stateInfo.forwardMove = Mathf.MoveTowards(stateInfo.forwardMove, i.z, 2f * Time.deltaTime);
+            //stateInfo.forwardMove = i.z;
+            stateInfo.rightMove = i.x;
+        }
     }
 
     public void Jump() {
-        if (grounded) {
-            jump = true;
+        if(health == null || health.isAlive) {
+            if (grounded) {
+                jump = true;
+            }
         }
     }
 
     float rollTimer = 0f;
     public void Roll() {
         if (grounded) {
-            rolling = true;
-            rollTimer = 0f;
+            //rolling = true;
+            //rollTimer = 0f;
+            animator.SetTrigger("roll");
         }
     }
 
     public void RotateTowards(Vector3 direction, float speed) {
-        ForceRotateTowards(direction, speed);
+        if (health == null || health.isAlive) {
+            ForceRotateTowards(direction, speed);
+        }
     }
 
     public void ForceRotateTowards(Vector3 direction, float speed) {
@@ -176,11 +189,6 @@ public class Character : MonoBehaviour {
         transform.position = pos + (transform.position - feetPosition);
     }
 
-    Vector3 ledgeMovingDirection;
-    public void LedgeMove(Vector3 direction) {
-        ledgeMovingDirection = direction;
-    }
-
     #endregion
 
     public enum State { OnGround, OnAir, OnLedge, Rolling, ClimbingLedge, Dead }
@@ -189,12 +197,11 @@ public class Character : MonoBehaviour {
 [System.Serializable]
 public class CharacterStateInfo {
     public float forwardMove;
+    public float forwardSpeed;
     public float rightMove;
 
     public bool grounded;
     public float groundHeight = float.MinValue;
-
-    public bool dead;
 
     public CharacterStateInfo() {
 
@@ -202,15 +209,17 @@ public class CharacterStateInfo {
 
     public void UpdateToAnimator(Animator anim) {
         anim.SetFloat("forwardMove", forwardMove);
+        anim.SetFloat("forwardSpeed", forwardSpeed);
         anim.SetFloat("rightMove", rightMove);
         anim.SetBool("grounded", grounded);
-        anim.SetBool("dead", dead);
     }
 
     public void Reset() {
         forwardMove = 0f;
+        forwardSpeed = 0f;
         rightMove = 0f;
     }
 }
 
 public delegate void Action();
+public delegate void FloatAction(float n);

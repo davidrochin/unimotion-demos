@@ -12,39 +12,23 @@ AvatarMask:
     m_Weight: 1
   - m_Path: Armature
     m_Weight: 1
-  - m_Path: Armature/HandIK.L
-    m_Weight: 1
-  - m_Path: Armature/HandIK.L/HandIK.L_end
-    m_Weight: 1
-  - m_Path: Armature/HandIK.R
-    m_Weight: 1
-  - m_Path: Armature/HandIK.R/HandIK.R_end
-    m_Weight: 1
-  - m_Path: Armature/HandPoleTarget.L
-    m_Weight: 1
-  - m_Path: Armature/HandPoleTarget.L/HandPoleTarget.L_end
-    m_Weight: 1
-  - m_Path: Armature/HandPoleTarget.R
-    m_Weight: 1
-  - m_Path: Armature/HandPoleTarget.R/HandPoleTarget.R_end
-    m_Weight: 1
-  - m_Path: Armature/LegIK.L
-    m_Weight: 1
-  - m_Path: Armature/LegIK.L/LegIK.L_end
-    m_Weight: 1
-  - m_Path: Armature/LegIK.R
-    m_Weight: 1
-  - m_Path: Armature/LegIK.R/LegIK.R_end
-    m_Weight: 1
-  - m_Path: Armature/PoleTarget.L
-    m_Weight: 1
-  - m_Path: Armature/PoleTarget.L/PoleTarget.L_end
-    m_Weight: 1
-  - m_Path: Armature/PoleTarget.R
-    m_Weight: 1
-  - m_Path: Armature/PoleTarget.R/PoleTarget.R_end
-    m_Weight: 1
   - m_Path: Armature/Root
+    m_Weight: 1
+  - m_Path: Armature/Root/HandIK.L
+    m_Weight: 1
+  - m_Path: Armature/Root/HandIK.L/HandIK.L_end
+    m_Weight: 1
+  - m_Path: Armature/Root/HandIK.R
+    m_Weight: 1
+  - m_Path: Armature/Root/HandIK.R/HandIK.R_end
+    m_Weight: 1
+  - m_Path: Armature/Root/HandPoleTarget.L
+    m_Weight: 1
+  - m_Path: Armature/Root/HandPoleTarget.L/HandPoleTarget.L_end
+    m_Weight: 1
+  - m_Path: Armature/Root/HandPoleTarget.R
+    m_Weight: 1
+  - m_Path: Armature/Root/HandPoleTarget.R/HandPoleTarget.R_end
     m_Weight: 1
   - m_Path: Armature/Root/Hips
     m_Weight: 1
@@ -85,6 +69,10 @@ AvatarMask:
   - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L/UpperArm.L/LowerArm.L
     m_Weight: 1
   - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Handle.L
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/Handle.L/Handle.L_end
     m_Weight: 1
   - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.L/UpperArm.L/LowerArm.L/Hand.L/IndexProximal.L
     m_Weight: 1
@@ -134,6 +122,10 @@ AvatarMask:
     m_Weight: 1
   - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R
     m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Handle.R
+    m_Weight: 1
+  - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/Handle.R/Handle.R_end
+    m_Weight: 1
   - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/IndexProximal.R
     m_Weight: 1
   - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/IndexProximal.R/IndexIntermediate.R
@@ -173,6 +165,22 @@ AvatarMask:
   - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/ThumbProximal.R/ThumbIntermediate.R/Thumb.R
     m_Weight: 1
   - m_Path: Armature/Root/Hips/Waist/Chest/Shoulder.R/UpperArm.R/LowerArm.R/Hand.R/ThumbProximal.R/ThumbIntermediate.R/Thumb.R/Thumb.R_end
+    m_Weight: 1
+  - m_Path: Armature/Root/LegIK.L
+    m_Weight: 1
+  - m_Path: Armature/Root/LegIK.L/LegIK.L_end
+    m_Weight: 1
+  - m_Path: Armature/Root/LegIK.R
+    m_Weight: 1
+  - m_Path: Armature/Root/LegIK.R/LegIK.R_end
+    m_Weight: 1
+  - m_Path: Armature/Root/PoleTarget.L
+    m_Weight: 1
+  - m_Path: Armature/Root/PoleTarget.L/PoleTarget.L_end
+    m_Weight: 1
+  - m_Path: Armature/Root/PoleTarget.R
+    m_Weight: 1
+  - m_Path: Armature/Root/PoleTarget.R/PoleTarget.R_end
     m_Weight: 1
   - m_Path: body
     m_Weight: 1
