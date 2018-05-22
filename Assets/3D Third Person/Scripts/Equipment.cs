@@ -52,7 +52,10 @@ public class Equipment : MonoBehaviour {
 
     public void UseRightHandItem() {
         if (rightHandItem is Weapon) {
-            GetComponent<Animator>().SetTrigger("hit");
+            int attackAnimation = 1;
+            GetComponent<Animator>().SetTrigger("attack");
+            attackAnimation = (int)((Weapon)rightHandItem).moves[Random.Range(0, ((Weapon)rightHandItem).moves.Length)];
+            GetComponent<Animator>().SetInteger("attackType", attackAnimation);
         }
     }
 
@@ -60,22 +63,26 @@ public class Equipment : MonoBehaviour {
 
         Destroy(leftHandItemOb);
 
-        if (leftHandItem) {
+        if (leftHandItem != null) {
             leftHandItemOb = Instantiate(leftHandItem.prefab);
             leftHandItemOb.transform.localScale = Vector3.one;
             leftHandItemOb.transform.parent = leftHandle;
             leftHandItemOb.transform.localPosition = Vector3.zero;
             leftHandItemOb.transform.localRotation = Quaternion.identity;
-            leftHandItemOb.transform.localRotation = Quaternion.Euler(-90f, 90f, 0f);
+            leftHandItemOb.transform.localRotation = Quaternion.Euler(-90f, -90f, 0f);
         }
 
-        if (rightHandItem) {
+        if (rightHandItem != null) {
             rightHandItemOb = Instantiate(rightHandItem.prefab);
             rightHandItemOb.transform.localScale = Vector3.one;
             rightHandItemOb.transform.parent = rightHandle;
             rightHandItemOb.transform.localPosition = Vector3.zero;
             rightHandItemOb.transform.localRotation = Quaternion.identity;
             rightHandItemOb.transform.localRotation = Quaternion.Euler(-90f, 90f, 0f);
+
+            if(rightHandItem is Weapon) {
+                rightHandItemOb.GetComponent<WeaponHitDetector>().colliderIgnore = GetComponent<Collider>();
+            }
         }
         
     }

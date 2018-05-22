@@ -9,12 +9,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c330ccf90db0fa94e9f2efc0ac00cca0, type: 3}
-  m_Name: Small Sword
+  m_Name: Black Knight Sword
   m_EditorClassIdentifier: 
-  name: Small Sword
-  description: A little sword made for testing.
+  name: Black Knight Sword
+  description: Greatsword of the black knights who wander Lordran. Used to face chaos
+    demons.  The large motion that puts the weight of the body into the attack reflects
+    the great size of their adversaries long ago.
   cost: 300
-  prefab: {fileID: 1098723971400448, guid: 4d444026f95ef1b4ca515656aa26cefb, type: 2}
+  prefab: {fileID: 1098723971400448, guid: 9081e0188525d5a4ab7bc319515b91f5, type: 2}
   sprite: {fileID: 0}
-  damage: 70
+  damage: 200
   moves: 0000000001000000

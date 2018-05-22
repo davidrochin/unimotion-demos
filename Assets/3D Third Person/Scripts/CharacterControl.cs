@@ -7,7 +7,7 @@ public class CharacterControl : MonoBehaviour {
 
     public InputType inputType; 
 
-    public ControlLockState lockState;
+    public LockState lockState;
 
     //References
     Character character;
@@ -19,8 +19,12 @@ public class CharacterControl : MonoBehaviour {
         equipment = GetComponent<Equipment>();
         health = GetComponent<Health>();
     }
-	
-	void Update () {
+
+    private void Start() {
+        Camera.main.GetComponent<CameraOrbit>().target = transform;
+    }
+
+    void Update () {
 
         //Caminar y correr
         if (lockState.canMove && GetInputVector() != Vector3.zero) {
@@ -35,11 +39,11 @@ public class CharacterControl : MonoBehaviour {
             character.Jump();
         }
 
-        if (Input.GetKeyDown(KeyCode.C)) {
+        if (Input.GetButtonDown("B")) {
             character.Roll();
         }
 
-        if (Input.GetMouseButtonDown(0)) {
+        if (Input.GetMouseButtonDown(0) || Input.GetButtonDown("RB")) {
             equipment.UseRightHandItem();
         }
 
@@ -89,13 +93,17 @@ public class CharacterControl : MonoBehaviour {
 }
 
 [System.Serializable]
-public class ControlLockState {
+public class LockState {
+
+    public bool lockAll = false;
+
     public bool canMove = true;
     public bool canTurn = true;
     public bool canJump = true;
     public bool canRoll = true;
+    public bool canRotate = true;
 
-    public ControlLockState() {
+    public LockState() {
 
     }
 }

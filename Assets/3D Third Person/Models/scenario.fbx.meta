@@ -1,40 +1,75 @@
 fileFormatVersion: 2
-guid: 62611966e18ac4a44a31e30e09e8f894
-timeCreated: 1526593867
+guid: ae1af927e071226468d5119720d493b4
+timeCreated: 1526790458
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: //RootNode
-    100002: shield
-    100004: sword
-    100006: shield_1
-    100008: sword_1
-    100010: sword_2
-    400000: //RootNode
-    400002: shield
-    400004: sword
-    400006: shield_1
-    400008: sword_1
-    400010: sword_2
-    2100000: No Name
-    2300000: //RootNode
-    2300002: shield
-    2300004: sword
-    2300006: shield_1
-    2300008: sword_1
-    2300010: sword_2
-    3300000: //RootNode
-    3300002: shield
-    3300004: sword
-    3300006: shield_1
-    3300008: sword_1
-    3300010: sword_2
-    4300000: sword
-    4300002: shield
-    4300004: sword_2
-    4300006: shield_1
-    4300008: sword_1
+    100000: bridge_part_a
+    100002: Camera
+    100004: Lamp
+    100006: reference
+    100008: //RootNode
+    100010: tower_a
+    100012: bridge_part_b
+    100014: bridge_part_c
+    100016: tower_floor
+    100018: stairs_a
+    100020: tower_floor.001
+    100022: tower_floor_a
+    100024: tower_floor_b
+    100026: stairs_b
+    400000: bridge_part_a
+    400002: Camera
+    400004: Lamp
+    400006: reference
+    400008: //RootNode
+    400010: tower_a
+    400012: bridge_part_b
+    400014: bridge_part_c
+    400016: tower_floor
+    400018: stairs_a
+    400020: tower_floor.001
+    400022: tower_floor_a
+    400024: tower_floor_b
+    400026: stairs_b
+    2000000: Camera
+    2100000: Material
+    2100002: No Name
+    2300000: bridge_part_a
+    2300002: reference
+    2300004: tower_a
+    2300006: bridge_part_b
+    2300008: bridge_part_c
+    2300010: tower_floor
+    2300012: stairs_a
+    2300014: tower_floor.001
+    2300016: tower_floor_a
+    2300018: tower_floor_b
+    2300020: stairs_b
+    3300000: bridge_part_a
+    3300002: reference
+    3300004: tower_a
+    3300006: bridge_part_b
+    3300008: bridge_part_c
+    3300010: tower_floor
+    3300012: stairs_a
+    3300014: tower_floor.001
+    3300016: tower_floor_a
+    3300018: tower_floor_b
+    3300020: stairs_b
+    4300000: bridge_part_a
+    4300002: reference
+    4300004: tower_a
+    4300006: bridge_part_b
+    4300008: bridge_part_c
+    4300010: tower_floor
+    4300012: tower_floor.001
+    4300014: stairs_a
+    4300016: tower_floor_a
+    4300018: tower_floor_b
+    4300020: stairs_b
+    10800000: Lamp
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -73,7 +108,7 @@ ModelImporter:
     importCameras: 1
     importLights: 1
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
     optimizeMeshForGPU: 1
     keepQuads: 0
@@ -90,7 +125,7 @@ ModelImporter:
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
-  importAnimation: 1
+  importAnimation: 0
   copyAvatar: 0
   humanDescription:
     serializedVersion: 2
