@@ -61,6 +61,7 @@ public class CharacterAI : MonoBehaviour {
 
                 //Attack when close to target
                 if (GetDistanceToTarget() <= 1.5f) {
+                    character.ForceRotateTowards((target.position - transform.position).normalized, 25f);
                     Stop();
                     equipment.UseItem(Hand.Right);
                 } else {

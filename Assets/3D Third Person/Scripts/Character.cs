@@ -9,6 +9,7 @@ public class Character : MonoBehaviour {
 
     [Range(0.01f, 10f)]
     public float speed = 5f;
+    public float rotationSpeed = 400f;
 
     [Range(1f, 10f)]
     public float jumpForce = 5f;
@@ -18,13 +19,16 @@ public class Character : MonoBehaviour {
 
     [Header("Debug")]
     public bool grounded = false;
+    public bool previousGrounded = false;
     public bool walking = false;
     public bool running = false;
     public bool rolling = false;
     public float yForce = 0f, xForce = 0f;
+    public Vector3 lookDirection;
     public Vector3 velocity;
 
     public CharacterStateInfo stateInfo;
+
     public InfoFromAnimator infoFromAnimator;
     public LockState lockState;
 
@@ -55,6 +59,8 @@ public class Character : MonoBehaviour {
         health = GetComponent<Health>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         stamina = GetComponent<Stamina>();
+
+        lookDirection = transform.forward;
     }
 
     void Update() {
@@ -75,52 +81,37 @@ public class Character : MonoBehaviour {
         
         //If governed by Physics
         else {
-            CheckGroundHeight();
+            //CheckGroundHeight();
             ApplyGravity();
             CheckForJump();
             CalculateMoveVector();
 
             //Move Unity's CharacterController and detect if it is grounded (it's necessary to move first, because Unity)
             characterController.Move(moveVector + inputVector * speed * Time.deltaTime);
-            /*if (!grounded && characterController.isGrounded && Mathf.Abs(velocity.y) / Time.deltaTime > 15f) {
-                if (OnHighFall != null) OnHighFall();
-            }*/
             grounded = characterController.isGrounded;
+
+            StickToSlope();
+
+            //Rotate to face direction
+            ForceRotateTowards(lookDirection, 25f);
 
             if (grounded) { stateInfo.grounded = true; } else { stateInfo.grounded = false; }
             stateInfo.forwardSpeed = inputVector.magnitude * speed;
-            //IF ROLLING
-            if (rolling) {
-                rollTimer += Time.deltaTime;
 
-                CheckGroundHeight();
-                ApplyGravity();
-                CalculateMoveVector();
-
-                moveVector += transform.forward * rollSpeed * Time.deltaTime;
-                inputVector = Vector3.zero;
-
-                //Mover el CharacterController y detectar si está en el piso (es necesario moverlo primero por cosas de Unity)
-                characterController.Move(moveVector + inputVector * speed * Time.deltaTime);
-                grounded = characterController.isGrounded;
-                //if (grounded) { state = State.Rolling; } else { state = State.OnAir; }
-
-                //Revisar si ya se acabó la animacion
-                if (rollTimer >= animator.GetCurrentAnimatorStateInfo(0).length) {
-                    //state = State.OnGround;
-                }
-            }
         }
 
         UpdateAnimator();
 
         //Resetear todo lo que se tiene que resetear
         if (inputVector == Vector3.zero) { stateInfo.forwardMove = Mathf.MoveTowards(stateInfo.forwardMove, 0f, 2f * Time.deltaTime); }
-        moveVector = Vector3.zero;
+        
         inputVector = Vector3.zero;
+        moveVector = Vector3.zero;
 
         //Calcular la velocidad
         velocity = transform.position - initPos;
+
+        previousGrounded = grounded;
     }
 
     #region Acciones Internas
@@ -135,14 +126,19 @@ public class Character : MonoBehaviour {
         }
     }
 
-    void CheckGroundHeight() {
+    void StickToSlope() {
 
         //Measure how high is the floor
-        RaycastHit hit = RaycastUtil.RaycastPastItself(gameObject, transform.position + characterController.center, Vector3.down, characterController.height / 2f + 4f, mask);
-        if (hit.collider != null) {
-            groundHeight = hit.point.y;
-        } else {
-            groundHeight = float.MinValue;
+        Vector3 start = transform.position + characterController.center + Vector3.up * characterController.height * 0.5f + Vector3.down * characterController.radius;
+        RaycastHit hit; Physics.SphereCast(start, characterController.radius, Vector3.down, out hit, float.MaxValue, mask);
+        float distanceToFloor = Mathf.Abs(hit.point.y - characterController.bounds.min.y);
+
+        //Stick to floor if necessary (when going down slopes of stairs)
+        if (distanceToFloor <= 0.5f && previousGrounded && !grounded && moveVector.y <= 0f) {
+            //Debug.Break();
+            transform.position = transform.position + Vector3.down * distanceToFloor;
+            //moveVector += Vector3.down * distanceToFloor * 2f;
+            grounded = true; stateInfo.grounded = true;
         }
     }
 
@@ -184,7 +180,6 @@ public class Character : MonoBehaviour {
         }
     }
 
-    float rollTimer = 0f;
     public void Roll() {
         if (grounded && inputVector.magnitude > 0f) {
             if(stamina == null || stamina.Consume(70f)) {
@@ -195,7 +190,8 @@ public class Character : MonoBehaviour {
 
     public void RotateTowards(Vector3 direction, float speed) {
         if ((health == null || health.isAlive) && lockState.canRotate && !lockState.lockAll) {
-            ForceRotateTowards(direction, speed);
+            //ForceRotateTowards(direction, speed);
+            lookDirection = direction;
         }
     }
 
@@ -205,13 +201,13 @@ public class Character : MonoBehaviour {
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(procesedDirection), speed);
     }
 
-    public void SetFeet(Vector3 pos) {
-        Vector3 realCenter = transform.position + characterController.center;
-        Vector3 feetPosition = new Vector3(realCenter.x, characterController.bounds.min.y, realCenter.z);
-        transform.position = pos + (transform.position - feetPosition);
-    }
-
     #endregion
+
+    private void OnDrawGizmos() {
+        characterController = GetComponent<CharacterController>();
+        Vector3 start = transform.position + characterController.center + Vector3.up * characterController.height * 0.5f + Vector3.down * characterController.radius;
+        Gizmos.DrawSphere(start, characterController.radius);
+    }
 
     public enum State { OnGround, OnAir, OnLedge, Rolling, ClimbingLedge, Dead }
 }

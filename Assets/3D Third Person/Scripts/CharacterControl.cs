@@ -9,6 +9,8 @@ public class CharacterControl : MonoBehaviour {
 
     public LockState lockState;
 
+    public Queue<string> buttonQueue;
+
     //References
     Character character;
     Equipment equipment;
@@ -28,11 +30,8 @@ public class CharacterControl : MonoBehaviour {
 
         //Caminar y correr
         if (lockState.canMove && GetInputVector() != Vector3.zero) {
-            character.RotateTowards(GetInputVector(), 400f * Time.deltaTime);
-            //float speed = Vector3.ClampMagnitude(GetInputVector(), 1f).magnitude;
-            //if (Input.GetButton("Walk")) { speed = Mathf.Clamp(speed, 0f, 0.5f); } 
-            //else { speed = Mathf.Clamp(speed, 0.4f, 1f); }
-            character.Move(transform.forward, GetInputMagnitude());
+            character.RotateTowards(GetInputVector(), 4000f * Time.deltaTime);
+            character.Move(GetInputVector(), GetInputMagnitude());
         }
 
         if (Input.GetButtonDown("Jump")) {

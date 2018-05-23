@@ -23,7 +23,7 @@ public class Stamina : MonoBehaviour {
         timeSinceLastConsume += Time.deltaTime;
 
         if (!isUsingStamina) {
-            current = Mathf.Clamp(current + 40f * Time.deltaTime, 0f, max);
+            current = Mathf.Clamp(current + 60f * Time.deltaTime, 0f, max);
         }
         
 	}
