@@ -25,6 +25,7 @@ public class Character : MonoBehaviour {
     public Vector3 velocity;
 
     public CharacterStateInfo stateInfo;
+    public InfoFromAnimator infoFromAnimator;
     public LockState lockState;
 
     //Información del entorno
@@ -45,6 +46,7 @@ public class Character : MonoBehaviour {
     Animator animator;
     LedgeGrabber ledgeGrabber;
     Health health;
+    Stamina stamina;
     NavMeshAgent navMeshAgent;
 
     void Awake() {
@@ -52,6 +54,7 @@ public class Character : MonoBehaviour {
         animator = GetComponent<Animator>();
         health = GetComponent<Health>();
         navMeshAgent = GetComponent<NavMeshAgent>();
+        stamina = GetComponent<Stamina>();
     }
 
     void Update() {
@@ -183,10 +186,10 @@ public class Character : MonoBehaviour {
 
     float rollTimer = 0f;
     public void Roll() {
-        if (grounded) {
-            //rolling = true;
-            //rollTimer = 0f;
-            animator.SetTrigger("roll");
+        if (grounded && inputVector.magnitude > 0f) {
+            if(stamina == null || stamina.Consume(70f)) {
+                animator.SetTrigger("roll");
+            }         
         }
     }
 
@@ -238,6 +241,14 @@ public class CharacterStateInfo {
         forwardSpeed = 0f;
         rightMove = 0f;
     }
+}
+
+[System.Serializable]
+public class InfoFromAnimator {
+
+    //The animator has to fill all of this
+    public bool isRolling = false;
+
 }
 
 public delegate void Action();

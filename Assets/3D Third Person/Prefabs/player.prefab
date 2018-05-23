@@ -352,6 +352,7 @@ GameObject:
   - component: {fileID: 95306783226562786}
   - component: {fileID: 143406613365863264}
   - component: {fileID: 114916199426189626}
+  - component: {fileID: 114998844979446466}
   - component: {fileID: 114827369661537288}
   - component: {fileID: 114497259926893924}
   - component: {fileID: 114271481960361928}
@@ -1998,7 +1999,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1290621746036830}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 7, z: 0}
+  m_LocalPosition: {x: -39.37, y: 15.47, z: 63.61}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4921431284965160}
@@ -2618,7 +2619,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   leftHandItem: {fileID: 11400000, guid: 1671ef49de733cc47b832a5395aa5020, type: 2}
-  rightHandItem: {fileID: 11400000, guid: 55d55788b97ae954b9a1a0d877f3405a, type: 2}
+  rightHandItem: {fileID: 11400000, guid: 1acc66c750743684a915e1d975aac4b4, type: 2}
   leftHandItemOb: {fileID: 0}
   rightHandItemOb: {fileID: 0}
   headArmor: {fileID: 0}
@@ -2654,6 +2655,8 @@ MonoBehaviour:
     rightMove: 0
     grounded: 0
     groundHeight: -3.4028235e+38
+  infoFromAnimator:
+    isRolling: 0
   lockState:
     lockAll: 0
     canMove: 1
@@ -2674,8 +2677,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bf474d6258eae347bde4a38f63c7164, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 200
-  maxHealth: 200
+  current: 500
+  max: 500
   isAlive: 1
 --- !u!114 &114916199426189626
 MonoBehaviour:
@@ -2696,6 +2699,20 @@ MonoBehaviour:
     canJump: 1
     canRoll: 1
     canRotate: 1
+--- !u!114 &114998844979446466
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1290621746036830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ed541ac1e8dab444be4433fa6aea745, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  current: 300
+  max: 300
+  isUsingStamina: 0
 --- !u!137 &137626442377871508
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

@@ -11,4 +11,4 @@ public class Weapon : Item {
     public WeaponMove[] moves;
 }
 
-public enum WeaponMove { OneHandedVerticalSwipe, OneHandedHorizontalSwipe }
+public enum WeaponMove { OneHandedVerticalSwipe, OneHandedHorizontalSwipe, OneHandedThrust }

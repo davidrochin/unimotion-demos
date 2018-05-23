@@ -48,7 +48,7 @@ public class CharacterAI : MonoBehaviour {
             //Attack when close to target
             if (GetDistanceToTarget() <= 1.5f) {
                 Stop();
-                equipment.UseRightHandItem();
+                equipment.UseItem(Hand.Right);
             } else {
                 Resume();
             }

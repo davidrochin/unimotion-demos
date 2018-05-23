@@ -27,6 +27,13 @@ public class WeaponHitDetector : MonoBehaviour {
         if (detecting) {
             RaycastHit hit;
 
+            Collider[] overlapColliders = Physics.OverlapBox(GetColliderWorldPosition(), collider.size * 0.5f, collider.transform.rotation, mask);
+            foreach (Collider c in overlapColliders) {
+                if (c != colliderIgnore) {
+                    if (OnHit != null) OnHit(c);
+                }      
+            }
+
             if (Physics.BoxCast(previousPosition, collider.size * 0.5f,
                 GetDirectionFromPrevious(), out hit, collider.transform.rotation,
                 (GetColliderWorldPosition() - previousPosition).magnitude, mask)) {

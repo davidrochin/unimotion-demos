@@ -26,10 +26,13 @@ public class Equipment : MonoBehaviour {
     Transform leftHandle;
     Transform rightHandle;
     Health health;
+    Stamina stamina;
 
     void Awake() {
         animator = GetComponent<Animator>();
         health = GetComponent<Health>();
+        stamina = GetComponent<Stamina>();
+
         leftHandle = animator.GetBoneTransform(HumanBodyBones.LeftHand).Find("Handle.L");
         rightHandle = animator.GetBoneTransform(HumanBodyBones.RightHand).Find("Handle.R");
     }
@@ -42,20 +45,27 @@ public class Equipment : MonoBehaviour {
 
     }
 
-    public void UseLeftHandItem() {
-        if(leftHandItem is Weapon) {
+    public void UseItem(Hand hand) {
 
-        } else if (leftHandItem is Shield) {
-
+        //Determine which item to use
+        Item itemToUse = null;
+        switch (hand) {
+            case Hand.Left: itemToUse = leftHandItem; break;
+            case Hand.Right: itemToUse = rightHandItem; break;
         }
-    }
 
-    public void UseRightHandItem() {
-        if (rightHandItem is Weapon) {
-            int attackAnimation = 1;
-            GetComponent<Animator>().SetTrigger("attack");
-            attackAnimation = (int)((Weapon)rightHandItem).moves[Random.Range(0, ((Weapon)rightHandItem).moves.Length)];
-            GetComponent<Animator>().SetInteger("attackType", attackAnimation);
+        if (itemToUse != null) {
+            if (itemToUse is Weapon) {
+                if (stamina.Consume(80f)) {
+                    animator.SetTrigger("attack");
+
+                    //Pick a random attack animation
+                    int attackAnimation = 0;
+                    attackAnimation = (int)((Weapon)rightHandItem).moves[Random.Range(0, ((Weapon)rightHandItem).moves.Length)];
+
+                    animator.SetInteger("attackType", attackAnimation);
+                }
+            }
         }
     }
 
@@ -97,3 +107,5 @@ public class Equipment : MonoBehaviour {
     }
 
 }
+
+public enum Hand { Left, Right }

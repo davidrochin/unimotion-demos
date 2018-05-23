@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class WeaponDamageBehaviour : StateMachineBehaviour {
 
+    //public float damageStart = 0.3f;
+    //public float damageEnd = 0.9f;
+
     public float weaponDamage = 100f;
     public List<Collider> alreadyHitColliders;
 
@@ -32,7 +35,7 @@ public class WeaponDamageBehaviour : StateMachineBehaviour {
                     //Substract Health if possible
                     Health hitColliderHealth = colliderHit.GetComponent<Health>();
                     if (hitColliderHealth != null) {
-                        hitColliderHealth.SubstractHealth(weaponDamage);
+                        hitColliderHealth.SubstractHealth(weaponDamage, true);
                     }
                 } 
                 
@@ -41,26 +44,15 @@ public class WeaponDamageBehaviour : StateMachineBehaviour {
 	}
 
 	//OnStateUpdate is called before OnStateUpdate is called on any state inside this state machine
-	override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        /*if (weaponHitDetector != null) {
-            Collider hitCollider = weaponHitDetector.DetectHit();
-            if(hitCollider != null && alreadyHitColliders.Find(x => x == hitCollider) == null) {
-
-                //Add this collider to the alreadyHitColliders list so its not hit again on this animation
-                alreadyHitColliders.Add(hitCollider);
-
-                //Substract Health if possible
-                Health hitColliderHealth = hitCollider.GetComponent<Health>();
-                if(hitColliderHealth != null) {
-                    hitColliderHealth.SubstractHealth(weaponDamage);
-                }
-            }
-        }*/
-	}
+	//override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
+    //
+	//}
 
 	// OnStateExit is called before OnStateExit is called on any state inside this state machine
 	override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        weaponHitDetector.StopDetection();
+        if (weaponHitDetector != null) {
+            weaponHitDetector.StopDetection();
+        }
     }
 
 	// OnStateMove is called before OnStateMove is called on any state inside this state machine

@@ -21,4 +21,15 @@ namespace Util {
         }
 
     }
+
+    public class Texture2D {
+
+        public static UnityEngine.Texture2D CreateEmpty(Color color) {
+            UnityEngine.Texture2D tex = new UnityEngine.Texture2D(1, 1);
+            tex.SetPixel(0, 0, color);
+            tex.Apply();
+            return tex;
+        }
+
+    }
 }

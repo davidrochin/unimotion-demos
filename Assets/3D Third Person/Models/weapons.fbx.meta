@@ -11,12 +11,14 @@ ModelImporter:
     100006: shield_1
     100008: sword_1
     100010: sword_2
+    100012: spear_1
     400000: //RootNode
     400002: shield
     400004: sword
     400006: shield_1
     400008: sword_1
     400010: sword_2
+    400012: spear_1
     2100000: No Name
     2300000: //RootNode
     2300002: shield
@@ -24,17 +26,20 @@ ModelImporter:
     2300006: shield_1
     2300008: sword_1
     2300010: sword_2
+    2300012: spear_1
     3300000: //RootNode
     3300002: shield
     3300004: sword
     3300006: shield_1
     3300008: sword_1
     3300010: sword_2
+    3300012: spear_1
     4300000: sword
     4300002: shield
     4300004: sword_2
     4300006: shield_1
     4300008: sword_1
+    4300010: spear_1
   externalObjects: {}
   materials:
     importMaterials: 1

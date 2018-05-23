@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class Health : MonoBehaviour {
 
-    public float health = 200f;
-    public float maxHealth = 200f;
+    public float current = 200f;
+    public float max = 200f;
 
     [HideInInspector]
     public bool isAlive = true;
 
     //References
     Character character;
-    CharacterControl charControl;
+    CharacterControl characterControl;
+    Animator animator;
 
     //Events
     public event Action OnDeath;
@@ -20,7 +21,8 @@ public class Health : MonoBehaviour {
 
     private void Awake() {
         character = GetComponent<Character>();
-        charControl = GetComponent<CharacterControl>();
+        characterControl = GetComponent<CharacterControl>();
+        animator = GetComponent<Animator>();
 
         character.OnHighFall += delegate () {
             Debug.Log("Uuuh");
@@ -29,44 +31,54 @@ public class Health : MonoBehaviour {
         CheckDeath();
     }
 
-    public void SubstractHealth(float quantity) {
-        health = Mathf.Clamp(health - quantity, 0f, maxHealth);
+    public void SubstractHealth(float quantity, bool damageAnimation) {
+        current = Mathf.Clamp(current - quantity, 0f, max);
+        if (damageAnimation && !animator.GetBool("dead")) { animator.Play("Take Damage"); }
         CheckDeath();
     }
 
+    public void SubstractHealth(float quantity) {
+        SubstractHealth(quantity, false);
+    }
+
     public void AddHealth(float quantity) {
-        health = Mathf.Clamp(health + quantity, 0f, maxHealth);
+        current = Mathf.Clamp(current + quantity, 0f, max);
         CheckDeath();
     }
 
     public void Kill() {
-        health = 0f;
+        current = 0f;
         GetComponent<Animator>().SetBool("dead", true);
         isAlive = false;
         if (OnDeath != null) OnDeath();
     }
 
     public void Revive() {
-        health = maxHealth;
+        current = max;
         GetComponent<Animator>().SetBool("dead", false);
         isAlive = true;
         if (OnRevive != null) OnRevive();
     }
 
     void CheckDeath() {
-        if(health <= 0f) {
+        if(current <= 0f) {
             Kill();
         }
     }
 
     private void OnGUI() {
 
-        if(charControl == null && health > 0f) {
+        /*if(characterControl == null && current > 0f) {
             Vector2 barSize = new Vector2(150f, 20f);
             Vector2 barPos = Camera.main.WorldToScreenPoint(character.transform.position + character.characterController.center + Vector3.up * character.characterController.height * 0.5f);
             barPos = new Vector2(barPos.x, (Screen.height - barPos.y));
 
-            GUI.Box(new Rect(barPos - Vector2.right * barSize.x * 0.5f - Vector2.up * 15f, barSize), "" + health);
+            GUI.Box(new Rect(barPos - Vector2.right * barSize.x * 0.5f - Vector2.up * 15f, barSize), "" + current);
+        }*/
+
+        if (characterControl != null) {
+            GUI.DrawTexture(new Rect(0f, 0f, max, 15f), Util.Texture2D.CreateEmpty(Color.black));
+            GUI.DrawTexture(new Rect(0f, 0f, current, 15f), Util.Texture2D.CreateEmpty(Color.red));
         }
 
     }

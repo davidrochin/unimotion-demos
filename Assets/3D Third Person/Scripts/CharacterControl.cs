@@ -43,8 +43,13 @@ public class CharacterControl : MonoBehaviour {
             character.Roll();
         }
 
+        if (Input.GetKeyDown(KeyCode.X)){
+            GetComponent<Animator>().Play("Point");
+        }
+
         if (Input.GetMouseButtonDown(0) || Input.GetButtonDown("RB")) {
-            equipment.UseRightHandItem();
+            //equipment.UseRightHandItem();
+            equipment.UseItem(Hand.Right);
         }
 
         if (Input.GetMouseButton(1)) {

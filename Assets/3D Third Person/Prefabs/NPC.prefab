@@ -1298,6 +1298,7 @@ GameObject:
   - component: {fileID: 95703996913262570}
   - component: {fileID: 143238239337549772}
   - component: {fileID: 114748075028113876}
+  - component: {fileID: 114815929384104254}
   - component: {fileID: 114417958786170804}
   - component: {fileID: 114897723286895176}
   - component: {fileID: 114884901266038582}
@@ -2614,9 +2615,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bf474d6258eae347bde4a38f63c7164, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 200
-  maxHealth: 200
+  current: 200
+  max: 200
   isAlive: 1
+--- !u!114 &114815929384104254
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1959513070725828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ed541ac1e8dab444be4433fa6aea745, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  current: 200
+  max: 200
 --- !u!114 &114884901266038582
 MonoBehaviour:
   m_ObjectHideFlags: 1

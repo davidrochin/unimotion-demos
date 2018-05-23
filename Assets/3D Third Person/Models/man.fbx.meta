@@ -94,6 +94,9 @@ ModelImporter:
     100172: Handle.R
     100174: Handle.R_end
     100176: sword
+    100178: anime_body_male
+    100180: human_body_male
+    100182: human_armor_male_1
     400000: //RootNode
     400002: Armature
     400004: body
@@ -183,6 +186,9 @@ ModelImporter:
     400172: Handle.R
     400174: Handle.R_end
     400176: sword
+    400178: anime_body_male
+    400180: human_body_male
+    400182: human_armor_male_1
     2100000: No Name
     2300000: body
     2300002: sword
@@ -190,6 +196,9 @@ ModelImporter:
     3300002: sword
     4300000: body
     4300002: sword
+    4300004: human_body_male
+    4300006: anime_body_male
+    4300008: human_armor_male_1
     7400000: Armature|animan_hanging_idle
     7400002: Armature|animan_idle
     7400004: Armature|animan_running_forward
@@ -212,8 +221,13 @@ ModelImporter:
     7400038: man_one_handed_horizontal_swipe
     7400040: man_one_handed_vertical_swipe
     7400042: man_roll
+    7400044: man_one_handed_thrust
+    7400046: man_damage
     9500000: //RootNode
     13700000: body
+    13700002: anime_body_male
+    13700004: human_body_male
+    13700006: human_armor_male_1
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -229,23 +243,30 @@ ModelImporter:
     rigImportErrors: 
     rigImportWarnings: 
     animationImportErrors: 
-    animationImportWarnings: "\nClip 'Armature|man_death_front' has import animation
-      warnings that might lower retargeting quality:\nNote: Activate translation DOF
-      on avatar to improve retargeting quality.\n\t'Chest' is inbetween humanoid transforms
-      and has rotation animation that will be discarded.\n\nClip 'Armature|man_idle'
+    animationImportWarnings: "\nClip 'Armature|man_damage' has import animation warnings
+      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'Chest' is inbetween humanoid transforms
+      and has rotation animation that will be discarded.\n\nClip 'Armature|man_death_front'
       has import animation warnings that might lower retargeting quality:\nNote: Activate
       translation DOF on avatar to improve retargeting quality.\n\t'Chest' is inbetween
       humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'Armature|man_idle' has import animation warnings that might lower retargeting
+      quality:\nNote: Activate translation DOF on avatar to improve retargeting quality.\n\t'Chest'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
       'Armature|man_one_handed_horizontal_swipe' has import animation warnings that
       might lower retargeting quality:\nNote: Activate translation DOF on avatar to
       improve retargeting quality.\n\t'Chest' is inbetween humanoid transforms and
-      has rotation animation that will be discarded.\n\nClip 'Armature|man_one_handed_vertical_swipe'
+      has rotation animation that will be discarded.\n\nClip 'Armature|man_one_handed_thrust'
       has import animation warnings that might lower retargeting quality:\nNote: Activate
       translation DOF on avatar to improve retargeting quality.\n\t'Chest' is inbetween
       humanoid transforms and has rotation animation that will be discarded.\n\nClip
-      'Armature|man_roll' has import animation warnings that might lower retargeting
-      quality:\nNote: Activate translation DOF on avatar to improve retargeting quality.\n\t'Chest'
-      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
+      'Armature|man_one_handed_vertical_swipe' has import animation warnings that
+      might lower retargeting quality:\nNote: Activate translation DOF on avatar to
+      improve retargeting quality.\n\t'Chest' is inbetween humanoid transforms and
+      has rotation animation that will be discarded.\n\nClip 'Armature|man_roll' has
+      import animation warnings that might lower retargeting quality:\nNote: Activate
+      translation DOF on avatar to improve retargeting quality.\n\t'Chest' is inbetween
+      humanoid transforms and has rotation animation that will be discarded.\n\nClip
       'Armature|man_running_forward' has import animation warnings that might lower
       retargeting quality:\nNote: Activate translation DOF on avatar to improve retargeting
       quality.\n\t'Chest' is inbetween humanoid transforms and has rotation animation
@@ -548,7 +569,7 @@ ModelImporter:
       name: man_one_handed_horizontal_swipe
       takeName: Armature|man_one_handed_horizontal_swipe
       firstFrame: 0
-      lastFrame: 29
+      lastFrame: 24.7
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -576,7 +597,7 @@ ModelImporter:
       name: man_one_handed_vertical_swipe
       takeName: Armature|man_one_handed_vertical_swipe
       firstFrame: 0
-      lastFrame: 36
+      lastFrame: 27.900002
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -603,8 +624,8 @@ ModelImporter:
     - serializedVersion: 16
       name: man_roll
       takeName: Armature|man_roll
-      firstFrame: 0
-      lastFrame: 29
+      firstFrame: 3.1
+      lastFrame: 25.3
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -619,6 +640,62 @@ ModelImporter:
       keepOriginalOrientation: 1
       keepOriginalPositionY: 1
       keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: man_one_handed_thrust
+      takeName: Armature|man_one_handed_thrust
+      firstFrame: 0
+      lastFrame: 23.8
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 1
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: man_damage
+      takeName: Armature|man_damage
+      firstFrame: 0
+      lastFrame: 35
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 1
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 1
       heightFromFeet: 0
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
