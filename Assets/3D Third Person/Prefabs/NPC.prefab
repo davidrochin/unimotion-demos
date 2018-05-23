@@ -2603,6 +2603,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04a687373819e9b44a05e7e7cf2c66a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  state: 0
   target: {fileID: 0}
 --- !u!114 &114748075028113876
 MonoBehaviour:
@@ -2631,6 +2632,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   current: 200
   max: 200
+  isUsingStamina: 0
 --- !u!114 &114884901266038582
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2679,6 +2681,8 @@ MonoBehaviour:
     rightMove: 0
     grounded: 0
     groundHeight: -3.4028235e+38
+  infoFromAnimator:
+    isRolling: 0
   lockState:
     lockAll: 0
     canMove: 1
@@ -2743,7 +2747,7 @@ SkinnedMeshRenderer:
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
   m_SkinnedMotionVectors: 1
-  m_Mesh: {fileID: 4300000, guid: 63c1b446695bb7d48b50141786a75bca, type: 3}
+  m_Mesh: {fileID: 4300004, guid: 63c1b446695bb7d48b50141786a75bca, type: 3}
   m_Bones:
   - {fileID: 4358354420182126}
   - {fileID: 4530395216394942}

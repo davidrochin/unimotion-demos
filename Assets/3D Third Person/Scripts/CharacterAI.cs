@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 public class CharacterAI : MonoBehaviour {
 
+    public State state;
     public Transform target;
 
     NavMeshAgent navMeshAgent;
@@ -38,20 +39,40 @@ public class CharacterAI : MonoBehaviour {
                 Resume();
             }
 
-            //Follow Target
-            if (target != null) {
-                navMeshAgent.destination = target.position;
-            } else {
-                navMeshAgent.destination = target.position;
-            }
+            if (state == State.Idle) {
 
-            //Attack when close to target
-            if (GetDistanceToTarget() <= 1.5f) {
-                Stop();
-                equipment.UseItem(Hand.Right);
-            } else {
-                Resume();
+                navMeshAgent.destination = transform.position;
+
+                if (GetDistanceToTarget() <= 10f) {
+                    state = State.Chasing;
+                }
+
+            } 
+            
+            
+            if (state == State.Chasing) {
+
+                //Chase Target
+                if (target != null) {
+                    navMeshAgent.destination = target.position;
+                } else {
+                    navMeshAgent.destination = target.position;
+                }
+
+                //Attack when close to target
+                if (GetDistanceToTarget() <= 1.5f) {
+                    Stop();
+                    equipment.UseItem(Hand.Right);
+                } else {
+                    Resume();
+                }
+
+                if (GetDistanceToTarget() > 10f) {
+                    state = State.Idle;
+                }
+
             }
+            
         }
   
     }
@@ -68,5 +89,7 @@ public class CharacterAI : MonoBehaviour {
     float GetDistanceToTarget() {
         return (target.position - transform.position).magnitude;
     }
+
+    public enum State { Idle, Chasing }
 
 }
