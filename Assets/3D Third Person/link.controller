@@ -1010,7 +1010,7 @@ AnimatorState:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Rolling
+  m_Name: Roll
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -1084,7 +1084,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400034, guid: 63c1b446695bb7d48b50141786a75bca, type: 3}
+  m_Motion: {fileID: 7400020, guid: 63c1b446695bb7d48b50141786a75bca, type: 3}
   m_Tag: 
   m_SpeedParameter: forwardMove
   m_MirrorParameter: 

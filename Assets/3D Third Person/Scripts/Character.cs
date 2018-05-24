@@ -5,6 +5,13 @@ using UnityEngine.AI;
 [RequireComponent(typeof(CharacterController))]
 public class Character : MonoBehaviour {
 
+    [Header("Information")]
+    public new string name;
+    public Faction faction;
+
+    [Header("Combat")]
+    public Transform combatTarget;
+
     [Header("Movement")]
 
     [Range(0.01f, 10f)]
@@ -48,10 +55,12 @@ public class Character : MonoBehaviour {
     [HideInInspector]
     public CharacterController characterController;
     Animator animator;
-    LedgeGrabber ledgeGrabber;
     Health health;
     Stamina stamina;
+
     NavMeshAgent navMeshAgent;
+
+    #region Monobehaviours
 
     void Awake() {
         characterController = GetComponent<CharacterController>();
@@ -81,7 +90,6 @@ public class Character : MonoBehaviour {
         
         //If governed by Physics
         else {
-            //CheckGroundHeight();
             ApplyGravity();
             CheckForJump();
             CalculateMoveVector();
@@ -90,11 +98,17 @@ public class Character : MonoBehaviour {
             characterController.Move(moveVector + inputVector * speed * Time.deltaTime);
             grounded = characterController.isGrounded;
 
+            //Stick to slope if necessary
             StickToSlope();
 
-            //Rotate to face direction
-            ForceRotateTowards(lookDirection, 25f);
+            //If there is a Combat Target, change the Look Direction to it
+            if (combatTarget != null) {
+                Vector3 toTarget = combatTarget.position - transform.position;
+                lookDirection = new Vector3(toTarget.x, 0f, toTarget.z).normalized;
+            }
 
+            ForceRotateTowards(lookDirection, 25f);
+            
             if (grounded) { stateInfo.grounded = true; } else { stateInfo.grounded = false; }
             stateInfo.forwardSpeed = inputVector.magnitude * speed;
 
@@ -113,6 +127,8 @@ public class Character : MonoBehaviour {
 
         previousGrounded = grounded;
     }
+
+    #endregion
 
     #region Acciones Internas
 
@@ -183,7 +199,8 @@ public class Character : MonoBehaviour {
     public void Roll() {
         if (grounded && inputVector.magnitude > 0f) {
             if(stamina == null || stamina.Consume(70f)) {
-                animator.SetTrigger("roll");
+                //animator.SetTrigger("roll");
+                animator.Play("Roll");
             }         
         }
     }
@@ -203,14 +220,10 @@ public class Character : MonoBehaviour {
 
     #endregion
 
-    private void OnDrawGizmos() {
-        characterController = GetComponent<CharacterController>();
-        Vector3 start = transform.position + characterController.center + Vector3.up * characterController.height * 0.5f + Vector3.down * characterController.radius;
-        Gizmos.DrawSphere(start, characterController.radius);
-    }
-
     public enum State { OnGround, OnAir, OnLedge, Rolling, ClimbingLedge, Dead }
 }
+
+public enum Faction { Human, Hollow }
 
 [System.Serializable]
 public class CharacterStateInfo {

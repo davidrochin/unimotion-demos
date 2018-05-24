@@ -2666,6 +2666,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee4659e43e29d674e9e5debb5301643e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  name: "David Roch\xEDn"
+  faction: 0
   speed: 3.5
   rotationSpeed: 400
   jumpForce: 5

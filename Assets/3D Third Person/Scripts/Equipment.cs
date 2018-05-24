@@ -79,7 +79,8 @@ public class Equipment : MonoBehaviour {
             leftHandItemOb.transform.parent = leftHandle;
             leftHandItemOb.transform.localPosition = Vector3.zero;
             leftHandItemOb.transform.localRotation = Quaternion.identity;
-            leftHandItemOb.transform.localRotation = Quaternion.Euler(-90f, -90f, 0f);
+            //leftHandItemOb.transform.localRotation = Quaternion.Euler(-90f, -90f, 0f);
+            leftHandItemOb.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
         }
 
         if (rightHandItem != null) {

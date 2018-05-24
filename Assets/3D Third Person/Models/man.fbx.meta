@@ -250,9 +250,6 @@ ModelImporter:
       has import animation warnings that might lower retargeting quality:\nNote: Activate
       translation DOF on avatar to improve retargeting quality.\n\t'Chest' is inbetween
       humanoid transforms and has rotation animation that will be discarded.\n\nClip
-      'Armature|man_idle' has import animation warnings that might lower retargeting
-      quality:\nNote: Activate translation DOF on avatar to improve retargeting quality.\n\t'Chest'
-      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\nClip
       'Armature|man_one_handed_horizontal_swipe' has import animation warnings that
       might lower retargeting quality:\nNote: Activate translation DOF on avatar to
       improve retargeting quality.\n\t'Chest' is inbetween humanoid transforms and
@@ -345,7 +342,7 @@ ModelImporter:
       name: man_idle
       takeName: Armature|man_idle
       firstFrame: 0
-      lastFrame: 36
+      lastFrame: 39
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

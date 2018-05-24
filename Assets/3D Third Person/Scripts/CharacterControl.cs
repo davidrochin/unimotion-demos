@@ -23,7 +23,7 @@ public class CharacterControl : MonoBehaviour {
     }
 
     private void Start() {
-        Camera.main.GetComponent<CameraOrbit>().target = transform;
+        Camera.main.GetComponent<PlayerCamera>().target = transform;
     }
 
     void Update () {
