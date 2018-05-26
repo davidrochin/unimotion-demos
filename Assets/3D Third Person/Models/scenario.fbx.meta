@@ -19,6 +19,7 @@ ModelImporter:
     100022: tower_floor_a
     100024: tower_floor_b
     100026: stairs_b
+    100028: platform_a
     400000: bridge_part_a
     400002: Camera
     400004: Lamp
@@ -33,6 +34,7 @@ ModelImporter:
     400022: tower_floor_a
     400024: tower_floor_b
     400026: stairs_b
+    400028: platform_a
     2000000: Camera
     2100000: Material
     2100002: No Name
@@ -47,6 +49,7 @@ ModelImporter:
     2300016: tower_floor_a
     2300018: tower_floor_b
     2300020: stairs_b
+    2300022: platform_a
     3300000: bridge_part_a
     3300002: reference
     3300004: tower_a
@@ -58,6 +61,7 @@ ModelImporter:
     3300016: tower_floor_a
     3300018: tower_floor_b
     3300020: stairs_b
+    3300022: platform_a
     4300000: bridge_part_a
     4300002: reference
     4300004: tower_a
@@ -69,6 +73,7 @@ ModelImporter:
     4300016: tower_floor_a
     4300018: tower_floor_b
     4300020: stairs_b
+    4300022: platform_a
     10800000: Lamp
   externalObjects: {}
   materials:

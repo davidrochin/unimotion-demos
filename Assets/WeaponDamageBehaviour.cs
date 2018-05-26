@@ -15,6 +15,8 @@ public class WeaponDamageBehaviour : StateMachineBehaviour {
     //OnStateEnter is called before OnStateEnter is called on any state inside this state machine
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
 
+        weaponDamage = ((Weapon)animator.GetComponent<Equipment>().equipedWeapon).damage;
+
         //Initialize things
         alreadyHitColliders = new List<Collider>();
 
@@ -30,12 +32,28 @@ public class WeaponDamageBehaviour : StateMachineBehaviour {
 
                 if (alreadyHitColliders.Find(x => x == colliderHit) == null) {
                     //Add this collider to the alreadyHitColliders list so its not hit again on this animation
-                    alreadyHitColliders.Add(colliderHit);   
+                    alreadyHitColliders.Add(colliderHit);
 
                     //Substract Health if possible
                     Health hitColliderHealth = colliderHit.GetComponent<Health>();
+                    Character character = colliderHit.GetComponent<Character>();
+
                     if (hitColliderHealth != null) {
-                        hitColliderHealth.SubstractHealth(weaponDamage, true);
+                        if (character != null) {
+                            if (character.combatState.isBlocking == false && character.combatState.isRolling == false) {
+                                hitColliderHealth.SubstractHealth(weaponDamage, true);
+                            } else {
+
+                                //Stagger if is blocking
+                                if (character.combatState.isBlocking) {
+                                    //animator.Play("Stagger");
+                                    animator.SetTrigger("stagger");
+                                }
+                            }
+                        } else {
+                            hitColliderHealth.SubstractHealth(weaponDamage, true);
+                        }
+                        
                     }
                 } 
                 

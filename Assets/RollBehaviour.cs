@@ -6,14 +6,10 @@ public class RollBehaviour : StateMachineBehaviour {
 
     //OnStateEnter is called before OnStateEnter is called on any state inside this state machine
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        Stamina stamina = animator.GetComponent<Stamina>();
-        if (stamina != null) {
-            stamina.isUsingStamina = true;
-        }
 
         Character character = animator.GetComponent<Character>();
         if (character != null) {
-            character.infoFromAnimator.isRolling = true;
+            character.combatState.isRolling = true;
         }
     }
 
@@ -24,14 +20,10 @@ public class RollBehaviour : StateMachineBehaviour {
 
     // OnStateExit is called before OnStateExit is called on any state inside this state machine
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        Stamina stamina = animator.GetComponent<Stamina>();
-        if (stamina != null) {
-            stamina.isUsingStamina = false;
-        }
 
         Character character = animator.GetComponent<Character>();
         if (character != null) {
-            character.infoFromAnimator.isRolling = false;
+            character.combatState.isRolling = false;
         }
     }
 

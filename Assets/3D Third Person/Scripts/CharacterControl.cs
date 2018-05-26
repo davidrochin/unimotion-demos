@@ -39,7 +39,17 @@ public class CharacterControl : MonoBehaviour {
         }
 
         if (Input.GetButtonDown("B")) {
-            character.Roll();
+            character.Roll(GetInputVector());
+        }
+
+        if (Input.GetButtonDown("RS")) {
+            if (character.combatTarget == null) {
+                Transform closestEnemy = FindClosestTarget();
+                if (closestEnemy != null)
+                    character.combatTarget = closestEnemy;
+            } else {
+                character.combatTarget = null;
+            } 
         }
 
         if (Input.GetKeyDown(KeyCode.X)){
@@ -51,7 +61,7 @@ public class CharacterControl : MonoBehaviour {
             equipment.UseItem(Hand.Right);
         }
 
-        if (Input.GetMouseButton(1)) {
+        if (Input.GetMouseButton(1) || Input.GetButton("LB")) {
             GetComponent<Animator>().SetBool("shieldUp", true);
         } else {
             GetComponent<Animator>().SetBool("shieldUp", false);
@@ -85,6 +95,19 @@ public class CharacterControl : MonoBehaviour {
         if (inputType == InputType.Normal) { input = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical")); } 
         else if (inputType == InputType.Raw) { input = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")); }
         return Vector3.ClampMagnitude(input, 1f).magnitude;
+    }
+
+    Transform FindClosestTarget() {
+        Targetable[] targetable = FindObjectsOfType<Targetable>();
+        Transform closestTargetable = null;
+        foreach (Targetable t in targetable) {
+            if (closestTargetable == null) {
+                closestTargetable = t.transform;
+            } else if (t.transform != transform && Vector3.Distance(transform.position, t.transform.position) < Vector3.Distance(transform.position, closestTargetable.position)) {
+                closestTargetable = t.transform;
+            }
+        }
+        return closestTargetable;
     }
 
     Vector3 finalMovementVector;

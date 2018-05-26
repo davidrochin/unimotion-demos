@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class AttackBehaviour : StateMachineBehaviour {
 
+    Character character;
+
     //OnStateEnter is called before OnStateEnter is called on any state inside this state machine
 	override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        Stamina stamina = animator.GetComponent<Stamina>();
-        if (stamina != null) {
-            stamina.isUsingStamina = true;
+        character = animator.GetComponent<Character>();
+        if (character != null) {
+            character.combatState.isAttacking = true;
         }
 	}
 
@@ -19,9 +21,8 @@ public class AttackBehaviour : StateMachineBehaviour {
 
     // OnStateExit is called before OnStateExit is called on any state inside this state machine
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        Stamina stamina = animator.GetComponent<Stamina>();
-        if (stamina != null) {
-            stamina.isUsingStamina = false;
+        if (character != null) {
+            character.combatState.isAttacking = false;
         }
     }
 

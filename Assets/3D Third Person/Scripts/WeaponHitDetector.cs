@@ -14,7 +14,9 @@ public class WeaponHitDetector : MonoBehaviour {
 
     public bool detecting = false;
 
-	void Awake () {
+    float minWeaponSpeed = 5f;
+
+    void Awake () {
         collider = GetComponent<BoxCollider>();
         mask = LayerMask.GetMask(new string[]{ "Characters" });
         hits = new List<RaycastHit>();
@@ -25,25 +27,37 @@ public class WeaponHitDetector : MonoBehaviour {
 	void Update () {
 
         if (detecting) {
+
+            //Calculate how fast is the weapon moving
+            float weaponSpeed = (GetColliderWorldPosition() - previousPosition).magnitude / Time.deltaTime;
+
             RaycastHit hit;
 
-            Collider[] overlapColliders = Physics.OverlapBox(GetColliderWorldPosition(), collider.size * 0.5f, collider.transform.rotation, mask);
-            foreach (Collider c in overlapColliders) {
-                if (c != colliderIgnore) {
-                    if (OnHit != null) OnHit(c);
-                }      
-            }
-
+            //Detect hit by BoxCasting
             if (Physics.BoxCast(previousPosition, collider.size * 0.5f,
                 GetDirectionFromPrevious(), out hit, collider.transform.rotation,
-                (GetColliderWorldPosition() - previousPosition).magnitude, mask)) {
+                (GetColliderWorldPosition() - previousPosition).magnitude, mask)) { 
 
-                if (hit.collider != null && hit.collider != colliderIgnore) {
+                //If it hit something and it is not the wielder
+                if (hit.collider != null && hit.collider != colliderIgnore && weaponSpeed >= minWeaponSpeed) {
+                    //Debug.Log("Weapon hit at " + weaponSpeed + " units per second, via BoxCasting");
                     hits.Add(hit);
                     if (OnHit != null) OnHit(hit.collider);
                     //Debug.Break();
                 }
             }
+
+            //Detect hit by Overlapping
+            if (weaponSpeed >= minWeaponSpeed) {
+                Collider[] overlapColliders = Physics.OverlapBox(GetColliderWorldPosition(), collider.size * 0.5f, collider.transform.rotation, mask);
+                foreach (Collider c in overlapColliders) {
+                    if (c != colliderIgnore) {
+                        //Debug.Log("Weapon hit at " + weaponSpeed + " units per second, via Overlapping");
+                        if (OnHit != null) OnHit(c);
+                    }
+                }
+            }
+            
         }
         
         previousPosition = GetColliderWorldPosition();

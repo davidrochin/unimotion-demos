@@ -5,12 +5,15 @@ using UnityEngine.AI;
 [RequireComponent(typeof(CharacterController))]
 public class Character : MonoBehaviour {
 
+    #region Variables
+
     [Header("Information")]
     public new string name;
     public Faction faction;
 
     [Header("Combat")]
     public Transform combatTarget;
+    public CombatStateInfo combatState;
 
     [Header("Movement")]
 
@@ -36,7 +39,6 @@ public class Character : MonoBehaviour {
 
     public CharacterStateInfo stateInfo;
 
-    public InfoFromAnimator infoFromAnimator;
     public LockState lockState;
 
     //Información del entorno
@@ -59,6 +61,8 @@ public class Character : MonoBehaviour {
     Stamina stamina;
 
     NavMeshAgent navMeshAgent;
+
+    #endregion
 
     #region Monobehaviours
 
@@ -102,7 +106,7 @@ public class Character : MonoBehaviour {
             StickToSlope();
 
             //If there is a Combat Target, change the Look Direction to it
-            if (combatTarget != null) {
+            if (combatTarget != null && !combatState.isRolling) {
                 Vector3 toTarget = combatTarget.position - transform.position;
                 lookDirection = new Vector3(toTarget.x, 0f, toTarget.z).normalized;
             }
@@ -130,7 +134,7 @@ public class Character : MonoBehaviour {
 
     #endregion
 
-    #region Acciones Internas
+    #region Private methods
 
     void ApplyGravity() {
         //Debug.Log("grounded=" + grounded + ", yForce=" + yForce);
@@ -176,7 +180,7 @@ public class Character : MonoBehaviour {
 
     #endregion
 
-    #region Acciones Básicas
+    #region Public methods
 
     public void Move(Vector3 direction, float speed) {
         if((health == null || health.isAlive) && lockState.canMove && !lockState.lockAll) {
@@ -196,12 +200,16 @@ public class Character : MonoBehaviour {
         }
     }
 
-    public void Roll() {
-        if (grounded && inputVector.magnitude > 0f) {
-            if(stamina == null || stamina.Consume(70f)) {
-                //animator.SetTrigger("roll");
-                animator.Play("Roll");
-            }         
+    public bool Roll(Vector3 direction) {
+        if (grounded && lockState.canRoll && !lockState.lockAll && (stamina == null || stamina.Consume(50f))) {
+            lookDirection = direction;
+            transform.rotation = Quaternion.LookRotation(new Vector3(direction.x, 0f, direction.z));
+            //animator.Play("Roll");
+            animator.SetTrigger("roll");
+            combatState.isRolling = true;
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -253,11 +261,13 @@ public class CharacterStateInfo {
 }
 
 [System.Serializable]
-public class InfoFromAnimator {
+public class CombatStateInfo {
 
     //The animator has to fill all of this
-    public bool isRolling = false;
 
+    public bool isBlocking = false;
+    public bool isAttacking = false;
+    public bool isRolling = false;
 }
 
 public delegate void Action();

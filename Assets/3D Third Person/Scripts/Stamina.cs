@@ -7,31 +7,33 @@ public class Stamina : MonoBehaviour {
     public float current = 200f;
     public float max = 200f;
 
-    public bool isUsingStamina = false;
-
-    float timeSinceLastConsume = float.MaxValue;
+    float timeSinceDepleted = float.MaxValue;
 
     //References
     CharacterControl characterControl;
+    Character character;
 
 	void Awake () {
         characterControl = GetComponent<CharacterControl>();
-	}
+        character = GetComponent<Character>();
+    }
 	
 	void Update () {
 
-        timeSinceLastConsume += Time.deltaTime;
+        timeSinceDepleted += Time.deltaTime;
 
-        if (!isUsingStamina) {
+        if ((character == null || (!character.combatState.isAttacking && !character.combatState.isBlocking && !character.combatState.isRolling)) && timeSinceDepleted >= 3f) {
             current = Mathf.Clamp(current + 60f * Time.deltaTime, 0f, max);
         }
         
 	}
 
     public bool Consume(float quantity) {
-        if (current >= quantity && !isUsingStamina) {
-            current -= quantity;
-            timeSinceLastConsume = 0f;
+        if (current > 0f) {
+            current = Mathf.Clamp(current - quantity, 0f, max);
+            if (current <= 0f) {
+                timeSinceDepleted = 0f;
+            }
             return true;
         } else {
             return false;
