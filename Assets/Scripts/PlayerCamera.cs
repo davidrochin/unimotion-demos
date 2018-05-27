@@ -5,42 +5,52 @@ using UnityEngine;
 public class PlayerCamera : MonoBehaviour {
 
     [Header("Target Settings")]
-    public Transform target;
-    public float distance = 5f;
-    public Vector3 targetOffset;
+    public Character player;
+    public float distance = 2.94f;
+    public Vector3 targetOffset = new Vector3(0f, 1.09f, 0f);
 
     [Header("Orbit Settings")]
-    public float orbitSpeed = 10f;
+    public float orbitSpeed = 50f;
     public LayerMask obstructionLayer;
 
     Camera camera;
-    Character player;
 
 	void Awake () {
         Cursor.lockState = CursorLockMode.Locked;
         camera = GetComponent<Camera>();
-        player = target.GetComponent<Character>();
 	}
 
     void LateUpdate () {
+
         //Get the real target position (add offset)
-        Vector3 realTarget = target.position + targetOffset;
+        Vector3 realTarget = player.transform.position + targetOffset;
 
-        //Make a vector from mouse/joystick movement
-        Vector3 input = new Vector3(Input.GetAxis("Mouse X") , -Input.GetAxis("Mouse Y"), 0f);
-        input = input + new Vector3(Input.GetAxis("Camera Horizontal") * 2f, Input.GetAxis("Camera Vertical") * 2f, 0f);
+        //When not targeting any enemy
+        if (player.combatTarget == null) {
 
-        //Calculate what rotation needs the Camera...
-        Quaternion finalRotation = Quaternion.Euler(
-            transform.rotation.eulerAngles.x + input.y * Time.deltaTime * orbitSpeed, 
-            transform.rotation.eulerAngles.y + input.x * Time.deltaTime * orbitSpeed, 
-            0f);
+            //Make a vector from mouse/joystick movement
+            Vector3 input = new Vector3(Input.GetAxis("Mouse X"), -Input.GetAxis("Mouse Y"), 0f);
+            input = input + new Vector3(Input.GetAxis("Camera Horizontal") * 2f, Input.GetAxis("Camera Vertical") * 2f, 0f);
 
-        //...and apply it
-        transform.localRotation = finalRotation;
+            //Calculate what rotation needs the Camera...
+            Quaternion finalRotation = Quaternion.Euler(
+                transform.rotation.eulerAngles.x + input.y * Time.deltaTime * orbitSpeed,
+                transform.rotation.eulerAngles.y + input.x * Time.deltaTime * orbitSpeed,
+                0f);
+
+            //...and apply it
+            transform.localRotation = finalRotation;
+        } 
+        
+        //When targeting an enemy
+        else {
+            Vector3 direction = (player.combatTarget.transform.position - player.transform.position).normalized;
+            transform.position = player.transform.position + Vector3.up * 4f - direction * 2f;
+            transform.localRotation = Quaternion.LookRotation((player.combatTarget.position - transform.position).normalized);
+        }
 
         //Antes de acomodarse en la distancia necesaria, revisar si hay una obstrucción para no pasar de ella
-        RaycastHit hit = RaycastUtil.RaycastPastItself(target.gameObject, realTarget, transform.forward * -1f, distance, obstructionLayer);
+        RaycastHit hit = RaycastUtil.RaycastPastItself(player.gameObject, realTarget, transform.forward * -1f, distance, obstructionLayer);
 
         float realDistance = 0f;
         if (hit.collider != null) {

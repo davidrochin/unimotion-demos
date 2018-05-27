@@ -41,7 +41,7 @@ public class WeaponDamageBehaviour : StateMachineBehaviour {
                     if (hitColliderHealth != null) {
                         if (character != null) {
                             if (character.combatState.isBlocking == false && character.combatState.isRolling == false) {
-                                hitColliderHealth.Substract(weaponDamage, true);
+                                hitColliderHealth.Damage(weaponDamage, true);
                             } else {
 
                                 //Stagger if is blocking
@@ -51,7 +51,7 @@ public class WeaponDamageBehaviour : StateMachineBehaviour {
                                 }
                             }
                         } else {
-                            hitColliderHealth.Substract(weaponDamage, true);
+                            hitColliderHealth.Damage(weaponDamage, true);
                         }
                         
                     }

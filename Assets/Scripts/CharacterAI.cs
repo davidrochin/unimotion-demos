@@ -46,7 +46,7 @@ public class CharacterAI : MonoBehaviour {
             //When Idle
             if (state == State.Idle) {
                 navMeshAgent.destination = transform.position;
-                if (GetDistanceToTarget() <= 10f) {
+                if (GetDistanceToTarget() <= 10f && !character.combatState.isDead) {
                     state = State.Attacking;
                 }
 
@@ -55,34 +55,27 @@ public class CharacterAI : MonoBehaviour {
             //When Attacking
             if (state == State.Attacking) {
 
-                //Chase Target
-                if (target != null) {
+                //Determine if it can keep chasing the target
+                if (target != null && !target.combatState.isDead && GetDistanceToTarget() <= 10f) {
+
+                    //Chase the target
                     navMeshAgent.destination = target.transform.position;
-                } else {
-                    navMeshAgent.destination = target.transform.position;
-                }
 
-                //Attack when close to target
-                if (GetDistanceToTarget() <= 1.5f) {
-                    character.ForceRotateTowards((target.transform.position - transform.position).normalized, 25f);
-                    Stop();
-                    //equipment.UseItem(Hand.Right);
-                    character.Attack();
-                } else {
-                    Resume();
-                }
+                    //Block incoming attacks
+                    if (target.combatState.isAttacking) {
+                        character.StartBlocking();
+                    } else {
+                        character.StopBlocking();
+                    }
 
-                if (target.combatState.isAttacking) {
-                    character.StartBlocking();
-                } else {
-                    character.StopBlocking();
-                }
+                    //Attack if too close
+                    if (GetDistanceToTarget() <= 1.5f) {
+                        character.Attack();
+                    }
 
-                //If Targets gets too far, return home
-                if (GetDistanceToTarget() > 10f) {
+                } else {
                     state = State.ReturningHome;
                 }
-
             }
 
             //When Returning Home

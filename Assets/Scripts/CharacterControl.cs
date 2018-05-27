@@ -23,7 +23,7 @@ public class CharacterControl : MonoBehaviour {
     }
 
     private void Start() {
-        Camera.main.GetComponent<PlayerCamera>().target = transform;
+        Camera.main.GetComponent<PlayerCamera>().player = character;
     }
 
     void Update () {
@@ -31,7 +31,7 @@ public class CharacterControl : MonoBehaviour {
         //Caminar y correr
         if (lockState.canMove && GetInputVector() != Vector3.zero) {
             character.RotateTowards(GetInputVector(), 4000f * Time.deltaTime);
-            character.Move(GetInputVector(), GetInputMagnitude());
+            character.Move(GetInputVector(), Input.GetButton("B") ? GetInputMagnitude() * 1.5f : GetInputMagnitude());
         }
 
         if (Input.GetButtonDown("Jump")) {
@@ -62,7 +62,7 @@ public class CharacterControl : MonoBehaviour {
             character.Attack();
         }
 
-        if (Input.GetMouseButton(1) || Input.GetButton("LB")) {
+        if (Input.GetButton("LB")) {
             //GetComponent<Animator>().SetBool("shieldUp", true);
             character.StartBlocking();
         } else {

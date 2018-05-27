@@ -50,6 +50,10 @@ public class Character : MonoBehaviour {
     //Events
     public Action OnJump;
     public Action OnHighFall;
+    public Action OnAttack;
+    public Action OnRoll;
+    public Action OnStartBlocking;
+    public Action OnStopBlocking;
 
     Vector3 moveVector;
     Vector3 inputVector;
@@ -76,6 +80,29 @@ public class Character : MonoBehaviour {
         equipment = GetComponent<Equipment>();
 
         lookDirection = transform.forward;
+    }
+
+    void Start() {
+        if (health != null) {
+
+            //Establish what happens when the Character dies
+            health.OnDeath += delegate () {
+                combatTarget = null;
+                combatState.isDead = true;
+            };
+
+            //Establish what happens when the Character revives
+            health.OnRevive += delegate () {
+                combatState.isDead = false;
+            };
+
+            //Establish what happens when the Character takes damage
+            health.OnDamage += delegate (float damage) {
+                if (!combatState.isDead && grounded) {
+                    animator.Play("Take Damage");
+                }
+            };
+        }    
     }
 
     void Update() {
@@ -108,7 +135,7 @@ public class Character : MonoBehaviour {
             StickToSlope();
 
             //If there is a Combat Target, change the Look Direction to it
-            if (combatTarget != null && !combatState.isRolling) {
+            if ((health == null || health.isAlive) && combatTarget != null && !combatState.isRolling) {
                 Vector3 toTarget = combatTarget.position - transform.position;
                 lookDirection = new Vector3(toTarget.x, 0f, toTarget.z).normalized;
             }
@@ -238,7 +265,7 @@ public class Character : MonoBehaviour {
 
     public bool StartBlocking() {
         if (grounded && !combatState.isAttacking && !combatState.isRolling) {
-            if (stamina == null || stamina.current > 0f) {
+            if (stamina == null || stamina.current >= 10f) {
                 animator.SetBool("blocking", true);
                 combatState.isBlocking = true;
             }
@@ -301,11 +328,10 @@ public class CharacterStateInfo {
 [System.Serializable]
 public class CombatStateInfo {
 
-    //The animator has to fill all of this
-
     public bool isBlocking = false;
     public bool isAttacking = false;
     public bool isRolling = false;
+    public bool isDead = false;
 }
 
 public delegate void Action();

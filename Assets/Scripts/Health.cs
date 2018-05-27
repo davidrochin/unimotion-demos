@@ -18,6 +18,7 @@ public class Health : MonoBehaviour {
     //Events
     public event Action OnDeath;
     public event Action OnRevive;
+    public event FloatAction OnDamage;
 
     private void Awake() {
         character = GetComponent<Character>();
@@ -31,14 +32,14 @@ public class Health : MonoBehaviour {
         CheckDeath();
     }
 
-    public void Substract(float quantity, bool damageAnimation) {
+    public void Damage(float quantity, bool damageAnimation) {
         current = Mathf.Clamp(current - quantity, 0f, max);
-        if (damageAnimation && !animator.GetBool("dead")) { animator.Play("Take Damage"); }
+        if (OnDamage != null) { OnDamage(quantity); }
         CheckDeath();
     }
 
     public void SubstractHealth(float quantity) {
-        Substract(quantity, false);
+        Damage(quantity, false);
     }
 
     public void AddHealth(float quantity) {
@@ -68,13 +69,18 @@ public class Health : MonoBehaviour {
 
     private void OnGUI() {
 
-        /*if(characterControl == null && current > 0f) {
-            Vector2 barSize = new Vector2(150f, 20f);
-            Vector2 barPos = Camera.main.WorldToScreenPoint(character.transform.position + character.characterController.center + Vector3.up * character.characterController.height * 0.5f);
+        if(characterControl == null && current > 0f) {
+            Texture2D backTex = Util.Texture2D.CreateEmpty(Color.black);
+            Texture2D frontTex = Util.Texture2D.CreateEmpty(Color.red);
+
+            Vector2 barSize = new Vector2(80f, 5f);
+            Vector2 barPos = Camera.main.WorldToScreenPoint(character.transform.position + character.characterController.center + Vector3.up * character.characterController.height * 0.4f);
             barPos = new Vector2(barPos.x, (Screen.height - barPos.y));
 
-            GUI.Box(new Rect(barPos - Vector2.right * barSize.x * 0.5f - Vector2.up * 15f, barSize), "" + current);
-        }*/
+            //GUI.Box(new Rect(barPos - Vector2.right * barSize.x * 0.5f - Vector2.up * 15f, barSize), "" + current);
+            GUI.DrawTexture(new Rect(barPos - Vector2.right * barSize.x * 0.5f - Vector2.up * 15f, barSize), backTex);
+            GUI.DrawTexture(new Rect(barPos - Vector2.right * barSize.x * 0.5f - Vector2.up * 15f, new Vector2((current / max) * barSize.x, barSize.y)), frontTex);
+        }
 
         if (characterControl != null) {
             GUI.DrawTexture(new Rect(0f, 0f, max, 15f), Util.Texture2D.CreateEmpty(Color.black));
@@ -82,4 +88,5 @@ public class Health : MonoBehaviour {
         }
 
     }
+
 }
