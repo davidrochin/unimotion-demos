@@ -31,14 +31,14 @@ public class Health : MonoBehaviour {
         CheckDeath();
     }
 
-    public void SubstractHealth(float quantity, bool damageAnimation) {
+    public void Substract(float quantity, bool damageAnimation) {
         current = Mathf.Clamp(current - quantity, 0f, max);
         if (damageAnimation && !animator.GetBool("dead")) { animator.Play("Take Damage"); }
         CheckDeath();
     }
 
     public void SubstractHealth(float quantity) {
-        SubstractHealth(quantity, false);
+        Substract(quantity, false);
     }
 
     public void AddHealth(float quantity) {

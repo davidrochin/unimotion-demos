@@ -58,13 +58,16 @@ public class CharacterControl : MonoBehaviour {
 
         if (Input.GetMouseButtonDown(0) || Input.GetButtonDown("RB")) {
             //equipment.UseRightHandItem();
-            equipment.UseItem(Hand.Right);
+            //equipment.UseItem(Hand.Right);
+            character.Attack();
         }
 
         if (Input.GetMouseButton(1) || Input.GetButton("LB")) {
-            GetComponent<Animator>().SetBool("shieldUp", true);
+            //GetComponent<Animator>().SetBool("shieldUp", true);
+            character.StartBlocking();
         } else {
-            GetComponent<Animator>().SetBool("shieldUp", false);
+            //GetComponent<Animator>().SetBool("shieldUp", false);
+            character.StopBlocking();
         }
 	}
 

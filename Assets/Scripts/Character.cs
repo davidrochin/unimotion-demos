@@ -59,6 +59,7 @@ public class Character : MonoBehaviour {
     Animator animator;
     Health health;
     Stamina stamina;
+    Equipment equipment;
 
     NavMeshAgent navMeshAgent;
 
@@ -72,6 +73,7 @@ public class Character : MonoBehaviour {
         health = GetComponent<Health>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         stamina = GetComponent<Stamina>();
+        equipment = GetComponent<Equipment>();
 
         lookDirection = transform.forward;
     }
@@ -201,7 +203,7 @@ public class Character : MonoBehaviour {
     }
 
     public bool Roll(Vector3 direction) {
-        if (grounded && lockState.canRoll && !lockState.lockAll && (stamina == null || stamina.Consume(50f))) {
+        if (grounded && lockState.canRoll && !lockState.lockAll && (stamina == null || stamina.Consume(100f))) {
             lookDirection = direction;
             transform.rotation = Quaternion.LookRotation(new Vector3(direction.x, 0f, direction.z));
             //animator.Play("Roll");
@@ -211,6 +213,43 @@ public class Character : MonoBehaviour {
         } else {
             return false;
         }
+    }
+
+    public bool Attack() {
+        Weapon equipedWeapon = equipment.equipedWeapon;
+        if (equipment != null && !combatState.isAttacking && !combatState.isBlocking && !combatState.isRolling && (stamina == null || stamina.HasAny())) {
+            
+            //Pick a random attack animation
+            int attackAnimation = 0;
+            attackAnimation = (int)(equipedWeapon).moves[Random.Range(0, (equipedWeapon).moves.Length)];
+            animator.SetInteger("attackType", attackAnimation);
+            animator.SetTrigger("attack");
+
+            //Consume Stamina
+            if (stamina != null) {
+                stamina.Consume(equipedWeapon.damage);
+            }
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public bool StartBlocking() {
+        if (grounded && !combatState.isAttacking && !combatState.isRolling) {
+            if (stamina == null || stamina.current > 0f) {
+                animator.SetBool("blocking", true);
+                combatState.isBlocking = true;
+            }
+        }
+        return true;
+    }
+
+    public bool StopBlocking() {
+        animator.SetBool("blocking", false);
+        combatState.isBlocking = false;
+        return true;
     }
 
     public void RotateTowards(Vector3 direction, float speed) {
@@ -228,7 +267,6 @@ public class Character : MonoBehaviour {
 
     #endregion
 
-    public enum State { OnGround, OnAir, OnLedge, Rolling, ClimbingLedge, Dead }
 }
 
 public enum Faction { Human, Hollow }

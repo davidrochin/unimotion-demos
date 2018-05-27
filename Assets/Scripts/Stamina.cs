@@ -22,7 +22,7 @@ public class Stamina : MonoBehaviour {
 
         timeSinceDepleted += Time.deltaTime;
 
-        if ((character == null || (!character.combatState.isAttacking && !character.combatState.isBlocking && !character.combatState.isRolling)) && timeSinceDepleted >= 3f) {
+        if ((character == null || (!character.combatState.isAttacking && !character.combatState.isBlocking && !character.combatState.isRolling)) && timeSinceDepleted >= 2f) {
             current = Mathf.Clamp(current + 60f * Time.deltaTime, 0f, max);
         }
         
@@ -30,10 +30,34 @@ public class Stamina : MonoBehaviour {
 
     public bool Consume(float quantity) {
         if (current > 0f) {
+            //Substract to current Stamina
             current = Mathf.Clamp(current - quantity, 0f, max);
+
             if (current <= 0f) {
                 timeSinceDepleted = 0f;
+
+                //Stop blocking
+                if (character != null) {
+                    character.StopBlocking();
+                }
             }
+            return true;
+        } else {
+            timeSinceDepleted = 0f;
+            return false;
+        }
+    }
+
+    public bool Has(float quantity) {
+        if (current >= quantity) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public bool HasAny() {
+        if (current > 0f) {
             return true;
         } else {
             return false;

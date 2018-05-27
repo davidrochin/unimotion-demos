@@ -6,7 +6,10 @@ using UnityEngine.AI;
 public class CharacterAI : MonoBehaviour {
 
     public State state;
-    public Transform target;
+    public State combatState;
+    public Character target;
+
+    public Vector3 home;
 
     NavMeshAgent navMeshAgent;
     Health health;
@@ -22,12 +25,13 @@ public class CharacterAI : MonoBehaviour {
         equipment = GetComponent<Equipment>();
         character = GetComponent<Character>();
 
-        navMeshAgent.destination = target.position;
+        navMeshAgent.destination = target.transform.position;
         health.OnDeath += delegate () { navMeshAgent.enabled = false; };
         health.OnRevive += delegate () { navMeshAgent.enabled = true; };
+
+        home = transform.position;
     }
 	
-	// Update is called once per frame
 	void Update () {
 
         if (navMeshAgent.enabled) {
@@ -39,39 +43,54 @@ public class CharacterAI : MonoBehaviour {
                 Resume();
             }
 
+            //When Idle
             if (state == State.Idle) {
-
                 navMeshAgent.destination = transform.position;
-
                 if (GetDistanceToTarget() <= 10f) {
-                    state = State.Chasing;
+                    state = State.Attacking;
                 }
 
-            } 
+            }
             
-            
-            if (state == State.Chasing) {
+            //When Attacking
+            if (state == State.Attacking) {
 
                 //Chase Target
                 if (target != null) {
-                    navMeshAgent.destination = target.position;
+                    navMeshAgent.destination = target.transform.position;
                 } else {
-                    navMeshAgent.destination = target.position;
+                    navMeshAgent.destination = target.transform.position;
                 }
 
                 //Attack when close to target
                 if (GetDistanceToTarget() <= 1.5f) {
-                    character.ForceRotateTowards((target.position - transform.position).normalized, 25f);
+                    character.ForceRotateTowards((target.transform.position - transform.position).normalized, 25f);
                     Stop();
-                    equipment.UseItem(Hand.Right);
+                    //equipment.UseItem(Hand.Right);
+                    character.Attack();
                 } else {
                     Resume();
                 }
 
-                if (GetDistanceToTarget() > 10f) {
-                    state = State.Idle;
+                if (target.combatState.isAttacking) {
+                    character.StartBlocking();
+                } else {
+                    character.StopBlocking();
                 }
 
+                //If Targets gets too far, return home
+                if (GetDistanceToTarget() > 10f) {
+                    state = State.ReturningHome;
+                }
+
+            }
+
+            //When Returning Home
+            if (state == State.ReturningHome) {
+                navMeshAgent.destination = home;
+                if (Vector3.Distance(transform.position, home) <= 1f) {
+                    state = State.Idle;
+                }
             }
             
         }
@@ -88,9 +107,10 @@ public class CharacterAI : MonoBehaviour {
     }
 
     float GetDistanceToTarget() {
-        return (target.position - transform.position).magnitude;
+        return (target.transform.position - transform.position).magnitude;
     }
 
-    public enum State { Idle, Chasing }
+    public enum State { Idle, Attacking, ReturningHome }
+    public enum CombatState { Idle, Attacking, Blocking, Rounding }
 
 }

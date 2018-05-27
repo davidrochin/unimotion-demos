@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class CharacterStateBehaviour : StateMachineBehaviour {
 
-    public Character.State onStateEnter;
+    /*public Character.State onStateEnter;
     public Character.State onStateUpdate;
-    public Character.State onStateExit;
+    public Character.State onStateExit;*/
 
 	override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
 	

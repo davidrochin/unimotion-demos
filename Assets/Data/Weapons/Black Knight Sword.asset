@@ -18,5 +18,5 @@ MonoBehaviour:
   cost: 300
   prefab: {fileID: 1098723971400448, guid: 9081e0188525d5a4ab7bc319515b91f5, type: 2}
   sprite: {fileID: 0}
-  damage: 200
+  damage: 140
   moves: 01000000

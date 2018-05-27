@@ -47,30 +47,6 @@ public class Equipment : MonoBehaviour {
 
     }
 
-    public void UseItem(Hand hand) {
-
-        //Determine which item to use
-        Item itemToUse = null;
-        switch (hand) {
-            case Hand.Left: itemToUse = equipedShield; break;
-            case Hand.Right: itemToUse = equipedWeapon; break;
-        }
-
-        if (itemToUse != null) {
-            if (itemToUse is Weapon) {
-                if (stamina.Consume(80f) && (character == null || !character.combatState.isAttacking)) {
-                    animator.SetTrigger("attack");
-
-                    //Pick a random attack animation
-                    int attackAnimation = 0;
-                    attackAnimation = (int)((Weapon)equipedWeapon).moves[Random.Range(0, ((Weapon)equipedWeapon).moves.Length)];
-
-                    animator.SetInteger("attackType", attackAnimation);
-                }
-            }
-        }
-    }
-
     void UpdateHandItems() {
 
         Destroy(shieldObject);
@@ -81,8 +57,7 @@ public class Equipment : MonoBehaviour {
             shieldObject.transform.parent = leftHandle;
             shieldObject.transform.localPosition = Vector3.zero;
             shieldObject.transform.localRotation = Quaternion.identity;
-            //leftHandItemOb.transform.localRotation = Quaternion.Euler(-90f, -90f, 0f);
-            shieldObject.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+            shieldObject.transform.localRotation = Quaternion.Euler(90f, 90f, 0f);
         }
 
         if (equipedWeapon != null) {
