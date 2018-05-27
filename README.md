@@ -1,3 +1,3 @@
-# Character Controller Collection
+# ARPG Template
 
-Character Controller Collection es una colección de controladores de personaje variados y genéricos para ser usados en proyectos de Unity. Las características de los controladores están basadas en los estándares actuales de controladores.
+Unity template for making ARPG's, inspired by games like Dark Souls and The Legend of Zelda
