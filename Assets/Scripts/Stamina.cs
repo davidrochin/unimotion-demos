@@ -12,10 +12,12 @@ public class Stamina : MonoBehaviour {
     //References
     CharacterControl characterControl;
     Character character;
+    Equipment equipment;
 
 	void Awake () {
         characterControl = GetComponent<CharacterControl>();
         character = GetComponent<Character>();
+        equipment = GetComponent<Equipment>();
     }
 	
 	void Update () {
@@ -46,6 +48,16 @@ public class Stamina : MonoBehaviour {
             timeSinceDepleted = 0f;
             return false;
         }
+    }
+
+    public bool ConsumeFromWeapon() {
+        if (equipment != null) {
+            Weapon weapon = equipment.equipedWeapon;
+            if (weapon != null) {
+                return Consume(weapon.damage);
+            }
+        }
+        return false;
     }
 
     public bool Has(float quantity) {

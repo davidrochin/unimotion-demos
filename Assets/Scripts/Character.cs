@@ -118,7 +118,7 @@ public class Character : MonoBehaviour {
                 stateInfo.grounded = true;
             }
             stateInfo.forwardMove = navMeshAgent.velocity.magnitude / navMeshAgent.speed;
-            stateInfo.forwardSpeed = navMeshAgent.velocity.magnitude;
+            stateInfo.moveSpeed = navMeshAgent.velocity.magnitude;
         } 
         
         //If governed by Physics
@@ -140,10 +140,10 @@ public class Character : MonoBehaviour {
                 lookDirection = new Vector3(toTarget.x, 0f, toTarget.z).normalized;
             }
 
-            ForceRotateTowards(lookDirection, 25f);
+            ForceRotateTowards(lookDirection, 5f);
             
             if (grounded) { stateInfo.grounded = true; } else { stateInfo.grounded = false; }
-            stateInfo.forwardSpeed = inputVector.magnitude * speed;
+            stateInfo.moveSpeed = inputVector.magnitude * speed;
 
         }
 
@@ -214,10 +214,13 @@ public class Character : MonoBehaviour {
     public void Move(Vector3 direction, float speed) {
         if((health == null || health.isAlive) && lockState.canMove && !lockState.lockAll) {
             inputVector = direction.normalized * speed;
+
+            Debug.Log(Vector3.Angle(inputVector, transform.rotation * Vector3.forward));
+
             Vector3 i = transform.InverseTransformDirection(inputVector);
+            //Vector3 i = transform.InverseTransformDirection(velocity);
             stateInfo.forwardMove = Mathf.MoveTowards(stateInfo.forwardMove, i.z, 2f * Time.deltaTime);
-            //stateInfo.forwardMove = i.z;
-            stateInfo.rightMove = i.x;
+            stateInfo.rightMove = Mathf.MoveTowards(stateInfo.rightMove, i.x, 2f * Time.deltaTime);
         }
     }
 
@@ -253,9 +256,9 @@ public class Character : MonoBehaviour {
             animator.SetTrigger("attack");
 
             //Consume Stamina
-            if (stamina != null) {
+            /*if (stamina != null) {
                 stamina.Consume(equipedWeapon.damage);
-            }
+            }*/
 
             return true;
         } else {
@@ -301,7 +304,7 @@ public enum Faction { Human, Hollow }
 [System.Serializable]
 public class CharacterStateInfo {
     public float forwardMove;
-    public float forwardSpeed;
+    public float moveSpeed;
     public float rightMove;
 
     public bool grounded;
@@ -312,15 +315,19 @@ public class CharacterStateInfo {
     }
 
     public void UpdateToAnimator(Animator anim) {
+        //anim.SetFloat("forwardMove", Mathf.MoveTowards(anim.GetFloat("forwardMove"), forwardMove, 1f * Time.deltaTime));
+        //anim.SetFloat("rightMove", Mathf.MoveTowards(anim.GetFloat("rightMove"), rightMove, 1f * Time.deltaTime));
+
         anim.SetFloat("forwardMove", forwardMove);
-        anim.SetFloat("forwardSpeed", forwardSpeed);
         anim.SetFloat("rightMove", rightMove);
+
+        anim.SetFloat("moveSpeed", moveSpeed);
         anim.SetBool("grounded", grounded);
     }
 
     public void Reset() {
         forwardMove = 0f;
-        forwardSpeed = 0f;
+        moveSpeed = 0f;
         rightMove = 0f;
     }
 }
