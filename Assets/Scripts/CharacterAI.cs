@@ -46,7 +46,7 @@ public class CharacterAI : MonoBehaviour {
             //When Idle
             if (state == State.Idle) {
                 navMeshAgent.destination = transform.position;
-                if (GetDistanceToTarget() <= 10f && !character.combatState.isDead) {
+                if (GetDistanceToTarget() <= 10f && !character.state.dead) {
                     state = State.Attacking;
                 }
 
@@ -56,13 +56,13 @@ public class CharacterAI : MonoBehaviour {
             if (state == State.Attacking) {
 
                 //Determine if it can keep chasing the target
-                if (target != null && !target.combatState.isDead && GetDistanceToTarget() <= 10f) {
+                if (target != null && !target.state.dead && GetDistanceToTarget() <= 10f) {
 
                     //Chase the target
                     navMeshAgent.destination = target.transform.position;
 
                     //Block incoming attacks
-                    if (target.combatState.isAttacking) {
+                    if (target.state.attacking) {
                         character.StartBlocking();
                     } else {
                         character.StopBlocking();

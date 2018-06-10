@@ -6,8 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/CharacterController3D/test.unity
+    path: Assets/Scenes/test_locomotion.unity
+    guid: d9d5ed0ba4c8b614f8b5db1201c65a70
+  - enabled: 1
+    path: Assets/Scenes/test_general.unity
     guid: 5cd10257f5183a24b9906151e5699cbd
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000

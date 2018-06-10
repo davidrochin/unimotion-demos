@@ -26,7 +26,7 @@ public class PlayerCamera : MonoBehaviour {
         Vector3 realTarget = player.transform.position + targetOffset;
 
         //When not targeting any enemy
-        if (player.combatTarget == null) {
+        if (player.lookTarget == null) {
 
             //Make a vector from mouse/joystick movement
             Vector3 input = new Vector3(Input.GetAxis("Mouse X"), -Input.GetAxis("Mouse Y"), 0f);
@@ -58,9 +58,9 @@ public class PlayerCamera : MonoBehaviour {
         
         //When targeting an enemy
         else {
-            Vector3 direction = (player.combatTarget.transform.position - player.transform.position).normalized;
+            Vector3 direction = (player.lookTarget.transform.position - player.transform.position).normalized;
             transform.position = player.transform.position + Vector3.up * 2.5f - direction * 2.275434f;
-            transform.localRotation = Quaternion.LookRotation((player.combatTarget.position - transform.position).normalized);
+            transform.localRotation = Quaternion.LookRotation((player.lookTarget.position - transform.position).normalized);
         }
 
         if (Input.GetKeyDown(KeyCode.Z)) {

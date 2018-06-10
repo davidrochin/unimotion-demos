@@ -43,12 +43,12 @@ public class CharacterControl : MonoBehaviour {
         }
 
         if (Input.GetButtonDown("RS")) {
-            if (character.combatTarget == null) {
+            if (character.lookTarget == null) {
                 Transform closestEnemy = FindClosestTarget();
                 if (closestEnemy != null)
-                    character.combatTarget = closestEnemy;
+                    character.lookTarget = closestEnemy;
             } else {
-                character.combatTarget = null;
+                character.lookTarget = null;
             } 
         }
 

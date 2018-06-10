@@ -9,7 +9,7 @@ public class RollBehaviour : StateMachineBehaviour {
 
         Character character = animator.GetComponent<Character>();
         if (character != null) {
-            character.combatState.isRolling = true;
+            character.state.rolling = true;
         }
     }
 
@@ -23,7 +23,7 @@ public class RollBehaviour : StateMachineBehaviour {
 
         Character character = animator.GetComponent<Character>();
         if (character != null) {
-            character.combatState.isRolling = false;
+            character.state.rolling = false;
         }
     }
 

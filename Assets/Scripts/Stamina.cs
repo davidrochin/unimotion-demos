@@ -24,7 +24,7 @@ public class Stamina : MonoBehaviour {
 
         timeSinceDepleted += Time.deltaTime;
 
-        if ((character == null || (!character.combatState.isAttacking && !character.combatState.isBlocking && !character.combatState.isRolling)) && timeSinceDepleted >= 2f) {
+        if ((character == null || (!character.state.attacking && !character.state.blocking && !character.state.rolling)) && timeSinceDepleted >= 2f) {
             current = Mathf.Clamp(current + 60f * Time.deltaTime, 0f, max);
         }
         

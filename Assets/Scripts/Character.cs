@@ -9,11 +9,9 @@ public class Character : MonoBehaviour {
 
     [Header("Information")]
     public new string name;
-    public Faction faction;
 
     [Header("Combat")]
-    public Transform combatTarget;
-    public CombatStateInfo combatState;
+    public Transform lookTarget;
 
     [Header("Movement")]
 
@@ -28,16 +26,10 @@ public class Character : MonoBehaviour {
     public float rollSpeed = 1f;
 
     [Header("Debug")]
-    public bool grounded = false;
-    public bool previousGrounded = false;
-    public bool walking = false;
-    public bool running = false;
-    public bool rolling = false;
     public float yForce = 0f, xForce = 0f;
     public Vector3 lookDirection;
-    public Vector3 velocity;
 
-    public CharacterStateInfo stateInfo;
+    public CharacterState state;
 
     public LockState lockState;
 
@@ -87,18 +79,18 @@ public class Character : MonoBehaviour {
 
             //Establish what happens when the Character dies
             health.OnDeath += delegate () {
-                combatTarget = null;
-                combatState.isDead = true;
+                lookTarget = null;
+                state.dead = true;
             };
 
             //Establish what happens when the Character revives
             health.OnRevive += delegate () {
-                combatState.isDead = false;
+                state.dead = false;
             };
 
             //Establish what happens when the Character takes damage
             health.OnDamage += delegate (float damage) {
-                if (!combatState.isDead && grounded) {
+                if (!state.dead && state.grounded) {
                     animator.Play("Take Damage");
                 }
             };
@@ -113,12 +105,12 @@ public class Character : MonoBehaviour {
         //If governed by Navigation Mesh
         if (navMeshAgent != null && navMeshAgent.isActiveAndEnabled) {
             if (navMeshAgent.isOnOffMeshLink) {
-                stateInfo.grounded = false;
+                state.grounded = false;
             } else {
-                stateInfo.grounded = true;
+                state.grounded = true;
             }
-            stateInfo.forwardMove = navMeshAgent.velocity.magnitude / navMeshAgent.speed;
-            stateInfo.moveSpeed = navMeshAgent.velocity.magnitude;
+            state.forwardMove = navMeshAgent.velocity.magnitude / navMeshAgent.speed;
+            state.moveSpeed = navMeshAgent.velocity.magnitude;
         } 
         
         //If governed by Physics
@@ -129,36 +121,40 @@ public class Character : MonoBehaviour {
 
             //Move Unity's CharacterController and detect if it is grounded (it's necessary to move first, because Unity)
             characterController.Move(moveVector + inputVector * speed * Time.deltaTime);
-            grounded = characterController.isGrounded;
+            state.grounded = characterController.isGrounded;
 
             //Stick to slope if necessary
             StickToSlope();
 
             //If there is a Combat Target, change the Look Direction to it
-            if ((health == null || health.isAlive) && combatTarget != null && !combatState.isRolling) {
-                Vector3 toTarget = combatTarget.position - transform.position;
+            if ((health == null || health.isAlive) && lookTarget != null && !state.rolling) {
+                Vector3 toTarget = lookTarget.position - transform.position;
                 lookDirection = new Vector3(toTarget.x, 0f, toTarget.z).normalized;
             }
 
             ForceRotateTowards(lookDirection, 5f);
             
-            if (grounded) { stateInfo.grounded = true; } else { stateInfo.grounded = false; }
-            stateInfo.moveSpeed = inputVector.magnitude * speed;
+            if (state.grounded) { state.grounded = true; } else { state.grounded = false; }
+            state.moveSpeed = inputVector.magnitude * speed;
 
         }
 
         UpdateAnimator();
 
+        //Calcular la velocidad
+        state.velocity = transform.position - initPos;
+
         //Resetear todo lo que se tiene que resetear
-        if (inputVector == Vector3.zero) { stateInfo.forwardMove = Mathf.MoveTowards(stateInfo.forwardMove, 0f, 2f * Time.deltaTime); }
+        if (inputVector == Vector3.zero) { state.forwardMove = Mathf.MoveTowards(state.forwardMove, 0f, 2f * Time.deltaTime); }
         
         inputVector = Vector3.zero;
         moveVector = Vector3.zero;
 
-        //Calcular la velocidad
-        velocity = transform.position - initPos;
+        if(state.velocity == Vector3.zero && state.moving) {
+            state.moving = false;
+        }
 
-        previousGrounded = grounded;
+        state.previouslyGrounded = state.grounded;
     }
 
     #endregion
@@ -167,7 +163,7 @@ public class Character : MonoBehaviour {
 
     void ApplyGravity() {
         //Debug.Log("grounded=" + grounded + ", yForce=" + yForce);
-        if (!grounded || yForce > 0) {
+        if (!state.grounded || yForce > 0) {
             yForce = yForce + (Physics2D.gravity.y * Time.deltaTime);
         } else {
             yForce = -0.1f;
@@ -183,11 +179,11 @@ public class Character : MonoBehaviour {
         float distanceToFloor = Mathf.Abs(hit.point.y - characterController.bounds.min.y);
 
         //Stick to floor if necessary (when going down slopes of stairs)
-        if (distanceToFloor <= 0.5f && previousGrounded && !grounded && moveVector.y <= 0f) {
+        if (distanceToFloor <= 0.5f && state.previouslyGrounded && !state.grounded && moveVector.y <= 0f) {
             //Debug.Break();
             transform.position = transform.position + Vector3.down * distanceToFloor;
             //moveVector += Vector3.down * distanceToFloor * 2f;
-            grounded = true; stateInfo.grounded = true;
+            state.grounded = true; state.grounded = true;
         }
     }
 
@@ -198,13 +194,13 @@ public class Character : MonoBehaviour {
     void CheckForJump() {
         if (jump) {
             yForce = jumpForce;
-            grounded = false;
+            state.grounded = false;
             jump = false;
         }
     }
 
     void UpdateAnimator() {
-        stateInfo.UpdateToAnimator(animator);
+        state.UpdateToAnimator(animator);
     }
 
     #endregion
@@ -215,30 +211,32 @@ public class Character : MonoBehaviour {
         if((health == null || health.isAlive) && lockState.canMove && !lockState.lockAll) {
             inputVector = direction.normalized * speed;
 
-            Debug.Log(Vector3.Angle(inputVector, transform.rotation * Vector3.forward));
+            //Debug.Log(Vector3.Angle(inputVector, transform.rotation * Vector3.forward));
 
             Vector3 i = transform.InverseTransformDirection(inputVector);
             //Vector3 i = transform.InverseTransformDirection(velocity);
-            stateInfo.forwardMove = Mathf.MoveTowards(stateInfo.forwardMove, i.z, 2f * Time.deltaTime);
-            stateInfo.rightMove = Mathf.MoveTowards(stateInfo.rightMove, i.x, 2f * Time.deltaTime);
+            state.forwardMove = Mathf.MoveTowards(state.forwardMove, i.z, 2f * Time.deltaTime);
+            state.rightMove = Mathf.MoveTowards(state.rightMove, i.x, 2f * Time.deltaTime);
+
+            state.moving = true;
         }
     }
 
     public void Jump() {
         if((health == null || health.isAlive) && lockState.canJump && !lockState.lockAll) {
-            if (grounded) {
+            if (state.grounded) {
                 jump = true;
             }
         }
     }
 
     public bool Roll(Vector3 direction) {
-        if (grounded && lockState.canRoll && !lockState.lockAll && (stamina == null || stamina.Consume(100f))) {
+        if (state.grounded && lockState.canRoll && !lockState.lockAll && (stamina == null || stamina.Consume(100f))) {
             lookDirection = direction;
             transform.rotation = Quaternion.LookRotation(new Vector3(direction.x, 0f, direction.z));
             //animator.Play("Roll");
             animator.SetTrigger("roll");
-            combatState.isRolling = true;
+            state.rolling = true;
             return true;
         } else {
             return false;
@@ -247,7 +245,7 @@ public class Character : MonoBehaviour {
 
     public bool Attack() {
         Weapon equipedWeapon = equipment.equipedWeapon;
-        if (equipment != null && !combatState.isAttacking && !combatState.isBlocking && !combatState.isRolling && (stamina == null || stamina.HasAny())) {
+        if (equipment != null && !state.attacking && !state.blocking && !state.rolling && (stamina == null || stamina.HasAny())) {
             
             //Pick a random attack animation
             int attackAnimation = 0;
@@ -267,10 +265,10 @@ public class Character : MonoBehaviour {
     }
 
     public bool StartBlocking() {
-        if (grounded && !combatState.isAttacking && !combatState.isRolling) {
+        if (state.grounded && !state.attacking && !state.rolling) {
             if (stamina == null || stamina.current >= 10f) {
                 animator.SetBool("blocking", true);
-                combatState.isBlocking = true;
+                state.blocking = true;
             }
         }
         return true;
@@ -278,7 +276,7 @@ public class Character : MonoBehaviour {
 
     public bool StopBlocking() {
         animator.SetBool("blocking", false);
-        combatState.isBlocking = false;
+        state.blocking = false;
         return true;
     }
 
@@ -299,18 +297,26 @@ public class Character : MonoBehaviour {
 
 }
 
-public enum Faction { Human, Hollow }
-
 [System.Serializable]
-public class CharacterStateInfo {
+public class CharacterState {
     public float forwardMove;
-    public float moveSpeed;
     public float rightMove;
+    public float moveSpeed;
 
+    public bool moving;
     public bool grounded;
-    public float groundHeight = float.MinValue;
+    public bool previouslyGrounded;
 
-    public CharacterStateInfo() {
+    //Combat
+    public bool blocking = false;
+    public bool attacking = false;
+    public bool rolling = false;
+    public bool dead = false;
+
+    public float groundHeight = float.MinValue;
+    public Vector3 velocity;
+
+    public CharacterState() {
 
     }
 
@@ -320,9 +326,14 @@ public class CharacterStateInfo {
 
         anim.SetFloat("forwardMove", forwardMove);
         anim.SetFloat("rightMove", rightMove);
-
         anim.SetFloat("moveSpeed", moveSpeed);
+
         anim.SetBool("grounded", grounded);
+        anim.SetBool("moving", moving);
+
+        anim.SetFloat("velocityX", velocity.x);
+        anim.SetFloat("velocityY", velocity.y);
+        anim.SetFloat("velocityZ", velocity.z);
     }
 
     public void Reset() {
@@ -330,15 +341,6 @@ public class CharacterStateInfo {
         moveSpeed = 0f;
         rightMove = 0f;
     }
-}
-
-[System.Serializable]
-public class CombatStateInfo {
-
-    public bool isBlocking = false;
-    public bool isAttacking = false;
-    public bool isRolling = false;
-    public bool isDead = false;
 }
 
 public delegate void Action();

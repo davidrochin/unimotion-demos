@@ -10,7 +10,7 @@ public class AttackBehaviour : StateMachineBehaviour {
 	override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         character = animator.GetComponent<Character>();
         if (character != null) {
-            character.combatState.isAttacking = true;
+            character.state.attacking = true;
         }
 	}
 
@@ -22,7 +22,7 @@ public class AttackBehaviour : StateMachineBehaviour {
     // OnStateExit is called before OnStateExit is called on any state inside this state machine
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         if (character != null) {
-            character.combatState.isAttacking = false;
+            character.state.attacking = false;
         }
     }
 

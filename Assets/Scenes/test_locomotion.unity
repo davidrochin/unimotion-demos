@@ -2429,35 +2429,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   name: David Rochin
-  faction: 0
-  combatTarget: {fileID: 0}
-  combatState:
-    isBlocking: 0
-    isAttacking: 0
-    isRolling: 0
-    isDead: 0
-  speed: 3.5
+  lookTarget: {fileID: 0}
+  speed: 4.5
   rotationSpeed: 400
   jumpForce: 5
   mask:
     serializedVersion: 2
     m_Bits: 1
   rollSpeed: 1
-  grounded: 1
-  previousGrounded: 0
-  walking: 0
-  running: 0
-  rolling: 0
   yForce: 0
   xForce: 0
   lookDirection: {x: 0, y: 0, z: 0}
-  velocity: {x: 0, y: 0, z: 0}
-  stateInfo:
+  state:
     forwardMove: 0
-    moveSpeed: 0
     rightMove: 0
+    moveSpeed: 0
+    moving: 0
     grounded: 0
+    previouslyGrounded: 0
+    blocking: 0
+    attacking: 0
+    rolling: 0
+    dead: 0
     groundHeight: -3.4028235e+38
+    velocity: {x: 0, y: 0, z: 0}
   lockState:
     lockAll: 0
     canMove: 1
@@ -2880,7 +2875,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1591040515}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e120c0088dfbd1640a72ca3a59dfc46c, type: 3}
   m_Name: 
@@ -2984,7 +2979,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1591040515}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 5.57, z: -10.86}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2121906745}

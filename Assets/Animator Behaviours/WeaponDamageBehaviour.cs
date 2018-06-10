@@ -40,12 +40,12 @@ public class WeaponDamageBehaviour : StateMachineBehaviour {
 
                     if (hitColliderHealth != null) {
                         if (character != null) {
-                            if (character.combatState.isBlocking == false && character.combatState.isRolling == false) {
+                            if (character.state.blocking == false && character.state.rolling == false) {
                                 hitColliderHealth.Damage(weaponDamage, true);
                             } else {
 
                                 //Stagger if is blocking
-                                if (character.combatState.isBlocking) {
+                                if (character.state.blocking) {
                                     //animator.Play("Stagger");
                                     animator.SetTrigger("stagger");
                                 }
@@ -61,7 +61,7 @@ public class WeaponDamageBehaviour : StateMachineBehaviour {
 
                     if (hitColliderStamina != null) {
                         if (character != null) {
-                            if (character.combatState.isBlocking) {
+                            if (character.state.blocking) {
                                 hitColliderStamina.Consume(weaponDamage);
                             }
                         } else {

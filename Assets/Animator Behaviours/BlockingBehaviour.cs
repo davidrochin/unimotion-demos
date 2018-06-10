@@ -10,7 +10,7 @@ public class BlockingBehaviour : StateMachineBehaviour {
 	override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         character = animator.GetComponent<Character>();
         if (character != null) {
-            character.combatState.isBlocking = true;
+            character.state.blocking = true;
         }
 	}
 
@@ -22,7 +22,7 @@ public class BlockingBehaviour : StateMachineBehaviour {
 	// OnStateExit is called when a transition ends and the state machine finishes evaluating this state
 	override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         if (character != null) {
-            character.combatState.isBlocking = false;
+            character.state.blocking = false;
         }
     }
 
