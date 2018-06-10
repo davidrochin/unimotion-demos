@@ -1,3 +1,3 @@
-# ARPG Template
+# Unimotion
 
-Unity template for making ARPG's, inspired by games like Dark Souls and The Legend of Zelda
+Unity character controller focused on providing good and reliable locomotion features.
