@@ -132,7 +132,7 @@ public class Character : MonoBehaviour {
                 lookDirection = new Vector3(toTarget.x, 0f, toTarget.z).normalized;
             }
 
-            ForceRotateTowards(lookDirection, 5f);
+            ForceRotateTowards(lookDirection, 300f * Time.deltaTime);
             
             if (state.grounded) { state.grounded = true; } else { state.grounded = false; }
             state.moveSpeed = inputVector.magnitude * speed;
