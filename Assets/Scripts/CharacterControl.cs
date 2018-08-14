@@ -7,19 +7,11 @@ public class CharacterControl : MonoBehaviour {
 
     public InputType inputType; 
 
-    public LockState lockState;
-
-    public Queue<string> buttonQueue;
-
     //References
     Character character;
-    Equipment equipment;
-    Health health;
 
     void Awake () {
         character = GetComponent<Character>();
-        equipment = GetComponent<Equipment>();
-        health = GetComponent<Health>();
     }
 
     private void Start() {
@@ -28,47 +20,16 @@ public class CharacterControl : MonoBehaviour {
 
     void Update () {
 
-        //Caminar y correr
-        if (lockState.canMove && GetInputVector() != Vector3.zero) {
+        Vector3 input = GetInputVector();
+        if(GetInputMagnitude() > 0.05f) {
             character.RotateTowards(GetInputVector(), 4000f * Time.deltaTime);
-            character.Move(GetInputVector(), Input.GetButton("B") ? GetInputMagnitude() * 1.5f : GetInputMagnitude());
+            character.Move(GetInputVector() * GetInputMagnitude() * Time.deltaTime * 4f);
         }
 
         if (Input.GetButtonDown("Jump")) {
             character.Jump();
         }
 
-        if (Input.GetButtonDown("B")) {
-            character.Roll(GetInputVector());
-        }
-
-        if (Input.GetButtonDown("RS")) {
-            if (character.lookTarget == null) {
-                Transform closestEnemy = FindClosestTarget();
-                if (closestEnemy != null)
-                    character.lookTarget = closestEnemy;
-            } else {
-                character.lookTarget = null;
-            } 
-        }
-
-        if (Input.GetKeyDown(KeyCode.X)){
-            GetComponent<Animator>().Play("Point");
-        }
-
-        if (Input.GetMouseButtonDown(0) || Input.GetButtonDown("RB")) {
-            //equipment.UseRightHandItem();
-            //equipment.UseItem(Hand.Right);
-            character.Attack();
-        }
-
-        if (Input.GetButton("LB")) {
-            //GetComponent<Animator>().SetBool("shieldUp", true);
-            character.StartBlocking();
-        } else {
-            //GetComponent<Animator>().SetBool("shieldUp", false);
-            character.StopBlocking();
-        }
 	}
 
     Vector3 GetInputVector() {
@@ -100,19 +61,6 @@ public class CharacterControl : MonoBehaviour {
         return Vector3.ClampMagnitude(input, 1f).magnitude;
     }
 
-    Transform FindClosestTarget() {
-        Targetable[] targetable = FindObjectsOfType<Targetable>();
-        Transform closestTargetable = null;
-        foreach (Targetable t in targetable) {
-            if (closestTargetable == null) {
-                closestTargetable = t.transform;
-            } else if (t.transform != transform && Vector3.Distance(transform.position, t.transform.position) < Vector3.Distance(transform.position, closestTargetable.position)) {
-                closestTargetable = t.transform;
-            }
-        }
-        return closestTargetable;
-    }
-
     Vector3 finalMovementVector;
     private void OnDrawGizmosSelected() {
         Gizmos.color = Color.blue;
@@ -120,20 +68,4 @@ public class CharacterControl : MonoBehaviour {
     }
 
     public enum InputType { Normal, Raw }
-}
-
-[System.Serializable]
-public class LockState {
-
-    public bool lockAll = false;
-
-    public bool canMove = true;
-    public bool canTurn = true;
-    public bool canJump = true;
-    public bool canRoll = true;
-    public bool canRotate = true;
-
-    public LockState() {
-
-    }
 }
