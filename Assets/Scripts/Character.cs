@@ -8,18 +8,19 @@ public class Character : MonoBehaviour {
 
     [Header("Movement")]
 
-    [Range(0.01f, 10f)]
+    [Range(0.01f, 10)]
     public float speed = 5f;
     public float rotationSpeed = 400f;
 
-    [Range(1f, 10f)]
-    public float jumpForce = 5f;
+    [Range(0.01f, 1f)]
+    public float jumpForce = 0.1f;
 
     public LayerMask mask;
     public float rollSpeed = 1f;
 
     [Header("Debug")]
     public Vector3 velocity;
+    public Vector3 relativeVelocity;
     public Vector3 lookDirection;
 
     public CharacterState state;
@@ -34,7 +35,6 @@ public class Character : MonoBehaviour {
     public Action OnJump;
     public Action OnHighFall;
 
-    Vector3 moveVector;
     Vector3 inputVector;
 
     [HideInInspector]
@@ -49,7 +49,18 @@ public class Character : MonoBehaviour {
 
     void Update() {
 
-        
+        CheckGrounded();
+
+        // Apply gravity if necessary
+        if (!state.grounded && Vector3.Dot(velocity, Physics.gravity.normalized) < Physics.gravity.magnitude) {
+            velocity = velocity + Physics.gravity * 0.06f * Time.deltaTime;
+        }
+
+        Move(velocity + inputVector * speed * Time.deltaTime);
+        inputVector = Vector3.zero;
+
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(transform.forward, -Physics.gravity.normalized), 200f * Time.deltaTime);
+
     }
 
     #endregion
@@ -63,18 +74,31 @@ public class Character : MonoBehaviour {
             radius, delta.normalized, out hit, delta.magnitude, mask);
 
         if (didHit) {
-            do {
 
-                debugDirection = Vector3.Cross(Vector3.Cross(hit.normal, delta.normalized), hit.normal);
+            transform.position += delta.normalized * (hit.distance - 0.02f);
 
-                didHit = Physics.CapsuleCast(
-                transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
-                radius, delta.normalized, out hit, delta.magnitude, mask);
+            debugDirection = Vector3.Cross(Vector3.Cross(hit.normal, delta.normalized), hit.normal);
 
+            didHit = Physics.CapsuleCast(
+            transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
+            radius, debugDirection, out hit, Vector3.Dot(delta.normalized * (delta.magnitude - hit.distance), debugDirection), mask);
 
-            } while (false);
+            if (!didHit) {
+                transform.position += debugDirection * Vector3.Dot(delta.normalized * (delta.magnitude - hit.distance), debugDirection);
+            }
+
         } else {
             transform.position += delta;
+        }
+    }
+
+    public void CheckGrounded() {
+        bool check = Physics.CheckSphere(transform.position + transform.up * radius, radius + 0.04f, mask);
+        if (check && Vector3.Dot(velocity, Physics.gravity.normalized) >= 0f) {
+            state.grounded = true;
+            velocity = Vector3.zero;
+        } else {
+            state.grounded = false;
         }
     }
 
@@ -82,10 +106,12 @@ public class Character : MonoBehaviour {
 
     #region Public methods
 
+    public void Walk(Vector3 delta) {
+        inputVector = Vector3.ClampMagnitude(delta, 1f);
+    }
+
     public void Jump() {
-        if (state.grounded) {
-            jump = true;
-        }
+        velocity = velocity - Physics.gravity.normalized * jumpForce;
     }
 
     public void RotateTowards(Vector3 direction, float speed) {
@@ -122,15 +148,6 @@ public class CharacterState {
     public bool grounded;
     public bool previouslyGrounded;
 
-    //Combat
-    public bool blocking = false;
-    public bool attacking = false;
-    public bool rolling = false;
-    public bool dead = false;
-
-    public float groundHeight = float.MinValue;
-    public Vector3 velocity;
-
     public CharacterState() {
 
     }
@@ -146,9 +163,6 @@ public class CharacterState {
         anim.SetBool("grounded", grounded);
         anim.SetBool("moving", moving);
 
-        anim.SetFloat("velocityX", velocity.x);
-        anim.SetFloat("velocityY", velocity.y);
-        anim.SetFloat("velocityZ", velocity.z);
     }
 
     public void Reset() {

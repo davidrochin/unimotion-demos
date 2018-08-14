@@ -23,14 +23,18 @@ public class CharacterControl : MonoBehaviour {
         Vector3 input = GetInputVector();
         if(GetInputMagnitude() > 0.05f) {
             character.RotateTowards(GetInputVector(), 4000f * Time.deltaTime);
-            character.Move(GetInputVector() * GetInputMagnitude() * Time.deltaTime * 4f);
+            character.Walk(GetInputVector() * GetInputMagnitude());
         }
 
         if (Input.GetButtonDown("Jump")) {
             character.Jump();
         }
 
-	}
+        if (Input.GetKeyDown(KeyCode.G)) {
+            Physics.gravity = -Physics.gravity;
+        }
+
+    }
 
     Vector3 GetInputVector() {
         Vector3 input = Vector3.zero;
