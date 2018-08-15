@@ -69,13 +69,17 @@ public class Character : MonoBehaviour {
 
     public void Move(Vector3 delta) {
 
+        //Store the position from before moving
+        Vector3 startingPos = transform.position;
+
         RaycastHit hit; bool didHit = Physics.CapsuleCast(
             transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
             radius, delta.normalized, out hit, delta.magnitude, mask);
 
         if (didHit) {
 
-            transform.position += delta.normalized * (hit.distance - 0.02f);
+            //transform.position += delta.normalized * (hit.distance - 0.02f);
+            transform.position += delta.normalized * hit.distance + hit.normal * 0.01f;
 
             debugDirection = Vector3.Cross(Vector3.Cross(hit.normal, delta.normalized), hit.normal);
 
@@ -85,21 +89,33 @@ public class Character : MonoBehaviour {
 
             if (!didHit) {
                 transform.position += debugDirection * Vector3.Dot(delta.normalized * (delta.magnitude - hit.distance), debugDirection);
+            } else {
+                transform.position += debugDirection * (hit.distance - 0.02f);
             }
 
         } else {
             transform.position += delta;
         }
+
+        //Check if this is a valid position. If not, return to the position from before moving
+        bool invalidPos = Physics.CheckCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, mask);
+        if (invalidPos) {
+            transform.position = startingPos;
+        }
     }
 
     public void CheckGrounded() {
-        bool check = Physics.CheckSphere(transform.position + transform.up * radius, radius + 0.04f, mask);
+        bool check = Physics.CheckSphere(transform.position + transform.up * radius - transform.up * 0.04f, radius - 0.01f, mask);
         if (check && Vector3.Dot(velocity, Physics.gravity.normalized) >= 0f) {
             state.grounded = true;
             velocity = Vector3.zero;
         } else {
             state.grounded = false;
         }
+    }
+
+    public void CheckGrounded2() {
+
     }
 
     #endregion
@@ -134,6 +150,8 @@ public class Character : MonoBehaviour {
 
         Gizmos.color = Color.red;
         Gizmos.DrawRay(transform.position, debugDirection);
+
+        Gizmos.DrawSphere(transform.position + transform.up * radius - transform.up * 0.04f, radius - 0.01f);
     }
 
 }
