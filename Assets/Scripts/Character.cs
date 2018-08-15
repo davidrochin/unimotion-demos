@@ -12,7 +12,7 @@ public class Character : MonoBehaviour {
     public float speed = 5f;
     public float rotationSpeed = 400f;
 
-    [Range(0.01f, 1f)]
+    [Range(1f, 10f)]
     public float jumpForce = 0.1f;
 
     public LayerMask mask;
@@ -51,12 +51,12 @@ public class Character : MonoBehaviour {
 
         CheckGrounded();
 
-        // Apply gravity if necessary
-        if (!state.grounded && Vector3.Dot(velocity, Physics.gravity.normalized) < Physics.gravity.magnitude) {
-            velocity = velocity + Physics.gravity * 0.06f * Time.deltaTime;
+        // Apply gravity if necessary (terminal velocity of a human in freefall is about 53 m/s)
+        if (!state.grounded && Vector3.Dot(velocity, Physics.gravity.normalized) < 50f) {
+            velocity = velocity + Physics.gravity * 2f * Time.deltaTime;
         }
 
-        Move(velocity + inputVector * speed * Time.deltaTime);
+        Move(velocity * Time.deltaTime + inputVector * speed * Time.deltaTime);
         inputVector = Vector3.zero;
 
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(transform.forward, -Physics.gravity.normalized), 200f * Time.deltaTime);

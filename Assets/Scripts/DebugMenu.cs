@@ -6,6 +6,12 @@ public class DebugMenu : MonoBehaviour {
 
     bool sixtyFps = false;
 
+    private void Start() {
+        if(QualitySettings.vSyncCount == 1) {
+            sixtyFps = true;
+        }
+    }
+
     private void OnGUI() {
         sixtyFps = GUILayout.Toggle(sixtyFps, "60 FPS");
     }

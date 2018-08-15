@@ -265,7 +265,7 @@ MonoBehaviour:
   radius: 0.5
   speed: 7
   rotationSpeed: 400
-  jumpForce: 0.3
+  jumpForce: 10
   mask:
     serializedVersion: 2
     m_Bits: 1
