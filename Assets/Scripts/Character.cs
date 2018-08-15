@@ -105,17 +105,26 @@ public class Character : MonoBehaviour {
     }
 
     public void CheckGrounded() {
-        bool check = Physics.CheckSphere(transform.position + transform.up * radius - transform.up * 0.04f, radius - 0.01f, mask);
-        if (check && Vector3.Dot(velocity, Physics.gravity.normalized) >= 0f) {
-            state.grounded = true;
-            velocity = Vector3.zero;
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position + transform.up * height - transform.up * radius, radius, -transform.up, height - radius * 2f + 0.04f, mask);
+        if(hits.Length > 0 && Vector3.Dot(velocity, Physics.gravity.normalized) >= 0f) {
+            bool validFloor = false;
+
+            foreach (RaycastHit hit in hits) {
+
+                // [This could be replaced by an angle measurement]
+                if(Vector3.Dot(hit.normal, -Physics.gravity.normalized) > 0f) {
+                    validFloor = true;
+                    break;
+                }
+            }
+
+            if (validFloor) {
+                state.grounded = true;
+                velocity = Vector3.zero;
+            }
         } else {
             state.grounded = false;
         }
-    }
-
-    public void CheckGrounded2() {
-
     }
 
     #endregion
@@ -150,8 +159,6 @@ public class Character : MonoBehaviour {
 
         Gizmos.color = Color.red;
         Gizmos.DrawRay(transform.position, debugDirection);
-
-        Gizmos.DrawSphere(transform.position + transform.up * radius - transform.up * 0.04f, radius - 0.01f);
     }
 
 }
