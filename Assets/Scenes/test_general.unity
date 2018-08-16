@@ -1337,15 +1337,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eba208bd65abd2244a733a06dc0a0346, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drawNodes: 1
-  drawEdges: 1
-  drawNodeNormals: 0
-  drawTriangleNormals: 0
-  ledgeNodes: []
-  ledgeTriangles: []
-  ledgeEdges: []
-  outerNodes: []
-  baseOfWallPositions: []
 --- !u!23 &284064509
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3239,15 +3230,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eba208bd65abd2244a733a06dc0a0346, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drawNodes: 1
-  drawEdges: 1
-  drawNodeNormals: 0
-  drawTriangleNormals: 0
-  ledgeNodes: []
-  ledgeTriangles: []
-  ledgeEdges: []
-  outerNodes: []
-  baseOfWallPositions: []
 --- !u!33 &1003836570
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -3800,14 +3782,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee4659e43e29d674e9e5debb5301643e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: David Rochin
-  faction: 0
-  combatTarget: {fileID: 0}
-  combatState:
-    isBlocking: 0
-    isAttacking: 0
-    isRolling: 0
-    isDead: 0
+  height: 1.76
+  radius: 0.2
   speed: 3.5
   rotationSpeed: 400
   jumpForce: 5
@@ -3815,30 +3791,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   rollSpeed: 1
-  grounded: 1
-  previousGrounded: 0
-  walking: 0
-  running: 0
-  rolling: 0
-  yForce: 0
-  xForce: 0
-  lookDirection: {x: 0, y: 0, z: 0}
   velocity: {x: 0, y: 0, z: 0}
-  stateInfo:
+  relativeVelocity: {x: 0, y: 0, z: 0}
+  lookDirection: {x: 0, y: 0, z: 0}
+  state:
     forwardMove: 0
-    moveSpeed: 0
     rightMove: 0
+    moveSpeed: 0
+    moving: 0
     grounded: 0
-    groundHeight: -3.4028235e+38
-  lockState:
-    lockAll: 0
-    canMove: 1
-    canTurn: 1
-    canJump: 1
-    canRoll: 1
-    canRotate: 1
+    previouslyGrounded: 0
   groundHeight: 0
-  characterController: {fileID: 0}
+  debugDirection: {x: 0, y: 0, z: 0}
 --- !u!1 &1221094251
 GameObject:
   m_ObjectHideFlags: 0
@@ -4017,15 +3981,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eba208bd65abd2244a733a06dc0a0346, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drawNodes: 1
-  drawEdges: 1
-  drawNodeNormals: 0
-  drawTriangleNormals: 0
-  ledgeNodes: []
-  ledgeTriangles: []
-  ledgeEdges: []
-  outerNodes: []
-  baseOfWallPositions: []
 --- !u!23 &1352091761
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4309,15 +4264,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eba208bd65abd2244a733a06dc0a0346, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drawNodes: 1
-  drawEdges: 1
-  drawNodeNormals: 0
-  drawTriangleNormals: 0
-  ledgeNodes: []
-  ledgeTriangles: []
-  ledgeEdges: []
-  outerNodes: []
-  baseOfWallPositions: []
 --- !u!23 &1461856967
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4530,13 +4476,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1591040523}
   - component: {fileID: 1591040522}
-  - component: {fileID: 1591040521}
   - component: {fileID: 1591040520}
-  - component: {fileID: 1591040518}
-  - component: {fileID: 1591040519}
   - component: {fileID: 1206532339}
-  - component: {fileID: 1591040517}
-  - component: {fileID: 1591040516}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -4544,71 +4485,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1591040516
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114258376619118042, guid: 760e58acb94b311428f94f2740fcbd9b,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1591040515}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7aa760914b6a7cf469d225eb450f9b7f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  list:
-  - {fileID: 11400000, guid: e3fafa588989f06479e5b9243ac17e3c, type: 2}
-  - {fileID: 11400000, guid: e3fafa588989f06479e5b9243ac17e3c, type: 2}
-  - {fileID: 11400000, guid: e3fafa588989f06479e5b9243ac17e3c, type: 2}
-  - {fileID: 11400000, guid: e3fafa588989f06479e5b9243ac17e3c, type: 2}
-  - {fileID: 11400000, guid: e3fafa588989f06479e5b9243ac17e3c, type: 2}
---- !u!114 &1591040517
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114271481960361928, guid: 760e58acb94b311428f94f2740fcbd9b,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1591040515}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e120c0088dfbd1640a72ca3a59dfc46c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  equipedShield: {fileID: 11400000, guid: 1671ef49de733cc47b832a5395aa5020, type: 2}
-  equipedWeapon: {fileID: 11400000, guid: 55d55788b97ae954b9a1a0d877f3405a, type: 2}
-  shieldObject: {fileID: 0}
-  weaponObject: {fileID: 0}
-  headArmor: {fileID: 0}
-  torsoArmor: {fileID: 0}
-  legsArmor: {fileID: 0}
---- !u!114 &1591040518
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1591040515}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1bf474d6258eae347bde4a38f63c7164, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  current: 500
-  max: 500
-  isAlive: 1
---- !u!114 &1591040519
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114998844979446466, guid: 760e58acb94b311428f94f2740fcbd9b,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1591040515}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ed541ac1e8dab444be4433fa6aea745, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  current: 300
-  max: 300
 --- !u!114 &1591040520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4621,32 +4497,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42104921d70ba5e49a9253fa7e5cdc58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputType: 1
-  lockState:
-    lockAll: 0
-    canMove: 1
-    canTurn: 1
-    canJump: 1
-    canRoll: 1
-    canRotate: 1
---- !u!143 &1591040521
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 143406613365863264, guid: 760e58acb94b311428f94f2740fcbd9b,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1591040515}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 1.86
-  m_Radius: 0.27
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.01
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.93, z: 0}
+  inputType: 0
 --- !u!95 &1591040522
 Animator:
   serializedVersion: 3

@@ -56,6 +56,8 @@ public class Character : MonoBehaviour {
             velocity = velocity + Physics.gravity * 2f * Time.deltaTime;
         }
 
+        Unstuck();
+
         Move(velocity * Time.deltaTime + inputVector * speed * Time.deltaTime);
         inputVector = Vector3.zero;
 
@@ -111,20 +113,32 @@ public class Character : MonoBehaviour {
 
             foreach (RaycastHit hit in hits) {
 
+                float angle = Vector3.Angle(-Physics.gravity.normalized, hit.normal);
+                Debug.Log(angle);
+
                 // [This could be replaced by an angle measurement]
-                if(Vector3.Dot(hit.normal, -Physics.gravity.normalized) > 0f) {
+                if(Vector3.Dot(hit.normal, -Physics.gravity.normalized) > 0f && angle <= 45f) {
                     validFloor = true;
-                    break;
+                    //transform.parent = hit.transform;
+                    //break;
                 }
             }
 
             if (validFloor) {
                 state.grounded = true;
                 velocity = Vector3.zero;
+            } else {
+                state.grounded = false;
             }
+
         } else {
             state.grounded = false;
+            //transform.parent = null;
         }
+    }
+
+    public void Unstuck() {
+
     }
 
     #endregion
