@@ -42,15 +42,18 @@ public class PlayerCamera : MonoBehaviour {
         //Antes de acomodarse en la distancia necesaria, revisar si hay una obstrucción para no pasar de ella
         RaycastHit hit = RaycastUtil.RaycastPastItself(player.gameObject, realTarget, transform.forward * -1f, distance, obstructionLayer);
 
-        float realDistance = 0f;
+        float maxDistance = 0f;
+        Vector3 addition = Vector3.zero;
+
         if (hit.collider != null) {
-            realDistance = hit.distance;
+            maxDistance = hit.distance;
+            addition = hit.normal;
         } else {
-            realDistance = distance;
+            maxDistance = distance;
         }
 
         //Acomodarse en la distancia necesaria
-        Vector3 desiredPosition = realTarget - transform.forward * (realDistance - 0.2f);
+        Vector3 desiredPosition = realTarget - transform.forward * (maxDistance - 0.1f);
         transform.position = desiredPosition;
 
         if (Input.GetKeyDown(KeyCode.Z)) {

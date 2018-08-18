@@ -99,6 +99,12 @@ public class Character : MonoBehaviour {
             transform.position += delta;
         }
 
+        //Stick to the slope
+        didHit = Physics.SphereCast(transform.position + transform.up * radius, radius, Physics.gravity.normalized, out hit, 7.5f * Time.deltaTime, mask);
+        if (state.previouslyGrounded && didHit && delta != Vector3.zero) {
+            transform.position += Physics.gravity.normalized * hit.distance + hit.normal * 0.01f;
+        }
+
         //Check if this is a valid position. If not, return to the position from before moving
         bool invalidPos = Physics.CheckCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, mask);
         if (invalidPos) {
@@ -107,6 +113,9 @@ public class Character : MonoBehaviour {
     }
 
     public void CheckGrounded() {
+
+        state.previouslyGrounded = state.grounded;
+
         RaycastHit[] hits = Physics.SphereCastAll(transform.position + transform.up * height - transform.up * radius, radius, -transform.up, height - radius * 2f + 0.04f, mask);
         if(hits.Length > 0 && Vector3.Dot(velocity, Physics.gravity.normalized) >= 0f) {
             bool validFloor = false;
@@ -114,7 +123,7 @@ public class Character : MonoBehaviour {
             foreach (RaycastHit hit in hits) {
 
                 float angle = Vector3.Angle(-Physics.gravity.normalized, hit.normal);
-                Debug.Log(angle);
+                //Debug.Log(angle);
 
                 // [This could be replaced by an angle measurement]
                 if(Vector3.Dot(hit.normal, -Physics.gravity.normalized) > 0f && angle <= 45f) {
@@ -140,6 +149,7 @@ public class Character : MonoBehaviour {
     public void Unstuck() {
 
     }
+
 
     #endregion
 
