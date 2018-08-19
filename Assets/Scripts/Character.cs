@@ -47,7 +47,7 @@ public class Character : MonoBehaviour {
 
     void Update() {
 
-        CheckGrounded();
+        //CheckGrounded();
 
         // Apply gravity if necessary (terminal velocity of a human in freefall is about 53 m/s)
         if (!state.grounded && Vector3.Dot(velocity, Physics.gravity.normalized) < 50f) {
@@ -58,6 +58,8 @@ public class Character : MonoBehaviour {
 
         Move(velocity * Time.deltaTime + inputVector * speed * Time.deltaTime);
         inputVector = Vector3.zero;
+
+        CheckGrounded();
 
         Quaternion fromToRotation = Quaternion.FromToRotation(transform.up, -Physics.gravity.normalized);
         transform.rotation = fromToRotation * transform.rotation;
@@ -121,6 +123,14 @@ public class Character : MonoBehaviour {
 
         state.previouslyGrounded = state.grounded;
 
+        //Check the floor beneath (even if the Character is not touching it)
+        RaycastHit floorHit; bool didHit = Physics.SphereCast(transform.position + transform.up * height - transform.up * radius, radius, -transform.up, out floorHit);
+        if (didHit) {
+            state.floor = floorHit.transform;
+        } else {
+            state.floor = null;
+        }
+
         RaycastHit[] hits = Physics.SphereCastAll(transform.position + transform.up * height - transform.up * radius, radius, -transform.up, height - radius * 2f + 0.04f, mask);
         if(hits.Length > 0 && Vector3.Dot(velocity, Physics.gravity.normalized) >= 0f) {
             bool validFloor = false;
@@ -134,8 +144,7 @@ public class Character : MonoBehaviour {
                 if(Vector3.Dot(hit.normal, -Physics.gravity.normalized) > 0f && angle <= 45f) {
                     validFloor = true;
 
-                    state.floor = hit.transform;
-                    //transform.parent = hit.transform;
+                    ///////////////state.floor = hit.transform;
                     //break;
                 }
             }
@@ -145,12 +154,12 @@ public class Character : MonoBehaviour {
                 velocity = Vector3.zero;
             } else {
                 state.grounded = false;
-                state.floor = null;
+                ////////////state.floor = null;
             }
 
         } else {
             state.grounded = false;
-            state.floor = null;
+            ///////////state.floor = null;
             //transform.parent = null;
         }
     }
@@ -161,26 +170,30 @@ public class Character : MonoBehaviour {
 
     void FollowFloor() {
 
-        //Follow the floor transform
+        //If we are detecting a floor transform
         if (state.floor != null) {
 
+            //If it is a different floor from the last one
             if (state.floorState.transform == null || state.floorState.transform != state.floor) {
                 state.floorState = TransformState.From(state.floor);
-            } else {
+            }
+
+            //Follow the floor transform if grounded
+            else if (state.grounded) {
 
                 //Follow position
                 transform.position += state.floor.position - state.floorState.position;
 
                 //Follow rotation
-                //Quaternion dif = Quaternion.Inverse(state.floorState.rotation) * state.floor.rotation;
                 Quaternion dif = Quaternion.FromToRotation(state.floorState.forward, state.floor.forward);
-                //transform.rotation = transform.rotation * dif;
                 transform.rotation = dif * transform.rotation;
                 Vector3 delta = transform.position - state.floor.position;
                 delta = dif * delta; transform.position = state.floor.position + delta;
 
-                state.floorState = TransformState.From(state.floor);
+                //state.floorState = TransformState.From(state.floor);
             }
+
+            state.floorState = TransformState.From(state.floor);
 
         } else {
             state.floorState = TransformState.Empty();
