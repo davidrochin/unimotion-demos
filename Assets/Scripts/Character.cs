@@ -40,8 +40,6 @@ public class Character : MonoBehaviour {
     [HideInInspector]
     Animator animator;
 
-    #region Monobehaviours
-
     void Awake() {
         animator = GetComponent<Animator>();
         lookDirection = transform.forward;
@@ -61,15 +59,20 @@ public class Character : MonoBehaviour {
         Move(velocity * Time.deltaTime + inputVector * speed * Time.deltaTime);
         inputVector = Vector3.zero;
 
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(transform.forward, -Physics.gravity.normalized), 200f * Time.deltaTime);
+        Quaternion fromToRotation = Quaternion.FromToRotation(transform.up, -Physics.gravity.normalized);
+        transform.rotation = fromToRotation * transform.rotation;
 
     }
 
-    #endregion
+    void LateUpdate() {
+
+        //FollowFloor();
+    }
+
 
     #region Private methods
 
-    public void Move(Vector3 delta) {
+    void Move(Vector3 delta) {
 
         //Store the position from before moving
         Vector3 startingPos = transform.position;
@@ -83,16 +86,16 @@ public class Character : MonoBehaviour {
             //transform.position += delta.normalized * (hit.distance - 0.02f);
             transform.position += delta.normalized * hit.distance + hit.normal * 0.01f;
 
-            debugDirection = Vector3.Cross(Vector3.Cross(hit.normal, delta.normalized), hit.normal);
+            Vector3 onPlaneDirection = Vector3.Cross(Vector3.Cross(hit.normal, delta.normalized), hit.normal);
 
             didHit = Physics.CapsuleCast(
             transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
-            radius, debugDirection, out hit, Vector3.Dot(delta.normalized * (delta.magnitude - hit.distance), debugDirection), mask);
+            radius, onPlaneDirection, out hit, Vector3.Dot(delta.normalized * (delta.magnitude - hit.distance), onPlaneDirection), mask);
 
             if (!didHit) {
-                transform.position += debugDirection * Vector3.Dot(delta.normalized * (delta.magnitude - hit.distance), debugDirection);
+                transform.position += onPlaneDirection * Vector3.Dot(delta.normalized * (delta.magnitude - hit.distance), onPlaneDirection);
             } else {
-                transform.position += debugDirection * (hit.distance - 0.02f);
+                transform.position += onPlaneDirection * (hit.distance - 0.02f);
             }
 
         } else {
@@ -112,7 +115,9 @@ public class Character : MonoBehaviour {
         }
     }
 
-    public void CheckGrounded() {
+    void CheckGrounded() {
+
+        FollowFloor();
 
         state.previouslyGrounded = state.grounded;
 
@@ -128,6 +133,8 @@ public class Character : MonoBehaviour {
                 // [This could be replaced by an angle measurement]
                 if(Vector3.Dot(hit.normal, -Physics.gravity.normalized) > 0f && angle <= 45f) {
                     validFloor = true;
+
+                    state.floor = hit.transform;
                     //transform.parent = hit.transform;
                     //break;
                 }
@@ -138,18 +145,47 @@ public class Character : MonoBehaviour {
                 velocity = Vector3.zero;
             } else {
                 state.grounded = false;
+                state.floor = null;
             }
 
         } else {
             state.grounded = false;
+            state.floor = null;
             //transform.parent = null;
         }
     }
 
-    public void Unstuck() {
+    void Unstuck() {
 
     }
 
+    void FollowFloor() {
+
+        //Follow the floor transform
+        if (state.floor != null) {
+
+            if (state.floorState.transform == null || state.floorState.transform != state.floor) {
+                state.floorState = TransformState.From(state.floor);
+            } else {
+
+                //Follow position
+                transform.position += state.floor.position - state.floorState.position;
+
+                //Follow rotation
+                //Quaternion dif = Quaternion.Inverse(state.floorState.rotation) * state.floor.rotation;
+                Quaternion dif = Quaternion.FromToRotation(state.floorState.forward, state.floor.forward);
+                //transform.rotation = transform.rotation * dif;
+                transform.rotation = dif * transform.rotation;
+                Vector3 delta = transform.position - state.floor.position;
+                delta = dif * delta; transform.position = state.floor.position + delta;
+
+                state.floorState = TransformState.From(state.floor);
+            }
+
+        } else {
+            state.floorState = TransformState.Empty();
+        }
+    }
 
     #endregion
 
@@ -197,6 +233,9 @@ public class CharacterState {
     public bool grounded;
     public bool previouslyGrounded;
 
+    public Transform floor;
+    public TransformState floorState;
+
     public CharacterState() {
 
     }
@@ -218,6 +257,7 @@ public class CharacterState {
         forwardMove = 0f;
         moveSpeed = 0f;
         rightMove = 0f;
+        floor = null;
     }
 }
 
