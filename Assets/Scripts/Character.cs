@@ -77,6 +77,9 @@ public class Character : MonoBehaviour {
     #region Private methods
 
     void Move(Vector3 delta) {
+
+        FollowFloor();
+
         //Store the position from before moving
         Vector3 startingPos = transform.position;
 
@@ -140,6 +143,7 @@ public class Character : MonoBehaviour {
                 if(Vector3.Dot(hit.normal, -Physics.gravity.normalized) > 0f && angle <= 45f) {
                     validFloor = true;
 
+                    //transform.parent = hit.transform;
                     ///////////////state.floor = hit.transform;
                     //break;
                 }
@@ -150,6 +154,7 @@ public class Character : MonoBehaviour {
                 velocity = Vector3.zero;
             } else {
                 state.grounded = false;
+                //transform.parent = null;
                 ////////////state.floor = null;
             }
 
