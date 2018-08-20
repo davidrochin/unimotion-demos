@@ -50,8 +50,10 @@ public class MovingPlatform : MonoBehaviour {
 
     private void OnDrawGizmos() {
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireCube(transform.position + secondPositionOffset, transform.localScale);
-        Gizmos.DrawLine(transform.position, transform.position + secondPositionOffset);
+        if (!Application.isPlaying) {
+            Gizmos.DrawWireCube(transform.position + secondPositionOffset, transform.localScale);
+            Gizmos.DrawLine(transform.position, transform.position + secondPositionOffset);
+        }  
     }
 
     public enum State { Going, Returning, Waiting }

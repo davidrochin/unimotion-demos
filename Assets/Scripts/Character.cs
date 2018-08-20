@@ -59,7 +59,7 @@ public class Character : MonoBehaviour {
         Move(velocity * Time.deltaTime + inputVector * speed * Time.deltaTime);
         inputVector = Vector3.zero;
 
-        CheckGrounded();
+        //CheckGrounded();
 
         Quaternion fromToRotation = Quaternion.FromToRotation(transform.up, -Physics.gravity.normalized);
         transform.rotation = fromToRotation * transform.rotation;
@@ -68,14 +68,15 @@ public class Character : MonoBehaviour {
 
     void LateUpdate() {
 
-        //FollowFloor();
+        FollowFloor();
+        CheckGrounded();
+        StickToSlope();
     }
 
 
     #region Private methods
 
     void Move(Vector3 delta) {
-
         //Store the position from before moving
         Vector3 startingPos = transform.position;
 
@@ -89,6 +90,7 @@ public class Character : MonoBehaviour {
             transform.position += delta.normalized * hit.distance + hit.normal * 0.01f;
 
             Vector3 onPlaneDirection = Vector3.Cross(Vector3.Cross(hit.normal, delta.normalized), hit.normal);
+            debugDirection = onPlaneDirection;
 
             didHit = Physics.CapsuleCast(
             transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
@@ -104,11 +106,7 @@ public class Character : MonoBehaviour {
             transform.position += delta;
         }
 
-        //Stick to the slope
-        didHit = Physics.SphereCast(transform.position + transform.up * radius, radius, Physics.gravity.normalized, out hit, 7.5f * Time.deltaTime, mask);
-        if (state.previouslyGrounded && didHit && delta != Vector3.zero) {
-            transform.position += Physics.gravity.normalized * hit.distance + hit.normal * 0.01f;
-        }
+        //StickToSlope();
 
         //Check if this is a valid position. If not, return to the position from before moving
         bool invalidPos = Physics.CheckCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, mask);
@@ -118,8 +116,6 @@ public class Character : MonoBehaviour {
     }
 
     void CheckGrounded() {
-
-        FollowFloor();
 
         state.previouslyGrounded = state.grounded;
 
@@ -197,6 +193,17 @@ public class Character : MonoBehaviour {
 
         } else {
             state.floorState = TransformState.Empty();
+        }
+    }
+
+    void StickToSlope() {
+        RaycastHit hit;
+        bool didHit = Physics.SphereCast(transform.position + transform.up * radius, radius, Physics.gravity.normalized, out hit, 7.5f * Time.deltaTime, mask);
+        //if (state.previouslyGrounded && didHit && delta != Vector3.zero) {
+        if (state.previouslyGrounded && didHit) {
+            transform.position += Physics.gravity.normalized * hit.distance + hit.normal * 0.01f;
+            state.grounded = true;
+            Debug.Log("Sticked " + hit.distance);
         }
     }
 
