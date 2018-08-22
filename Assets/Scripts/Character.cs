@@ -198,9 +198,9 @@ public class Character : MonoBehaviour {
 
     void StickToSlope() {
         RaycastHit hit;
-        bool didHit = Physics.SphereCast(transform.position + transform.up * radius, radius, Physics.gravity.normalized, out hit, 7.5f * Time.deltaTime, mask);
-        //if (state.previouslyGrounded && didHit && delta != Vector3.zero) {
-        Debug.Log(Vector3.Dot((hit.point - transform.position), Physics.gravity.normalized));
+        //bool didHit = Physics.SphereCast(transform.position + transform.up * radius, radius, Physics.gravity.normalized, out hit, 7.5f * Time.deltaTime, mask);
+        bool didHit = Physics.SphereCast(transform.position + transform.up * radius, radius, Physics.gravity.normalized, out hit, radius, mask);
+        //Debug.Log(Vector3.Dot((hit.point - transform.position), Physics.gravity.normalized));
         if (state.previouslyGrounded && didHit && Vector3.Dot((hit.point - transform.position), Physics.gravity.normalized) > 0f ) {
 
             Vector3 hyp;
@@ -239,6 +239,7 @@ public class Character : MonoBehaviour {
 
     public void Jump() {
         velocity = velocity - Physics.gravity.normalized * jumpForce;
+        state.grounded = false;
     }
 
     public void RotateTowards(Vector3 direction) {
