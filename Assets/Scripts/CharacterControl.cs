@@ -22,7 +22,7 @@ public class CharacterControl : MonoBehaviour {
 
         Vector3 input = GetInputVector();
         if(GetInputMagnitude() > 0.05f) {
-            character.RotateTowards(GetInputVector(), 4000f * Time.deltaTime);
+            character.RotateTowards(GetInputVector());
             character.Walk(GetInputVector() * GetInputMagnitude());
         }
 

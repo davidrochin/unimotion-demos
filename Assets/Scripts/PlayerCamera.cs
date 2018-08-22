@@ -10,7 +10,7 @@ public class PlayerCamera : MonoBehaviour {
     public Vector3 targetOffset = new Vector3(0f, 1.09f, 0f);
 
     [Header("Orbit Settings")]
-    public float orbitSpeed = 50f;
+    public float orbitSpeed = 2.5f;
     public LayerMask obstructionLayer;
 
     Camera camera;
@@ -25,19 +25,13 @@ public class PlayerCamera : MonoBehaviour {
         //Get the real target position (add offset)
         Vector3 realTarget = player.transform.position + targetOffset;
 
-
         //Make a vector from mouse/joystick movement
         Vector3 input = new Vector3(Input.GetAxis("Mouse X"), -Input.GetAxis("Mouse Y"), 0f);
-        input = input + new Vector3(Input.GetAxis("Camera Horizontal") * 2f, Input.GetAxis("Camera Vertical") * 2f, 0f);
+        input = input + new Vector3(Input.GetAxis("Camera Horizontal") * 60f * Time.deltaTime, Input.GetAxis("Camera Vertical") * 60f * Time.deltaTime, 0f);
 
-        //Calculate what rotation needs the Camera...
-        Quaternion finalRotation = Quaternion.Euler(
-            transform.rotation.eulerAngles.x + input.y * Time.deltaTime * orbitSpeed,
-            transform.rotation.eulerAngles.y + input.x * Time.deltaTime * orbitSpeed,
-            0f);
-
-        //...and apply it
-        transform.localRotation = finalRotation;
+        //Rotate the Camera
+        transform.RotateAround(transform.position, Vector3.up, input.x * orbitSpeed);
+        transform.RotateAround(transform.position, transform.right, input.y * orbitSpeed);
 
         //Antes de acomodarse en la distancia necesaria, revisar si hay una obstrucción para no pasar de ella
         RaycastHit hit = RaycastUtil.RaycastPastItself(player.gameObject, realTarget, transform.forward * -1f, distance, obstructionLayer);
@@ -52,7 +46,7 @@ public class PlayerCamera : MonoBehaviour {
             maxDistance = distance;
         }
 
-        //Acomodarse en la distancia necesaria
+        //Put the Camera around the target
         Vector3 desiredPosition = realTarget - transform.forward * (maxDistance - 0.1f);
         transform.position = desiredPosition;
 
@@ -60,7 +54,7 @@ public class PlayerCamera : MonoBehaviour {
             Cursor.lockState = Cursor.lockState == CursorLockMode.Locked ? CursorLockMode.None : CursorLockMode.Locked;
         }
 
-        //Hacer zoom si se mueve la ruedita del ratón
+        //Zoom if user uses mousewheel
         distance = distance - Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * 100f;
     }
 }

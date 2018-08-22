@@ -9,11 +9,11 @@ public class Character : MonoBehaviour {
     [Header("Movement")]
 
     [Range(0.01f, 10)]
-    public float speed = 5f;
+    public float speed = 7f;
     public float rotationSpeed = 400f;
 
     [Range(1f, 10f)]
-    public float jumpForce = 0.1f;
+    public float jumpForce = 10f;
 
     public LayerMask mask;
     public float rollSpeed = 1f;
@@ -40,14 +40,14 @@ public class Character : MonoBehaviour {
     [HideInInspector]
     Animator animator;
 
+    float skinWidth = 0.02f;
+
     void Awake() {
         animator = GetComponent<Animator>();
         lookDirection = transform.forward;
     }
 
     void Update() {
-
-        //CheckGrounded();
 
         // Apply gravity if necessary (terminal velocity of a human in freefall is about 53 m/s)
         if (!state.grounded && Vector3.Dot(velocity, Physics.gravity.normalized) < 50f) {
@@ -59,7 +59,10 @@ public class Character : MonoBehaviour {
         Move(velocity * Time.deltaTime + inputVector * speed * Time.deltaTime);
         inputVector = Vector3.zero;
 
-        //CheckGrounded();
+        /*Collider[] cols = Physics.OverlapCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius);
+        foreach (Collider col in cols) {
+            col.GetComponent<Rigidbody>().AddExplosionForce(50f, transform.position, 10f);
+        }*/
 
         Quaternion fromToRotation = Quaternion.FromToRotation(transform.up, -Physics.gravity.normalized);
         transform.rotation = fromToRotation * transform.rotation;
@@ -72,7 +75,6 @@ public class Character : MonoBehaviour {
         CheckGrounded();
         StickToSlope();
     }
-
 
     #region Private methods
 
@@ -88,8 +90,6 @@ public class Character : MonoBehaviour {
             radius, delta.normalized, out hit, delta.magnitude, mask);
 
         if (didHit) {
-
-            //transform.position += delta.normalized * (hit.distance - 0.02f);
             transform.position += delta.normalized * hit.distance + hit.normal * 0.01f;
 
             Vector3 onPlaneDirection = Vector3.Cross(Vector3.Cross(hit.normal, delta.normalized), hit.normal);
@@ -109,21 +109,21 @@ public class Character : MonoBehaviour {
             transform.position += delta;
         }
 
-        //StickToSlope();
-
         //Check if this is a valid position. If not, return to the position from before moving
         bool invalidPos = Physics.CheckCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, mask);
         if (invalidPos) {
             transform.position = startingPos;
         }
+
     }
 
     void CheckGrounded() {
 
+        //Save whether if the Character was grounded or not before the check
         state.previouslyGrounded = state.grounded;
 
         //Check the floor beneath (even if the Character is not touching it)
-        RaycastHit floorHit; bool didHit = Physics.SphereCast(transform.position + transform.up * height - transform.up * radius, radius, -transform.up, out floorHit);
+        RaycastHit floorHit; bool didHit = Physics.SphereCast(transform.position + transform.up * height - transform.up * radius, radius, -transform.up, out floorHit, float.MaxValue, mask);
         if (didHit) {
             state.floor = floorHit.transform;
         } else {
@@ -137,15 +137,9 @@ public class Character : MonoBehaviour {
             foreach (RaycastHit hit in hits) {
 
                 float angle = Vector3.Angle(-Physics.gravity.normalized, hit.normal);
-                //Debug.Log(angle);
-
-                // [This could be replaced by an angle measurement]
+                state.floorAngle = angle;
                 if(Vector3.Dot(hit.normal, -Physics.gravity.normalized) > 0f && angle <= 45f) {
                     validFloor = true;
-
-                    //transform.parent = hit.transform;
-                    ///////////////state.floor = hit.transform;
-                    //break;
                 }
             }
 
@@ -154,19 +148,20 @@ public class Character : MonoBehaviour {
                 velocity = Vector3.zero;
             } else {
                 state.grounded = false;
-                //transform.parent = null;
-                ////////////state.floor = null;
             }
 
         } else {
             state.grounded = false;
-            ///////////state.floor = null;
-            //transform.parent = null;
         }
     }
 
     void Unstuck() {
-
+        Collider[] cols = Physics.OverlapCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius);
+        if(cols.Length > 0) {
+            state.stuck = true;
+        } else {
+            state.stuck = false;
+        }
     }
 
     void FollowFloor() {
@@ -205,10 +200,32 @@ public class Character : MonoBehaviour {
         RaycastHit hit;
         bool didHit = Physics.SphereCast(transform.position + transform.up * radius, radius, Physics.gravity.normalized, out hit, 7.5f * Time.deltaTime, mask);
         //if (state.previouslyGrounded && didHit && delta != Vector3.zero) {
-        if (state.previouslyGrounded && didHit) {
-            transform.position += Physics.gravity.normalized * hit.distance + hit.normal * 0.01f;
+        Debug.Log(Vector3.Dot((hit.point - transform.position), Physics.gravity.normalized));
+        if (state.previouslyGrounded && didHit && Vector3.Dot((hit.point - transform.position), Physics.gravity.normalized) > 0f ) {
+
+            Vector3 hyp;
+            float topAngle = Vector3.Angle(Physics.gravity.normalized, -hit.normal);
+            float bottomAngle = 180f - topAngle - 90f;
+            hyp = -Physics.gravity.normalized * (skinWidth / Mathf.Sin(Mathf.Deg2Rad * bottomAngle)) * Mathf.Sin(Mathf.Deg2Rad * 90f);
+            //Debug.Log("topAngle = " + topAngle + ", bottomAngle = " + bottomAngle);
+            //Debug.Log(skinWidth + " / " + Mathf.Sin(Mathf.Deg2Rad * bottomAngle) + " x " + Mathf.Sin(Mathf.Deg2Rad * 90f) + " = " + hyp.magnitude);
+
+            transform.position += Physics.gravity.normalized * hit.distance + hyp;
             state.grounded = true;
-            Debug.Log("Sticked " + hit.distance);
+            //Debug.Log("Sticked " + hit.distance);
+        }
+    }
+
+    Vector3 GetPartPosition(Part part) {
+        switch (part) {
+            case Part.BottomSphere:
+                return transform.position + transform.up * radius;
+            case Part.TopSphere:
+                return transform.position + transform.up * height - transform.up * radius;
+            case Part.Center:
+                return transform.position + transform.up * height * 0.5f;
+            default:
+                return transform.position;
         }
     }
 
@@ -224,8 +241,8 @@ public class Character : MonoBehaviour {
         velocity = velocity - Physics.gravity.normalized * jumpForce;
     }
 
-    public void RotateTowards(Vector3 direction, float speed) {
-        lookDirection = direction;
+    public void RotateTowards(Vector3 direction) {
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(direction, -Physics.gravity.normalized), rotationSpeed * Time.deltaTime);
     }
 
     public void ForceRotateTowards(Vector3 direction, float speed) {
@@ -246,6 +263,8 @@ public class Character : MonoBehaviour {
         Gizmos.DrawRay(transform.position, debugDirection);
     }
 
+    public enum Part { BottomSphere, TopSphere, Center }
+
 }
 
 [System.Serializable]
@@ -257,6 +276,11 @@ public class CharacterState {
     public bool moving;
     public bool grounded;
     public bool previouslyGrounded;
+
+    public bool stuck;
+
+    public Vector3 lastDelta;
+    public float floorAngle;
 
     public Transform floor;
     public TransformState floorState;
