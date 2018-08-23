@@ -59,10 +59,10 @@ public class Character : MonoBehaviour {
         Move(velocity * Time.deltaTime + inputVector * speed * Time.deltaTime);
         inputVector = Vector3.zero;
 
-        /*Collider[] cols = Physics.OverlapCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius);
+        Collider[] cols = Physics.OverlapCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius);
         foreach (Collider col in cols) {
             col.GetComponent<Rigidbody>().AddExplosionForce(50f, transform.position, 10f);
-        }*/
+        }
 
         Quaternion fromToRotation = Quaternion.FromToRotation(transform.up, -Physics.gravity.normalized);
         transform.rotation = fromToRotation * transform.rotation;
@@ -234,7 +234,8 @@ public class Character : MonoBehaviour {
     #region Public methods
 
     public void Walk(Vector3 delta) {
-        inputVector = Vector3.ClampMagnitude(delta, 1f);
+        //inputVector = Vector3.ClampMagnitude(delta, 1f);
+        inputVector = delta;
     }
 
     public void Jump() {
