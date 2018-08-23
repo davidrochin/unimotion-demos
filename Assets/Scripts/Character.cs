@@ -198,17 +198,20 @@ public class Character : MonoBehaviour {
 
     void StickToSlope() {
         RaycastHit hit;
-        //bool didHit = Physics.SphereCast(transform.position + transform.up * radius, radius, Physics.gravity.normalized, out hit, 7.5f * Time.deltaTime, mask);
         bool didHit = Physics.SphereCast(transform.position + transform.up * radius, radius, Physics.gravity.normalized, out hit, radius, mask);
-        //Debug.Log(Vector3.Dot((hit.point - transform.position), Physics.gravity.normalized));
-        if (state.previouslyGrounded && didHit && Vector3.Dot((hit.point - transform.position), Physics.gravity.normalized) > 0f ) {
+
+        /*Debug.Log(Vector3.Dot((hit.point - transform.position), Physics.gravity.normalized));
+        if(Vector3.Dot((hit.point - transform.position), Physics.gravity.normalized) < 0f) {
+            Debug.Break();
+        }*/
+
+        //if (state.previouslyGrounded && didHit && Vector3.Dot((hit.point - transform.position), Physics.gravity.normalized) > 0f ) {
+        if (state.previouslyGrounded && didHit && Vector3.Angle(-Physics.gravity.normalized, hit.normal) <= 45f) {
 
             Vector3 hyp;
             float topAngle = Vector3.Angle(Physics.gravity.normalized, -hit.normal);
             float bottomAngle = 180f - topAngle - 90f;
             hyp = -Physics.gravity.normalized * (skinWidth / Mathf.Sin(Mathf.Deg2Rad * bottomAngle)) * Mathf.Sin(Mathf.Deg2Rad * 90f);
-            //Debug.Log("topAngle = " + topAngle + ", bottomAngle = " + bottomAngle);
-            //Debug.Log(skinWidth + " / " + Mathf.Sin(Mathf.Deg2Rad * bottomAngle) + " x " + Mathf.Sin(Mathf.Deg2Rad * 90f) + " = " + hyp.magnitude);
 
             transform.position += Physics.gravity.normalized * hit.distance + hyp;
             state.grounded = true;
@@ -245,11 +248,6 @@ public class Character : MonoBehaviour {
 
     public void RotateTowards(Vector3 direction) {
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(direction, -Physics.gravity.normalized), rotationSpeed * Time.deltaTime);
-    }
-
-    public void ForceRotateTowards(Vector3 direction, float speed) {
-        Vector3 procesedDirection = new Vector3(direction.x, 0f, direction.z);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(procesedDirection), speed);
     }
 
     #endregion
