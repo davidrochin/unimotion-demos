@@ -85,11 +85,15 @@ public class Character : MonoBehaviour {
         //Store the position from before moving
         Vector3 startingPos = transform.position;
 
+        //Capsule cast to delta
         RaycastHit hit; bool didHit = Physics.CapsuleCast(
             transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
             radius, delta.normalized, out hit, delta.magnitude, mask);
 
+        //Move and slide on the hit plane
         if (didHit) {
+
+            //[This could be replaced for something better]
             transform.position += delta.normalized * hit.distance + hit.normal * 0.01f;
 
             Vector3 onPlaneDirection = Vector3.Cross(Vector3.Cross(hit.normal, delta.normalized), hit.normal);
@@ -105,7 +109,10 @@ public class Character : MonoBehaviour {
                 transform.position += onPlaneDirection * (hit.distance - 0.02f);
             }
 
-        } else {
+        } 
+        
+        //If the cast didn't hit anything, just move
+        else {
             transform.position += delta;
         }
 
