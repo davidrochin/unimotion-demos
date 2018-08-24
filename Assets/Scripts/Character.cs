@@ -40,7 +40,7 @@ public class Character : MonoBehaviour {
     [HideInInspector]
     Animator animator;
 
-    float skinWidth = 0.02f;
+    const float SkinWidth = 0.01f;
 
     void Awake() {
         animator = GetComponent<Animator>();
@@ -200,22 +200,15 @@ public class Character : MonoBehaviour {
         RaycastHit hit;
         bool didHit = Physics.SphereCast(transform.position + transform.up * radius, radius, Physics.gravity.normalized, out hit, radius, mask);
 
-        /*Debug.Log(Vector3.Dot((hit.point - transform.position), Physics.gravity.normalized));
-        if(Vector3.Dot((hit.point - transform.position), Physics.gravity.normalized) < 0f) {
-            Debug.Break();
-        }*/
-
-        //if (state.previouslyGrounded && didHit && Vector3.Dot((hit.point - transform.position), Physics.gravity.normalized) > 0f ) {
         if (state.previouslyGrounded && didHit && Vector3.Angle(-Physics.gravity.normalized, hit.normal) <= 45f) {
 
             Vector3 hyp;
             float topAngle = Vector3.Angle(Physics.gravity.normalized, -hit.normal);
             float bottomAngle = 180f - topAngle - 90f;
-            hyp = -Physics.gravity.normalized * (skinWidth / Mathf.Sin(Mathf.Deg2Rad * bottomAngle)) * Mathf.Sin(Mathf.Deg2Rad * 90f);
+            hyp = -Physics.gravity.normalized * (SkinWidth / Mathf.Sin(Mathf.Deg2Rad * bottomAngle)) * Mathf.Sin(Mathf.Deg2Rad * 90f);
 
             transform.position += Physics.gravity.normalized * hit.distance + hyp;
             state.grounded = true;
-            //Debug.Log("Sticked " + hit.distance);
         }
     }
 
