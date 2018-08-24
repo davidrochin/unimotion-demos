@@ -94,19 +94,34 @@ public class Character : MonoBehaviour {
         if (didHit) {
 
             //[This could be replaced for something better]
-            transform.position += delta.normalized * hit.distance + hit.normal * 0.01f;
+            transform.position += delta.normalized * hit.distance + hit.normal * SkinWidth;
 
-            Vector3 onPlaneDirection = Vector3.Cross(Vector3.Cross(hit.normal, delta.normalized), hit.normal);
-            debugDirection = onPlaneDirection;
+            Vector3 slideDirection = Vector3.Cross(Vector3.Cross(hit.normal, delta.normalized), hit.normal);
+            debugDirection = slideDirection;
 
             didHit = Physics.CapsuleCast(
-            transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
-            radius, onPlaneDirection, out hit, Vector3.Dot(delta.normalized * (delta.magnitude - hit.distance), onPlaneDirection), mask);
+                transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
+                radius, slideDirection, out hit, Vector3.Dot(delta.normalized * (delta.magnitude - hit.distance), slideDirection), mask);
+
+            Vector3 remainingDelta = delta.normalized * (delta.magnitude - hit.distance);
+            while (didHit) {
+
+                //Slide util it hits
+                transform.position += slideDirection * (hit.distance - SkinWidth);
+
+                slideDirection = Vector3.Cross(Vector3.Cross(hit.normal, slideDirection.normalized), hit.normal);
+                debugDirection = slideDirection;
+
+                didHit = Physics.CapsuleCast(
+                    transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
+                    radius, slideDirection, out hit, Vector3.Dot(remainingDelta.normalized * (remainingDelta.magnitude - hit.distance), slideDirection), mask);
+
+                remainingDelta = remainingDelta.normalized * (remainingDelta.magnitude - hit.distance);
+
+            }
 
             if (!didHit) {
-                transform.position += onPlaneDirection * Vector3.Dot(delta.normalized * (delta.magnitude - hit.distance), onPlaneDirection);
-            } else {
-                transform.position += onPlaneDirection * (hit.distance - 0.02f);
+                transform.position += slideDirection * Vector3.Dot(delta.normalized * (delta.magnitude - hit.distance), slideDirection);
             }
 
         } 
