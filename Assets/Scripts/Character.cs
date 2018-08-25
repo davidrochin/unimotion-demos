@@ -78,6 +78,9 @@ public class Character : MonoBehaviour {
 
     #region Private methods
 
+    Vector3 debugDelta;
+    Vector3 debugSlide;
+
     void Move(Vector3 delta) {
 
         FollowFloor();
@@ -96,12 +99,12 @@ public class Character : MonoBehaviour {
             //[This could be replaced for something better]
             transform.position += delta.normalized * hit.distance + hit.normal * SkinWidth;
 
-            Vector3 slideDirection = Vector3.Cross(Vector3.Cross(hit.normal, delta.normalized), hit.normal);
+            Vector3 slideDirection = Vector3.Cross(Vector3.Cross(hit.normal, delta.normalized), hit.normal).normalized;
             debugDirection = slideDirection;
 
             didHit = Physics.CapsuleCast(
                 transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
-                radius, slideDirection, out hit, Vector3.Dot(delta.normalized * (delta.magnitude - hit.distance), slideDirection), mask);
+                radius, slideDirection, out hit, Vector3.Dot(delta.normalized * (delta.magnitude - hit.distance), slideDirection), mask);       
 
             Vector3 remainingDelta = delta.normalized * (delta.magnitude - hit.distance);
             while (didHit) {
@@ -109,7 +112,7 @@ public class Character : MonoBehaviour {
                 //Slide util it hits
                 transform.position += slideDirection * (hit.distance - SkinWidth);
 
-                slideDirection = Vector3.Cross(Vector3.Cross(hit.normal, slideDirection.normalized), hit.normal);
+                slideDirection = Vector3.Cross(Vector3.Cross(hit.normal, slideDirection.normalized), hit.normal).normalized;
                 debugDirection = slideDirection;
 
                 didHit = Physics.CapsuleCast(
@@ -177,6 +180,10 @@ public class Character : MonoBehaviour {
         }
     }
 
+    bool IsPositionValid() {
+        return Physics.CheckCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, mask);
+    }
+
     void Unstuck() {
         Collider[] cols = Physics.OverlapCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius);
         if(cols.Length > 0) {
@@ -242,6 +249,10 @@ public class Character : MonoBehaviour {
                 return transform.position + transform.up * height - transform.up * radius;
             case Part.Center:
                 return transform.position + transform.up * height * 0.5f;
+            case Part.Bottom:
+                return transform.position;
+            case Part.Top:
+                return transform.position + transform.up * height;
             default:
                 return transform.position;
         }
@@ -278,7 +289,7 @@ public class Character : MonoBehaviour {
         Gizmos.DrawRay(transform.position, debugDirection);
     }
 
-    public enum Part { BottomSphere, TopSphere, Center }
+    public enum Part { BottomSphere, TopSphere, Center, Top, Bottom }
 
 }
 

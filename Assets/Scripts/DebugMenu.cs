@@ -24,4 +24,10 @@ public class DebugMenu : MonoBehaviour {
         }
     }
 
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.P)) {
+            Debug.Break();
+        }
+    }
+
 }
