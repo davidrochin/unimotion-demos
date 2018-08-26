@@ -78,9 +78,6 @@ public class Character : MonoBehaviour {
 
     #region Private methods
 
-    Vector3 debugDelta;
-    Vector3 debugSlide;
-
     void Move(Vector3 delta) {
 
         FollowFloor();
@@ -99,6 +96,12 @@ public class Character : MonoBehaviour {
             //[This could be replaced for something better]
             transform.position += delta.normalized * hit.distance + hit.normal * SkinWidth;
 
+            /*transform.position += delta.normalized * hit.distance;
+            float angleA = 180f - 90f - Vector3.Angle(delta.normalized, -hit.normal);
+            float cSide = ((SkinWidth / Mathf.Sin(Mathf.Deg2Rad * angleA)) * Mathf.Sin(Mathf.Sin(Mathf.Deg2Rad * 90f))); cSide = Mathf.Clamp(cSide, 0f, delta.magnitude);
+            transform.position = transform.position - delta.normalized * cSide;
+            Debug.Log("Angle A = " + angleA + ", Formula = " + ((SkinWidth / Mathf.Sin(Mathf.Deg2Rad * angleA)) * Mathf.Sin(Mathf.Sin(Mathf.Deg2Rad * 90f))) + ", Delta = " + delta.magnitude);*/
+
             Vector3 slideDirection = Vector3.Cross(Vector3.Cross(hit.normal, delta.normalized), hit.normal).normalized;
             debugDirection = slideDirection;
 
@@ -110,7 +113,12 @@ public class Character : MonoBehaviour {
             while (didHit) {
 
                 //Slide util it hits
-                transform.position += slideDirection * (hit.distance - SkinWidth);
+                transform.position += slideDirection * hit.distance + hit.normal * SkinWidth;
+
+                /*transform.position += slideDirection.normalized * (hit.distance - cSide);
+                angleA = 180f - 90f - Vector3.Angle(slideDirection.normalized, -hit.normal);
+                cSide = ((SkinWidth / Mathf.Sin(Mathf.Deg2Rad * angleA)) * Mathf.Sin(Mathf.Sin(Mathf.Deg2Rad * 90f))); cSide = Mathf.Clamp(cSide, 0f, slideDirection.magnitude);
+                transform.position = transform.position - slideDirection.normalized * cSide;*/
 
                 slideDirection = Vector3.Cross(Vector3.Cross(hit.normal, slideDirection.normalized), hit.normal).normalized;
                 debugDirection = slideDirection;
@@ -124,6 +132,7 @@ public class Character : MonoBehaviour {
             }
 
             if (!didHit) {
+                //transform.position += slideDirection * Vector3.Dot(delta.normalized * (delta.magnitude - hit.distance + cSide), slideDirection);
                 transform.position += slideDirection * Vector3.Dot(delta.normalized * (delta.magnitude - hit.distance), slideDirection);
             }
 
@@ -137,6 +146,7 @@ public class Character : MonoBehaviour {
         //Check if this is a valid position. If not, return to the position from before moving
         bool invalidPos = Physics.CheckCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, mask);
         if (invalidPos) {
+            //Debug.Break();
             transform.position = startingPos;
         }
 
