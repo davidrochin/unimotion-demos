@@ -86,15 +86,19 @@ public class Character : MonoBehaviour {
         Vector3 startingPos = transform.position;
 
         //Capsule cast to delta
-        RaycastHit hit; bool didHit = Physics.CapsuleCast(
+        float lastDistance = 0f;
+        RaycastHit[] hits = Physics.CapsuleCastAll(
             transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
-            radius, delta.normalized, out hit, delta.magnitude, mask);
+            radius, delta.normalized, delta.magnitude, mask); lastDistance = (hits.Length > 0 ? hits[0].distance : lastDistance);
+        bool didHit = (hits.Length > 0 ? true : false);
+
+        Debug.Log(hits.Length); if(hits.Length > 1) { Debug.Break(); }
 
         //Move and slide on the hit plane
         if (didHit) {
 
             //[This could be replaced for something better]
-            transform.position += delta.normalized * hit.distance + hit.normal * SkinWidth;
+            transform.position += delta.normalized * hits[0].distance + hits[0].normal * SkinWidth;
 
             /*transform.position += delta.normalized * hit.distance;
             float angleA = 180f - 90f - Vector3.Angle(delta.normalized, -hit.normal);
@@ -102,38 +106,41 @@ public class Character : MonoBehaviour {
             transform.position = transform.position - delta.normalized * cSide;
             Debug.Log("Angle A = " + angleA + ", Formula = " + ((SkinWidth / Mathf.Sin(Mathf.Deg2Rad * angleA)) * Mathf.Sin(Mathf.Sin(Mathf.Deg2Rad * 90f))) + ", Delta = " + delta.magnitude);*/
 
-            Vector3 slideDirection = Vector3.Cross(Vector3.Cross(hit.normal, delta.normalized), hit.normal).normalized;
+            Vector3 slideDirection = Vector3.Cross(Vector3.Cross(hits[0].normal, delta.normalized), hits[0].normal).normalized;
             debugDirection = slideDirection;
 
-            didHit = Physics.CapsuleCast(
+            hits = Physics.CapsuleCastAll(
                 transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
-                radius, slideDirection, out hit, Vector3.Dot(delta.normalized * (delta.magnitude - hit.distance), slideDirection), mask);       
+                radius, slideDirection, Vector3.Dot(delta.normalized * (delta.magnitude - hits[0].distance), slideDirection), mask);
+            didHit = (hits.Length > 0 ? true : false); lastDistance = (hits.Length > 0 ? hits[0].distance : lastDistance);
 
-            Vector3 remainingDelta = delta.normalized * (delta.magnitude - hit.distance);
+            Vector3 remainingDelta = delta.normalized * (delta.magnitude - lastDistance);
+            
             while (didHit) {
 
                 //Slide util it hits
-                transform.position += slideDirection * hit.distance + hit.normal * SkinWidth;
+                transform.position += slideDirection * hits[0].distance + hits[0].normal * SkinWidth;
 
                 /*transform.position += slideDirection.normalized * (hit.distance - cSide);
                 angleA = 180f - 90f - Vector3.Angle(slideDirection.normalized, -hit.normal);
                 cSide = ((SkinWidth / Mathf.Sin(Mathf.Deg2Rad * angleA)) * Mathf.Sin(Mathf.Sin(Mathf.Deg2Rad * 90f))); cSide = Mathf.Clamp(cSide, 0f, slideDirection.magnitude);
                 transform.position = transform.position - slideDirection.normalized * cSide;*/
 
-                slideDirection = Vector3.Cross(Vector3.Cross(hit.normal, slideDirection.normalized), hit.normal).normalized;
+                slideDirection = Vector3.Cross(Vector3.Cross(hits[0].normal, slideDirection.normalized), hits[0].normal).normalized;
                 debugDirection = slideDirection;
 
-                didHit = Physics.CapsuleCast(
+                hits = Physics.CapsuleCastAll(
                     transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
-                    radius, slideDirection, out hit, Vector3.Dot(remainingDelta.normalized * (remainingDelta.magnitude - hit.distance), slideDirection), mask);
+                    radius, slideDirection, Vector3.Dot(remainingDelta.normalized * (remainingDelta.magnitude - hits[0].distance), slideDirection), mask);
+                didHit = (hits.Length > 0 ? true : false); lastDistance = (hits.Length > 0 ? hits[0].distance : lastDistance);
 
-                remainingDelta = remainingDelta.normalized * (remainingDelta.magnitude - hit.distance);
+                remainingDelta = remainingDelta.normalized * (remainingDelta.magnitude - lastDistance);
 
             }
 
             if (!didHit) {
                 //transform.position += slideDirection * Vector3.Dot(delta.normalized * (delta.magnitude - hit.distance + cSide), slideDirection);
-                transform.position += slideDirection * Vector3.Dot(delta.normalized * (delta.magnitude - hit.distance), slideDirection);
+                transform.position += slideDirection * Vector3.Dot(delta.normalized * (delta.magnitude - lastDistance), slideDirection);
             }
 
         } 
