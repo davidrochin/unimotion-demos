@@ -102,8 +102,6 @@ public class Character : MonoBehaviour {
 
     void Move(Vector3 delta) {
 
-        int slideCount = 0;
-
         FollowFloor();
 
         //Store the position from before moving
@@ -116,12 +114,8 @@ public class Character : MonoBehaviour {
             radius, delta.normalized, delta.magnitude, mask); lastDistance = (hits.Length > 0 ? hits[0].distance : lastDistance);
         bool didHit = (hits.Length > 0 ? true : false); Vector3 lastNormal = (hits.Length > 0 ? hits[0].normal : Vector3.zero);
 
-        if (hits.Length > 1) { Debug.Log(hits.Length); /*Debug.Break();*/ }
-
         //Move and slide on the hit plane
         if (didHit) {
-
-            slideCount++;
 
             //[This could be replaced for something better]
             debugPosition = transform.position;
@@ -133,63 +127,23 @@ public class Character : MonoBehaviour {
             float slideMagnitude = Mathf.Clamp(Vector3.Dot(delta.normalized * (delta.magnitude - hits[0].distance), slideDirection), 0f, float.MaxValue);
 
             //Cast to see if the Character is free to move or must slide on another plane
-            Debug.Log("Dot: " + slideMagnitude);
             hits = Physics.CapsuleCastAll(
                 transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
                 radius, slideDirection, slideMagnitude, mask);
             didHit = (hits.Length > 0 ? true : false); lastDistance = (hits.Length > 0 ? hits[0].distance : lastDistance); lastNormal = (hits.Length > 0 ? hits[0].normal : lastNormal);
 
             Vector3 remainingDelta = delta.normalized * (delta.magnitude - lastDistance);
-            Debug.Log("Remaining Delta: " + remainingDelta);
 
             //If the Character cannot move freely
-            while (didHit && slideCount < 1000) {
-
-                lastNormal = hits[0].normal;
-                slideCount++;
-
-                //Slide util it hits
-                debugPosition = transform.position;
-                transform.position += slideDirection * hits[0].distance + hits[0].normal * SkinWidth;
-
-                //Calculate the direction in which the Character should slide
-                Vector3 previousDelta = slideDirection * slideMagnitude;
-                slideDirection = Vector3.Cross(Vector3.Cross(hits[0].normal, slideDirection.normalized), hits[0].normal).normalized;
-                slideMagnitude = Mathf.Clamp(Vector3.Dot(previousDelta.normalized * (previousDelta.magnitude - hits[0].distance), slideDirection), 0f, float.MaxValue);
-                debugDirection = slideDirection;
-
-                //Debug.Break();
-
-                //Cast to see if the Character is free to move or must slide on another plane
-                Debug.Log("Dot: " + slideMagnitude);
-                hits = Physics.CapsuleCastAll(
-                    transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
-                    radius, slideDirection, slideMagnitude, mask);
-                didHit = (hits.Length > 0 ? true : false); lastDistance = (hits.Length > 0 ? hits[0].distance : lastDistance); lastNormal = (hits.Length > 0 ? hits[0].normal : lastNormal);
-
-                //Calculate how much delta is left to travel
-                if (didHit) {
-                    remainingDelta = remainingDelta.normalized * (remainingDelta.magnitude - hits[0].distance);
-                    Debug.Log("Remaining Delta: " + remainingDelta);
-                }
+            if (didHit) {
+                Move(slideDirection * slideMagnitude);
             }
 
             //If the Character is free to move
             if (!didHit) {
 
                 debugPosition = transform.position;
-
-                Debug.Log("Dot: " + Mathf.Clamp(Vector3.Dot(remainingDelta, slideDirection), 0f, float.MaxValue));
                 transform.position += slideDirection * Mathf.Clamp(Vector3.Dot(remainingDelta, slideDirection), 0f, float.MaxValue);
-                //Debug.DrawLine(GetPartPosition(Part.Top), GetPartPosition(Part.Top) + slideDirection * Mathf.Clamp(Vector3.Dot(remainingDelta.normalized * (remainingDelta.magnitude - lastDistance), slideDirection), 0f, float.MaxValue), Color.black, 1f);
-
-                /*if (slideCount > 1f) {
-                    Debug.DrawRay(GetPartPosition(Part.Top) + Vector3.up, delta, Color.black, 1f);
-                    Debug.DrawRay(GetPartPosition(Part.Top) + Vector3.up, remainingDelta, Color.red, 1f);
-                    Debug.DrawRay(GetPartPosition(Part.Top) + Vector3.up, slideDirection, Color.blue, 1f);
-                    Debug.Log("This is slide #" + slideCount);
-                    Debug.Break();
-                }*/
             }
         } 
         
@@ -197,14 +151,11 @@ public class Character : MonoBehaviour {
         else {
             debugPosition = transform.position;
             transform.position += delta;
-            //Debug.DrawLine(GetPartPosition(Part.Top), GetPartPosition(Part.Top) + delta, Color.black, 1f);
         }
 
         //Check if this is a valid position. If not, return to the position from before moving
         bool invalidPos = Physics.CheckCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, mask);
         if (invalidPos) {
-            Debug.Break();
-            Debug.LogError("Got stuck. " + slideCount + " slides.");
             stuckPosition = transform.position;
             transform.position = startingPos;
         }
