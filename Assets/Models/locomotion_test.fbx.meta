@@ -10,24 +10,29 @@ ModelImporter:
     100004: test_locomotion_01
     100006: test_locomotion_02
     100008: test_locomotion_03
+    100010: test_locomotion_01.001
     400000: //RootNode
     400002: reference
     400004: test_locomotion_01
     400006: test_locomotion_02
     400008: test_locomotion_03
+    400010: test_locomotion_01.001
     2100000: No Name
     2300000: reference
     2300002: test_locomotion_01
     2300004: test_locomotion_02
     2300006: test_locomotion_03
+    2300008: test_locomotion_01.001
     3300000: reference
     3300002: test_locomotion_01
     3300004: test_locomotion_02
     3300006: test_locomotion_03
+    3300008: test_locomotion_01.001
     4300000: test_locomotion_01
     4300002: reference
     4300004: test_locomotion_02
     4300006: test_locomotion_03
+    4300008: test_locomotion_01.001
   externalObjects: {}
   materials:
     importMaterials: 1

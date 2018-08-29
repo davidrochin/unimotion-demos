@@ -13,11 +13,8 @@ public class PlayerCamera : MonoBehaviour {
     public float orbitSpeed = 2.5f;
     public LayerMask obstructionLayer;
 
-    Camera camera;
-
     void Awake() {
         Cursor.lockState = CursorLockMode.Locked;
-        camera = GetComponent<Camera>();
     }
 
     void LateUpdate() {

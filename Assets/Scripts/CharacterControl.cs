@@ -20,7 +20,6 @@ public class CharacterControl : MonoBehaviour {
 
     void Update () {
 
-        Vector3 input = GetInputVector();
         if(GetInputMagnitude() > 0.05f) {
             character.RotateTowards(GetInputVector());
             character.Walk(GetInputVector() * GetInputMagnitude() * (Input.GetButton("B") ? 1.5f : 1f));

@@ -37,17 +37,39 @@ public class Character : MonoBehaviour {
 
     Vector3 inputVector;
 
-    [HideInInspector]
-    Animator animator;
-
     const float SkinWidth = 0.01f;
 
     void Awake() {
-        animator = GetComponent<Animator>();
         lookDirection = transform.forward;
     }
 
+    bool controlUpdate = false;
+
     void Update() {
+        if (Input.GetKeyDown(KeyCode.O)) {
+            controlUpdate = !controlUpdate;
+        }
+
+        if (controlUpdate) {
+            if (Input.GetKeyDown(KeyCode.Alpha1)) {
+                ControlledUpdate();
+            }
+        } else {
+            ControlledUpdate();
+        }
+    }
+
+    void LateUpdate() {
+        if (controlUpdate) {
+            if (Input.GetKeyDown(KeyCode.Alpha1)) {
+                ControlledUpdate();
+            }
+        } else {
+            ControlledLateUpdate();
+        }
+    }
+
+    void ControlledUpdate() {
 
         // Apply gravity if necessary (terminal velocity of a human in freefall is about 53 m/s)
         if (!state.grounded && Vector3.Dot(velocity, Physics.gravity.normalized) < 50f) {
@@ -69,7 +91,7 @@ public class Character : MonoBehaviour {
 
     }
 
-    void LateUpdate() {
+    void ControlledLateUpdate() {
 
         FollowFloor();
         CheckGrounded();
@@ -79,6 +101,8 @@ public class Character : MonoBehaviour {
     #region Private methods
 
     void Move(Vector3 delta) {
+
+        int slideCount = 0;
 
         FollowFloor();
 
@@ -90,73 +114,100 @@ public class Character : MonoBehaviour {
         RaycastHit[] hits = Physics.CapsuleCastAll(
             transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
             radius, delta.normalized, delta.magnitude, mask); lastDistance = (hits.Length > 0 ? hits[0].distance : lastDistance);
-        bool didHit = (hits.Length > 0 ? true : false);
+        bool didHit = (hits.Length > 0 ? true : false); Vector3 lastNormal = (hits.Length > 0 ? hits[0].normal : Vector3.zero);
 
-        Debug.Log(hits.Length); if(hits.Length > 1) { Debug.Break(); }
+        if (hits.Length > 1) { Debug.Log(hits.Length); /*Debug.Break();*/ }
 
         //Move and slide on the hit plane
         if (didHit) {
 
+            slideCount++;
+
             //[This could be replaced for something better]
+            debugPosition = transform.position;
             transform.position += delta.normalized * hits[0].distance + hits[0].normal * SkinWidth;
 
-            /*transform.position += delta.normalized * hit.distance;
-            float angleA = 180f - 90f - Vector3.Angle(delta.normalized, -hit.normal);
-            float cSide = ((SkinWidth / Mathf.Sin(Mathf.Deg2Rad * angleA)) * Mathf.Sin(Mathf.Sin(Mathf.Deg2Rad * 90f))); cSide = Mathf.Clamp(cSide, 0f, delta.magnitude);
-            transform.position = transform.position - delta.normalized * cSide;
-            Debug.Log("Angle A = " + angleA + ", Formula = " + ((SkinWidth / Mathf.Sin(Mathf.Deg2Rad * angleA)) * Mathf.Sin(Mathf.Sin(Mathf.Deg2Rad * 90f))) + ", Delta = " + delta.magnitude);*/
-
+            //Calculate the direction in which the Character should slide
             Vector3 slideDirection = Vector3.Cross(Vector3.Cross(hits[0].normal, delta.normalized), hits[0].normal).normalized;
             debugDirection = slideDirection;
+            float slideMagnitude = Mathf.Clamp(Vector3.Dot(delta.normalized * (delta.magnitude - hits[0].distance), slideDirection), 0f, float.MaxValue);
 
+            //Cast to see if the Character is free to move or must slide on another plane
+            Debug.Log("Dot: " + slideMagnitude);
             hits = Physics.CapsuleCastAll(
                 transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
-                radius, slideDirection, Vector3.Dot(delta.normalized * (delta.magnitude - hits[0].distance), slideDirection), mask);
-            didHit = (hits.Length > 0 ? true : false); lastDistance = (hits.Length > 0 ? hits[0].distance : lastDistance);
+                radius, slideDirection, slideMagnitude, mask);
+            didHit = (hits.Length > 0 ? true : false); lastDistance = (hits.Length > 0 ? hits[0].distance : lastDistance); lastNormal = (hits.Length > 0 ? hits[0].normal : lastNormal);
 
             Vector3 remainingDelta = delta.normalized * (delta.magnitude - lastDistance);
-            
-            while (didHit) {
+            Debug.Log("Remaining Delta: " + remainingDelta);
+
+            //If the Character cannot move freely
+            while (didHit && slideCount < 1000) {
+
+                lastNormal = hits[0].normal;
+                slideCount++;
 
                 //Slide util it hits
+                debugPosition = transform.position;
                 transform.position += slideDirection * hits[0].distance + hits[0].normal * SkinWidth;
 
-                /*transform.position += slideDirection.normalized * (hit.distance - cSide);
-                angleA = 180f - 90f - Vector3.Angle(slideDirection.normalized, -hit.normal);
-                cSide = ((SkinWidth / Mathf.Sin(Mathf.Deg2Rad * angleA)) * Mathf.Sin(Mathf.Sin(Mathf.Deg2Rad * 90f))); cSide = Mathf.Clamp(cSide, 0f, slideDirection.magnitude);
-                transform.position = transform.position - slideDirection.normalized * cSide;*/
-
+                //Calculate the direction in which the Character should slide
+                Vector3 previousDelta = slideDirection * slideMagnitude;
                 slideDirection = Vector3.Cross(Vector3.Cross(hits[0].normal, slideDirection.normalized), hits[0].normal).normalized;
+                slideMagnitude = Mathf.Clamp(Vector3.Dot(previousDelta.normalized * (previousDelta.magnitude - hits[0].distance), slideDirection), 0f, float.MaxValue);
                 debugDirection = slideDirection;
 
+                //Debug.Break();
+
+                //Cast to see if the Character is free to move or must slide on another plane
+                Debug.Log("Dot: " + slideMagnitude);
                 hits = Physics.CapsuleCastAll(
                     transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
-                    radius, slideDirection, Vector3.Dot(remainingDelta.normalized * (remainingDelta.magnitude - hits[0].distance), slideDirection), mask);
-                didHit = (hits.Length > 0 ? true : false); lastDistance = (hits.Length > 0 ? hits[0].distance : lastDistance);
+                    radius, slideDirection, slideMagnitude, mask);
+                didHit = (hits.Length > 0 ? true : false); lastDistance = (hits.Length > 0 ? hits[0].distance : lastDistance); lastNormal = (hits.Length > 0 ? hits[0].normal : lastNormal);
 
-                remainingDelta = remainingDelta.normalized * (remainingDelta.magnitude - lastDistance);
-
+                //Calculate how much delta is left to travel
+                if (didHit) {
+                    remainingDelta = remainingDelta.normalized * (remainingDelta.magnitude - hits[0].distance);
+                    Debug.Log("Remaining Delta: " + remainingDelta);
+                }
             }
 
+            //If the Character is free to move
             if (!didHit) {
-                //transform.position += slideDirection * Vector3.Dot(delta.normalized * (delta.magnitude - hit.distance + cSide), slideDirection);
-                transform.position += slideDirection * Vector3.Dot(delta.normalized * (delta.magnitude - lastDistance), slideDirection);
-            }
 
+                debugPosition = transform.position;
+
+                Debug.Log("Dot: " + Mathf.Clamp(Vector3.Dot(remainingDelta, slideDirection), 0f, float.MaxValue));
+                transform.position += slideDirection * Mathf.Clamp(Vector3.Dot(remainingDelta, slideDirection), 0f, float.MaxValue);
+                //Debug.DrawLine(GetPartPosition(Part.Top), GetPartPosition(Part.Top) + slideDirection * Mathf.Clamp(Vector3.Dot(remainingDelta.normalized * (remainingDelta.magnitude - lastDistance), slideDirection), 0f, float.MaxValue), Color.black, 1f);
+
+                /*if (slideCount > 1f) {
+                    Debug.DrawRay(GetPartPosition(Part.Top) + Vector3.up, delta, Color.black, 1f);
+                    Debug.DrawRay(GetPartPosition(Part.Top) + Vector3.up, remainingDelta, Color.red, 1f);
+                    Debug.DrawRay(GetPartPosition(Part.Top) + Vector3.up, slideDirection, Color.blue, 1f);
+                    Debug.Log("This is slide #" + slideCount);
+                    Debug.Break();
+                }*/
+            }
         } 
         
         //If the cast didn't hit anything, just move
         else {
+            debugPosition = transform.position;
             transform.position += delta;
+            //Debug.DrawLine(GetPartPosition(Part.Top), GetPartPosition(Part.Top) + delta, Color.black, 1f);
         }
 
         //Check if this is a valid position. If not, return to the position from before moving
         bool invalidPos = Physics.CheckCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, mask);
         if (invalidPos) {
-            //Debug.Break();
+            Debug.Break();
+            Debug.LogError("Got stuck. " + slideCount + " slides.");
+            stuckPosition = transform.position;
             transform.position = startingPos;
         }
-
     }
 
     void CheckGrounded() {
@@ -296,6 +347,8 @@ public class Character : MonoBehaviour {
     #endregion
 
     public Vector3 debugDirection;
+    public Vector3 stuckPosition;
+    public Vector3 debugPosition;
 
     private void OnDrawGizmosSelected() {
         Gizmos.color = Color.green;
@@ -304,6 +357,14 @@ public class Character : MonoBehaviour {
 
         Gizmos.color = Color.red;
         Gizmos.DrawRay(transform.position, debugDirection);
+
+        //Gizmos.color = new Color(Color.red.r, Color.red.g, Color.red.b, 0.5f);
+        Gizmos.DrawWireSphere(stuckPosition + transform.up * radius, radius);
+        Gizmos.DrawWireSphere(stuckPosition + transform.up * height - transform.up * radius, radius);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(debugPosition + transform.up * radius, radius);
+        Gizmos.DrawWireSphere(debugPosition + transform.up * height - transform.up * radius, radius);
     }
 
     public enum Part { BottomSphere, TopSphere, Center, Top, Bottom }
