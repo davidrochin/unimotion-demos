@@ -78,7 +78,9 @@ public class Character : MonoBehaviour {
 
         Unstuck();
 
-        Move(velocity * Time.deltaTime + inputVector * speed * Time.deltaTime);
+        //Move(velocity * Time.deltaTime + inputVector * speed * Time.deltaTime);
+        Move(velocity * Time.deltaTime);
+        Move(inputVector * speed * Time.deltaTime);
         inputVector = Vector3.zero;
 
         Collider[] cols = Physics.OverlapCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius);
@@ -102,6 +104,8 @@ public class Character : MonoBehaviour {
 
     void Move(Vector3 delta) {
 
+        int slideCount = 0;
+
         FollowFloor();
 
         //Store the position from before moving
@@ -116,6 +120,8 @@ public class Character : MonoBehaviour {
 
         //Move and slide on the hit plane
         if (didHit) {
+
+            slideCount++;
 
             //[This could be replaced for something better]
             debugPosition = transform.position;
@@ -135,18 +141,40 @@ public class Character : MonoBehaviour {
             Vector3 remainingDelta = delta.normalized * (delta.magnitude - lastDistance);
 
             //If the Character cannot move freely
-            if (didHit) {
-                Move(slideDirection * slideMagnitude);
+            while (didHit && slideCount < 20) {
+
+                lastNormal = hits[0].normal;
+                slideCount++;
+
+                //Slide util it hits
+                debugPosition = transform.position;
+                transform.position += slideDirection * hits[0].distance + hits[0].normal * SkinWidth;
+
+                //Calculate the direction in which the Character should slide
+                Vector3 previousDelta = slideDirection * slideMagnitude;
+                slideDirection = Vector3.Cross(Vector3.Cross(hits[0].normal, slideDirection.normalized), hits[0].normal).normalized;
+                slideMagnitude = Mathf.Clamp(Vector3.Dot(previousDelta.normalized * (previousDelta.magnitude - hits[0].distance), slideDirection), 0f, float.MaxValue);
+                debugDirection = slideDirection;
+
+                //Cast to see if the Character is free to move or must slide on another plane
+                hits = Physics.CapsuleCastAll(
+                    transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
+                    radius, slideDirection, slideMagnitude, mask);
+                didHit = (hits.Length > 0 ? true : false); lastDistance = (hits.Length > 0 ? hits[0].distance : lastDistance); lastNormal = (hits.Length > 0 ? hits[0].normal : lastNormal);
+
+                //Calculate how much delta is left to travel
+                if (didHit) {
+                    remainingDelta = remainingDelta.normalized * (remainingDelta.magnitude - hits[0].distance);
+                }
             }
 
             //If the Character is free to move
             if (!didHit) {
-
                 debugPosition = transform.position;
                 transform.position += slideDirection * Mathf.Clamp(Vector3.Dot(remainingDelta, slideDirection), 0f, float.MaxValue);
             }
-        } 
-        
+        }
+
         //If the cast didn't hit anything, just move
         else {
             debugPosition = transform.position;
@@ -156,6 +184,7 @@ public class Character : MonoBehaviour {
         //Check if this is a valid position. If not, return to the position from before moving
         bool invalidPos = Physics.CheckCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, mask);
         if (invalidPos) {
+            Debug.LogError("Got stuck. " + slideCount + " slides.");
             stuckPosition = transform.position;
             transform.position = startingPos;
         }
@@ -175,14 +204,14 @@ public class Character : MonoBehaviour {
         }
 
         RaycastHit[] hits = Physics.SphereCastAll(transform.position + transform.up * height - transform.up * radius, radius, -transform.up, height - radius * 2f + 0.04f, mask);
-        if(hits.Length > 0 && Vector3.Dot(velocity, Physics.gravity.normalized) >= 0f) {
+        if (hits.Length > 0 && Vector3.Dot(velocity, Physics.gravity.normalized) >= 0f) {
             bool validFloor = false;
 
             foreach (RaycastHit hit in hits) {
 
                 float angle = Vector3.Angle(-Physics.gravity.normalized, hit.normal);
                 state.floorAngle = angle;
-                if(Vector3.Dot(hit.normal, -Physics.gravity.normalized) > 0f && angle <= 45f) {
+                if (Vector3.Dot(hit.normal, -Physics.gravity.normalized) > 0f && angle <= 45f) {
                     validFloor = true;
                 }
             }
@@ -205,7 +234,7 @@ public class Character : MonoBehaviour {
 
     void Unstuck() {
         Collider[] cols = Physics.OverlapCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius);
-        if(cols.Length > 0) {
+        if (cols.Length > 0) {
             state.stuck = true;
         } else {
             state.stuck = false;
