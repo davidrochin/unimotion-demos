@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Character))]
+[RequireComponent(typeof(CharacterMotor))]
 public class CharacterControl : MonoBehaviour {
 
     public InputType inputType; 
 
     //References
-    Character character;
+    CharacterMotor character;
 
     void Awake () {
-        character = GetComponent<Character>();
+        character = GetComponent<CharacterMotor>();
     }
 
     private void Start() {

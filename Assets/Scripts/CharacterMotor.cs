@@ -2,7 +2,7 @@
 using UnityEngine.AI;
 
 [SelectionBase]
-public class Character : MonoBehaviour {
+public class CharacterMotor : MonoBehaviour {
 
     public float height, radius;
 

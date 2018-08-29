@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerCamera : MonoBehaviour {
 
     [Header("Target Settings")]
-    public Character player;
+    public CharacterMotor player;
     public float distance = 2.94f;
     public Vector3 targetOffset = new Vector3(0f, 1.09f, 0f);
 
