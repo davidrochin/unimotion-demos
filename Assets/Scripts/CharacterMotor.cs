@@ -12,11 +12,9 @@ public class CharacterMotor : MonoBehaviour {
 
     [Header("Walking")]
     [Tooltip("How fast the character should walk (in m/s).")] [Range(0.01f, 10)] public float walkSpeed = 7f;
-    public MovementStyle movementStyle = MovementStyle.Smoothed;
 
     [Header("Turning")]
     [Tooltip("How fast the character should turn (in degrees/s).")] public float turningSpeed = 400f;
-    public MovementStyle rotationStyle = MovementStyle.Smoothed;
 
     [Header("Jumping")]
     [Range(1f, 10f)] public float jumpForce = 10f;
@@ -42,71 +40,44 @@ public class CharacterMotor : MonoBehaviour {
 
     [Header("Debug")]
     public Vector3 velocity;
-    public Vector3 relativeVelocity;
-    public Vector3 lookDirection;
 
     public CharacterMotorState state;
 
     bool jump; 
     Vector3 inputVector;
+    Vector3 inputVectorSmoothed;
 
     const float SkinWidth = 0.01f;
 
-    void Awake() {
-        lookDirection = transform.forward;
-    }
-
-    bool controlUpdate = false;
-
     void Update() {
-        if (Input.GetKeyDown(KeyCode.O)) {
-            controlUpdate = !controlUpdate;
-        }
-
-        if (controlUpdate) {
-            if (Input.GetKeyDown(KeyCode.Alpha1)) {
-                ControlledUpdate();
-            }
-        } else {
-            ControlledUpdate();
-        }
-    }
-
-    void LateUpdate() {
-        if (controlUpdate) {
-            if (Input.GetKeyDown(KeyCode.Alpha1)) {
-                ControlledUpdate();
-            }
-        } else {
-            ControlledLateUpdate();
-        }
-    }
-
-    void ControlledUpdate() {
 
         // Apply gravity if necessary (terminal velocity of a human in freefall is about 53 m/s)
         if (!state.grounded && Vector3.Dot(velocity, Physics.gravity.normalized) < 50f) {
             velocity = velocity + Physics.gravity * 2f * Time.deltaTime;
         }
 
-        Unstuck();
+        Unblock();
 
-        //Move(velocity * Time.deltaTime + inputVector * speed * Time.deltaTime);
+        // Apply movement from velocity
         Move(velocity * Time.deltaTime);
-        Move(inputVector * walkSpeed * Time.deltaTime);
-        inputVector = Vector3.zero;
 
+        // Apply movement from input
+        inputVectorSmoothed = inputVector; inputVector = Vector3.zero;
+        Move(inputVectorSmoothed * walkSpeed * Time.deltaTime);
+
+        // Push away Rigidbodies
         Collider[] cols = Physics.OverlapCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius);
         foreach (Collider col in cols) {
             col.GetComponent<Rigidbody>().AddExplosionForce(50f, transform.position, 10f);
         }
 
+        // Rotate feet towards gravity direction
         Quaternion fromToRotation = Quaternion.FromToRotation(transform.up, -Physics.gravity.normalized);
         transform.rotation = fromToRotation * transform.rotation;
 
     }
 
-    void ControlledLateUpdate() {
+    void LateUpdate() {
 
         FollowFloor();
         CheckGrounded();
@@ -137,7 +108,6 @@ public class CharacterMotor : MonoBehaviour {
             slideCount++;
 
             //[This could be replaced for something better]
-            debugPosition = transform.position;
             transform.position += delta.normalized * hits[0].distance + hits[0].normal * SkinWidth;
 
             //Calculate the direction in which the Character should slide
@@ -160,7 +130,6 @@ public class CharacterMotor : MonoBehaviour {
                 slideCount++;
 
                 //Slide util it hits
-                debugPosition = transform.position;
                 transform.position += slideDirection * hits[0].distance + hits[0].normal * SkinWidth;
 
                 //Calculate the direction in which the Character should slide
@@ -183,14 +152,12 @@ public class CharacterMotor : MonoBehaviour {
 
             //If the Character is free to move
             if (!didHit) {
-                debugPosition = transform.position;
                 transform.position += slideDirection * Mathf.Clamp(Vector3.Dot(remainingDelta, slideDirection), 0f, float.MaxValue);
             }
         }
 
         //If the cast didn't hit anything, just move
         else {
-            debugPosition = transform.position;
             transform.position += delta;
         }
 
@@ -245,7 +212,7 @@ public class CharacterMotor : MonoBehaviour {
         return Physics.CheckCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, collisionMask);
     }
 
-    void Unstuck() {
+    void Unblock() {
         Collider[] cols = Physics.OverlapCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius);
         if (cols.Length > 0) {
             state.stuck = true;
@@ -329,8 +296,10 @@ public class CharacterMotor : MonoBehaviour {
     }
 
     public void Jump() {
-        velocity = velocity - Physics.gravity.normalized * jumpForce;
-        state.grounded = false;
+        if (state.grounded || Debug.isDebugBuild) {
+            velocity = velocity - Physics.gravity.normalized * jumpForce;
+            state.grounded = false;
+        }
     }
 
     public void TurnTowards(Vector3 direction) {
@@ -341,12 +310,12 @@ public class CharacterMotor : MonoBehaviour {
 
     public Vector3 debugDirection;
     public Vector3 stuckPosition;
-    public Vector3 debugPosition;
 
     private void OnDrawGizmosSelected() {
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position + transform.up * radius, radius);
         Gizmos.DrawWireSphere(transform.position + transform.up * height - transform.up * radius, radius);
+        Gizmos.DrawRay(transform.position, inputVectorSmoothed);
 
         Gizmos.color = Color.red;
         Gizmos.DrawRay(transform.position, debugDirection);
@@ -354,10 +323,6 @@ public class CharacterMotor : MonoBehaviour {
         //Gizmos.color = new Color(Color.red.r, Color.red.g, Color.red.b, 0.5f);
         Gizmos.DrawWireSphere(stuckPosition + transform.up * radius, radius);
         Gizmos.DrawWireSphere(stuckPosition + transform.up * height - transform.up * radius, radius);
-
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(debugPosition + transform.up * radius, radius);
-        Gizmos.DrawWireSphere(debugPosition + transform.up * height - transform.up * radius, radius);
     }
 
     public enum Part { BottomSphere, TopSphere, Center, Top, Bottom }

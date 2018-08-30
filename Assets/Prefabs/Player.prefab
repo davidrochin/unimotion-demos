@@ -268,7 +268,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42104921d70ba5e49a9253fa7e5cdc58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputType: 1
+  inputType: 0
 --- !u!114 &114552827695539114
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -283,6 +283,7 @@ MonoBehaviour:
   height: 2
   radius: 0.5
   walkSpeed: 7
+  fastDirectionChange: 0
   movementStyle: 1
   turningSpeed: 400
   rotationStyle: 1
@@ -295,8 +296,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   velocity: {x: 0, y: 0, z: 0}
-  relativeVelocity: {x: 0, y: 0, z: 0}
-  lookDirection: {x: 0, y: 0, z: 0}
   state:
     forwardMove: 0
     rightMove: 0
@@ -308,7 +307,5 @@ MonoBehaviour:
     lastDelta: {x: 0, y: 0, z: 0}
     floorAngle: 0
     floor: {fileID: 0}
-  groundHeight: 0
   debugDirection: {x: 0, y: 0, z: 0}
   stuckPosition: {x: 0, y: 0, z: 0}
-  debugPosition: {x: 0, y: 0, z: 0}

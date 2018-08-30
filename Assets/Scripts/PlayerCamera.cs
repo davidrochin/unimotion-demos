@@ -13,8 +13,11 @@ public class PlayerCamera : MonoBehaviour {
     public float orbitSpeed = 2.5f;
     public LayerMask obstructionLayer;
 
+    VirtualJoystick virtualJoystick;
+
     void Awake() {
         Cursor.lockState = CursorLockMode.Locked;
+        virtualJoystick = VirtualJoystick.GetById(1);
     }
 
     void LateUpdate() {
@@ -23,8 +26,15 @@ public class PlayerCamera : MonoBehaviour {
         Vector3 realTarget = player.transform.position + targetOffset;
 
         //Make a vector from mouse/joystick movement
-        Vector3 input = new Vector3(Input.GetAxis("Mouse X"), -Input.GetAxis("Mouse Y"), 0f);
+        Vector3 input = Vector3.zero;
+        if (!Application.isMobilePlatform) {
+            input = new Vector3(Input.GetAxis("Mouse X"), -Input.GetAxis("Mouse Y"), 0f);
+        }
         input = input + new Vector3(Input.GetAxis("Camera Horizontal") * 60f * Time.deltaTime, Input.GetAxis("Camera Vertical") * 60f * Time.deltaTime, 0f);
+
+        if(virtualJoystick != null) {
+            input += new Vector3(virtualJoystick.input.x, -virtualJoystick.input.y, 0f);
+        }
 
         //Rotate the Camera
         transform.RotateAround(transform.position, Vector3.up, input.x * orbitSpeed);
