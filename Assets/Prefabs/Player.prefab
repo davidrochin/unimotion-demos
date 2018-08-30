@@ -114,7 +114,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1999045143486084}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -62, y: 8, z: -59}
+  m_LocalPosition: {x: -56, y: 2, z: -38}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4317762883585878}
@@ -148,7 +148,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: e1b052179bd47ef4497a8fd409c4d36f, type: 2}
+  - {fileID: 2100000, guid: 77898a3a5eb85b9449e954ac5b62aca4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -182,7 +182,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: e1b052179bd47ef4497a8fd409c4d36f, type: 2}
+  - {fileID: 2100000, guid: 77898a3a5eb85b9449e954ac5b62aca4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -268,7 +268,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42104921d70ba5e49a9253fa7e5cdc58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputType: 0
+  inputType: 1
 --- !u!114 &114552827695539114
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -282,13 +282,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   height: 2
   radius: 0.5
-  speed: 7
-  rotationSpeed: 400
+  walkSpeed: 7
+  movementStyle: 1
+  turningSpeed: 400
+  rotationStyle: 1
   jumpForce: 10
-  mask:
+  collisionMask:
     serializedVersion: 2
     m_Bits: 1
-  rollSpeed: 1
+  canPushRigidbodies: 1
+  rigidbodiesLayer:
+    serializedVersion: 2
+    m_Bits: 0
   velocity: {x: 0, y: 0, z: 0}
   relativeVelocity: {x: 0, y: 0, z: 0}
   lookDirection: {x: 0, y: 0, z: 0}
@@ -299,6 +304,11 @@ MonoBehaviour:
     moving: 0
     grounded: 0
     previouslyGrounded: 0
+    stuck: 0
+    lastDelta: {x: 0, y: 0, z: 0}
+    floorAngle: 0
     floor: {fileID: 0}
   groundHeight: 0
   debugDirection: {x: 0, y: 0, z: 0}
+  stuckPosition: {x: 0, y: 0, z: 0}
+  debugPosition: {x: 0, y: 0, z: 0}

@@ -4,37 +4,50 @@ using UnityEngine.AI;
 [SelectionBase]
 public class CharacterMotor : MonoBehaviour {
 
-    public float height, radius;
+    #region User Settings
 
-    [Header("Movement")]
+    [Header("Size")]
+    [Tooltip("The total height of the player capsule.")] public float height;
+    [Tooltip("The radius of the player capsule.")] public float radius;
 
-    [Range(0.01f, 10)]
-    public float speed = 7f;
-    public float rotationSpeed = 400f;
+    [Header("Walking")]
+    [Tooltip("How fast the character should walk (in m/s).")] [Range(0.01f, 10)] public float walkSpeed = 7f;
+    public MovementStyle movementStyle = MovementStyle.Smoothed;
 
-    [Range(1f, 10f)]
-    public float jumpForce = 10f;
+    [Header("Turning")]
+    [Tooltip("How fast the character should turn (in degrees/s).")] public float turningSpeed = 400f;
+    public MovementStyle rotationStyle = MovementStyle.Smoothed;
 
-    public LayerMask mask;
-    public float rollSpeed = 1f;
+    [Header("Jumping")]
+    [Range(1f, 10f)] public float jumpForce = 10f;
+
+    [Header("Collision")]
+    [Tooltip("A mask that defines what are the objects the Character can collide with.")]
+    public LayerMask collisionMask;
+
+    [Header("Rigidbody Interaction")]
+    public bool canPushRigidbodies = true;
+    public LayerMask rigidbodiesLayer;
+
+    #endregion
+
+    #region Events
+
+    public event Action OnWalk;
+    public event Action OnRun;
+    public event Action OnJump;
+    public event Action OnLand;
+
+    #endregion
 
     [Header("Debug")]
     public Vector3 velocity;
     public Vector3 relativeVelocity;
     public Vector3 lookDirection;
 
-    public CharacterState state;
+    public CharacterMotorState state;
 
-    //Información del entorno
-    public float groundHeight;
-
-    //Triggers
-    bool jump;
-
-    //Events
-    public Action OnJump;
-    public Action OnHighFall;
-
+    bool jump; 
     Vector3 inputVector;
 
     const float SkinWidth = 0.01f;
@@ -80,7 +93,7 @@ public class CharacterMotor : MonoBehaviour {
 
         //Move(velocity * Time.deltaTime + inputVector * speed * Time.deltaTime);
         Move(velocity * Time.deltaTime);
-        Move(inputVector * speed * Time.deltaTime);
+        Move(inputVector * walkSpeed * Time.deltaTime);
         inputVector = Vector3.zero;
 
         Collider[] cols = Physics.OverlapCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius);
@@ -115,7 +128,7 @@ public class CharacterMotor : MonoBehaviour {
         float lastDistance = 0f;
         RaycastHit[] hits = Physics.CapsuleCastAll(
             transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
-            radius, delta.normalized, delta.magnitude, mask); lastDistance = (hits.Length > 0 ? hits[0].distance : lastDistance);
+            radius, delta.normalized, delta.magnitude, collisionMask); lastDistance = (hits.Length > 0 ? hits[0].distance : lastDistance);
         bool didHit = (hits.Length > 0 ? true : false); Vector3 lastNormal = (hits.Length > 0 ? hits[0].normal : Vector3.zero);
 
         //Move and slide on the hit plane
@@ -135,7 +148,7 @@ public class CharacterMotor : MonoBehaviour {
             //Cast to see if the Character is free to move or must slide on another plane
             hits = Physics.CapsuleCastAll(
                 transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
-                radius, slideDirection, slideMagnitude, mask);
+                radius, slideDirection, slideMagnitude, collisionMask);
             didHit = (hits.Length > 0 ? true : false); lastDistance = (hits.Length > 0 ? hits[0].distance : lastDistance); lastNormal = (hits.Length > 0 ? hits[0].normal : lastNormal);
 
             Vector3 remainingDelta = delta.normalized * (delta.magnitude - lastDistance);
@@ -159,7 +172,7 @@ public class CharacterMotor : MonoBehaviour {
                 //Cast to see if the Character is free to move or must slide on another plane
                 hits = Physics.CapsuleCastAll(
                     transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
-                    radius, slideDirection, slideMagnitude, mask);
+                    radius, slideDirection, slideMagnitude, collisionMask);
                 didHit = (hits.Length > 0 ? true : false); lastDistance = (hits.Length > 0 ? hits[0].distance : lastDistance); lastNormal = (hits.Length > 0 ? hits[0].normal : lastNormal);
 
                 //Calculate how much delta is left to travel
@@ -182,7 +195,7 @@ public class CharacterMotor : MonoBehaviour {
         }
 
         //Check if this is a valid position. If not, return to the position from before moving
-        bool invalidPos = Physics.CheckCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, mask);
+        bool invalidPos = Physics.CheckCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, collisionMask);
         if (invalidPos) {
             Debug.LogError("Got stuck. " + slideCount + " slides.");
             stuckPosition = transform.position;
@@ -196,14 +209,14 @@ public class CharacterMotor : MonoBehaviour {
         state.previouslyGrounded = state.grounded;
 
         //Check the floor beneath (even if the Character is not touching it)
-        RaycastHit floorHit; bool didHit = Physics.SphereCast(transform.position + transform.up * height - transform.up * radius, radius, -transform.up, out floorHit, float.MaxValue, mask);
+        RaycastHit floorHit; bool didHit = Physics.SphereCast(transform.position + transform.up * height - transform.up * radius, radius, -transform.up, out floorHit, float.MaxValue, collisionMask);
         if (didHit) {
             state.floor = floorHit.transform;
         } else {
             state.floor = null;
         }
 
-        RaycastHit[] hits = Physics.SphereCastAll(transform.position + transform.up * height - transform.up * radius, radius, -transform.up, height - radius * 2f + 0.04f, mask);
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position + transform.up * height - transform.up * radius, radius, -transform.up, height - radius * 2f + 0.04f, collisionMask);
         if (hits.Length > 0 && Vector3.Dot(velocity, Physics.gravity.normalized) >= 0f) {
             bool validFloor = false;
 
@@ -229,7 +242,7 @@ public class CharacterMotor : MonoBehaviour {
     }
 
     bool IsPositionValid() {
-        return Physics.CheckCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, mask);
+        return Physics.CheckCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, collisionMask);
     }
 
     void Unstuck() {
@@ -275,7 +288,7 @@ public class CharacterMotor : MonoBehaviour {
 
     void StickToSlope() {
         RaycastHit hit;
-        bool didHit = Physics.SphereCast(transform.position + transform.up * radius, radius, Physics.gravity.normalized, out hit, radius, mask);
+        bool didHit = Physics.SphereCast(transform.position + transform.up * radius, radius, Physics.gravity.normalized, out hit, radius, collisionMask);
 
         if (state.previouslyGrounded && didHit && Vector3.Angle(-Physics.gravity.normalized, hit.normal) <= 45f) {
 
@@ -320,8 +333,8 @@ public class CharacterMotor : MonoBehaviour {
         state.grounded = false;
     }
 
-    public void RotateTowards(Vector3 direction) {
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(direction, -Physics.gravity.normalized), rotationSpeed * Time.deltaTime);
+    public void TurnTowards(Vector3 direction) {
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(direction, -Physics.gravity.normalized), turningSpeed * Time.deltaTime);
     }
 
     #endregion
@@ -348,11 +361,12 @@ public class CharacterMotor : MonoBehaviour {
     }
 
     public enum Part { BottomSphere, TopSphere, Center, Top, Bottom }
+    public enum MovementStyle { Raw, Smoothed }
 
 }
 
 [System.Serializable]
-public class CharacterState {
+public class CharacterMotorState {
     public float forwardMove;
     public float rightMove;
     public float moveSpeed;
@@ -369,7 +383,7 @@ public class CharacterState {
     public Transform floor;
     public TransformState floorState;
 
-    public CharacterState() {
+    public CharacterMotorState() {
 
     }
 

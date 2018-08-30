@@ -21,7 +21,7 @@ public class CharacterControl : MonoBehaviour {
     void Update () {
 
         if(GetInputMagnitude() > 0.05f) {
-            character.RotateTowards(GetInputVector());
+            character.TurnTowards(GetInputVector());
             character.Walk(GetInputVector() * GetInputMagnitude() * (Input.GetButton("B") ? 1.5f : 1f));
         }
 
