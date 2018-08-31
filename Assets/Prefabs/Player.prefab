@@ -114,7 +114,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1999045143486084}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -56, y: 2, z: -38}
+  m_LocalPosition: {x: -59, y: 8, z: -60}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4317762883585878}
@@ -283,10 +283,7 @@ MonoBehaviour:
   height: 2
   radius: 0.5
   walkSpeed: 7
-  fastDirectionChange: 0
-  movementStyle: 1
   turningSpeed: 400
-  rotationStyle: 1
   jumpForce: 10
   collisionMask:
     serializedVersion: 2
@@ -294,7 +291,7 @@ MonoBehaviour:
   canPushRigidbodies: 1
   rigidbodiesLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 2048
   velocity: {x: 0, y: 0, z: 0}
   state:
     forwardMove: 0
@@ -309,3 +306,5 @@ MonoBehaviour:
     floor: {fileID: 0}
   debugDirection: {x: 0, y: 0, z: 0}
   stuckPosition: {x: 0, y: 0, z: 0}
+  debugPoints: []
+  debugPoints2: []

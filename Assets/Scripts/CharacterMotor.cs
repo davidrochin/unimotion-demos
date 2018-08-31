@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.AI;
 
 [SelectionBase]
@@ -51,12 +53,14 @@ public class CharacterMotor : MonoBehaviour {
 
     void Update() {
 
+        Unblock();
+
         // Apply gravity if necessary (terminal velocity of a human in freefall is about 53 m/s)
         if (!state.grounded && Vector3.Dot(velocity, Physics.gravity.normalized) < 50f) {
             velocity = velocity + Physics.gravity * 2f * Time.deltaTime;
         }
 
-        Unblock();
+        //Unblock();
 
         // Apply movement from velocity
         Move(velocity * Time.deltaTime);
@@ -66,7 +70,7 @@ public class CharacterMotor : MonoBehaviour {
         Move(inputVectorSmoothed * walkSpeed * Time.deltaTime);
 
         // Push away Rigidbodies
-        Collider[] cols = Physics.OverlapCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius);
+        Collider[] cols = Physics.OverlapCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, rigidbodiesLayer);
         foreach (Collider col in cols) {
             col.GetComponent<Rigidbody>().AddExplosionForce(50f, transform.position, 10f);
         }
@@ -79,14 +83,19 @@ public class CharacterMotor : MonoBehaviour {
 
     void LateUpdate() {
 
+        Unblock();
+
         FollowFloor();
         CheckGrounded();
         StickToSlope();
+        
     }
 
     #region Private methods
 
     void Move(Vector3 delta) {
+
+        if (delta == Vector3.zero) { return; }
 
         int slideCount = 0;
 
@@ -163,11 +172,11 @@ public class CharacterMotor : MonoBehaviour {
 
         //Check if this is a valid position. If not, return to the position from before moving
         bool invalidPos = Physics.CheckCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, collisionMask);
-        if (invalidPos) {
+        /*if (invalidPos) {
             Debug.LogError("Got stuck. " + slideCount + " slides.");
             stuckPosition = transform.position;
             transform.position = startingPos;
-        }
+        }*/
     }
 
     void CheckGrounded() {
@@ -208,14 +217,37 @@ public class CharacterMotor : MonoBehaviour {
         }
     }
 
-    bool IsPositionValid() {
+    bool CheckPosition() {
         return Physics.CheckCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, collisionMask);
     }
 
     void Unblock() {
-        Collider[] cols = Physics.OverlapCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius);
+        Collider[] cols = Physics.OverlapCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, collisionMask);
         if (cols.Length > 0) {
+
             state.stuck = true;
+
+            foreach (Collider col in cols) {
+
+                Vector3 closestPointInCollider = col.ClosestPoint(GetPartPosition(Part.Center));
+                Vector3 closestPointInCapsule = ClosestPoint(closestPointInCollider);
+
+                // Calculate where the character needs to move to get unblocked
+                Vector3 delta = closestPointInCollider - closestPointInCapsule;
+                //Debug.Log(delta.magnitude);
+
+                // Move
+                //transform.position += delta + delta.normalized * SkinWidth;
+                transform.position += delta.normalized * (delta.magnitude + SkinWidth);
+
+                debugPoint = closestPointInCollider;
+                debugPoint2 = closestPointInCapsule;
+
+                //Debug.Break();
+
+                break;
+            }
+
         } else {
             state.stuck = false;
         }
@@ -269,6 +301,12 @@ public class CharacterMotor : MonoBehaviour {
         }
     }
 
+    Vector3 ClosestPoint(Vector3 point) {
+        float segment = Mathf.Clamp(Vector3.Dot(point - transform.position, transform.up), 0f + radius, height - radius);
+        Vector3 segmentPosition = transform.position + transform.up * segment;
+        return segmentPosition + (point - segmentPosition).normalized * radius;
+    }
+
     Vector3 GetPartPosition(Part part) {
         switch (part) {
             case Part.BottomSphere:
@@ -310,6 +348,8 @@ public class CharacterMotor : MonoBehaviour {
 
     public Vector3 debugDirection;
     public Vector3 stuckPosition;
+    public Vector3 debugPoint;
+    public Vector3 debugPoint2;
 
     private void OnDrawGizmosSelected() {
         Gizmos.color = Color.green;
@@ -323,6 +363,10 @@ public class CharacterMotor : MonoBehaviour {
         //Gizmos.color = new Color(Color.red.r, Color.red.g, Color.red.b, 0.5f);
         Gizmos.DrawWireSphere(stuckPosition + transform.up * radius, radius);
         Gizmos.DrawWireSphere(stuckPosition + transform.up * height - transform.up * radius, radius);
+
+        Gizmos.DrawSphere(debugPoint, 0.05f);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawSphere(debugPoint2, 0.05f);
     }
 
     public enum Part { BottomSphere, TopSphere, Center, Top, Bottom }
