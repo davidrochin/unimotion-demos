@@ -18,9 +18,13 @@ public class PlayerCamera : MonoBehaviour {
     void Awake() {
         Cursor.lockState = CursorLockMode.Locked;
         virtualJoystick = VirtualJoystick.GetById(1);
+
+        if(player != null) {
+            player.OnFrameFinish += Follow;
+        }
     }
 
-    void LateUpdate() {
+    public void Follow() {
 
         //Get the real target position (add offset)
         Vector3 realTarget = player.transform.position + targetOffset;
@@ -32,7 +36,7 @@ public class PlayerCamera : MonoBehaviour {
         }
         input = input + new Vector3(Input.GetAxis("Camera Horizontal") * 60f * Time.deltaTime, Input.GetAxis("Camera Vertical") * 60f * Time.deltaTime, 0f);
 
-        if(virtualJoystick != null) {
+        if (virtualJoystick != null) {
             input += new Vector3(virtualJoystick.input.x, -virtualJoystick.input.y, 0f);
         }
 

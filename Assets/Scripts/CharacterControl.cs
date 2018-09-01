@@ -32,6 +32,10 @@ public class CharacterControl : MonoBehaviour {
             character.Jump();
         }
 
+        if (Input.GetButtonDown("Crouch")) {
+            character.Crouch();
+        }
+
         if (Input.GetKeyDown(KeyCode.G)) {
             Physics.gravity = -Physics.gravity;
         }

@@ -10,6 +10,11 @@ public class DebugMenu : MonoBehaviour {
         if(QualitySettings.vSyncCount == 1) {
             sixtyFps = true;
         }
+
+        if (Application.isMobilePlatform) {
+            QualitySettings.vSyncCount = 1;
+            Destroy(gameObject);
+        }
     }
 
     private void OnGUI() {

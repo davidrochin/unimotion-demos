@@ -37,6 +37,8 @@ public class CharacterMotor : MonoBehaviour {
     public event Action OnRun;
     public event Action OnJump;
     public event Action OnLand;
+    public event Action OnFrameStart;
+    public event Action OnFrameFinish;
 
     #endregion
 
@@ -52,6 +54,8 @@ public class CharacterMotor : MonoBehaviour {
     const float SkinWidth = 0.01f;
 
     void Update() {
+
+        FollowFloor();
 
         Unblock();
 
@@ -83,11 +87,12 @@ public class CharacterMotor : MonoBehaviour {
 
     void LateUpdate() {
 
-        Unblock();
-
         FollowFloor();
+        Unblock();
         CheckGrounded();
         StickToSlope();
+
+        if (OnFrameFinish != null) { OnFrameFinish(); }
         
     }
 
@@ -99,7 +104,7 @@ public class CharacterMotor : MonoBehaviour {
 
         int slideCount = 0;
 
-        FollowFloor();
+        //FollowFloor();
 
         //Store the position from before moving
         Vector3 startingPos = transform.position;
@@ -172,11 +177,11 @@ public class CharacterMotor : MonoBehaviour {
 
         //Check if this is a valid position. If not, return to the position from before moving
         bool invalidPos = Physics.CheckCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, collisionMask);
-        /*if (invalidPos) {
-            Debug.LogError("Got stuck. " + slideCount + " slides.");
+        if (invalidPos) {
+            Debug.LogError("Character Motor " + name + " got stuck with " + slideCount + " slides.");
             stuckPosition = transform.position;
             transform.position = startingPos;
-        }*/
+        }
     }
 
     void CheckGrounded() {
@@ -192,7 +197,7 @@ public class CharacterMotor : MonoBehaviour {
             state.floor = null;
         }
 
-        RaycastHit[] hits = Physics.SphereCastAll(transform.position + transform.up * height - transform.up * radius, radius, -transform.up, height - radius * 2f + 0.04f, collisionMask);
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position + transform.up * height - transform.up * radius, radius, -transform.up, height - radius * 2f + SkinWidth * 2f, collisionMask);
         if (hits.Length > 0 && Vector3.Dot(velocity, Physics.gravity.normalized) >= 0f) {
             bool validFloor = false;
 
@@ -268,6 +273,7 @@ public class CharacterMotor : MonoBehaviour {
 
                 //Follow position
                 transform.position += state.floor.position - state.floorState.position;
+                //Move(state.floor.position - state.floorState.position);
 
                 //Follow rotation
                 Quaternion dif = Quaternion.FromToRotation(state.floorState.forward, state.floor.forward);
@@ -338,6 +344,14 @@ public class CharacterMotor : MonoBehaviour {
             velocity = velocity - Physics.gravity.normalized * jumpForce;
             state.grounded = false;
         }
+    }
+
+    public void Crouch() {
+        throw new System.NotImplementedException();
+    }
+
+    public bool Stand() {
+        throw new System.NotImplementedException();
     }
 
     public void TurnTowards(Vector3 direction) {

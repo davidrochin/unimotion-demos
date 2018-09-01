@@ -242,24 +242,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee4659e43e29d674e9e5debb5301643e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  settings:
-    canPushRigidbodies: 1
-    rigidbodiesLayer:
-      serializedVersion: 2
-      m_Bits: 0
-    canCollideWithCharacters: 1
-    canPushCharacters: 1
   height: 2
   radius: 0.5
-  speed: 7
-  rotationSpeed: 400
+  walkSpeed: 7
+  turningSpeed: 400
   jumpForce: 10
-  mask:
+  collisionMask:
     serializedVersion: 2
     m_Bits: 1
+  canPushRigidbodies: 1
+  rigidbodiesLayer:
+    serializedVersion: 2
+    m_Bits: 2048
   velocity: {x: 0, y: 0, z: 0}
-  relativeVelocity: {x: 0, y: 0, z: 0}
-  lookDirection: {x: 0, y: 0, z: 0}
   state:
     forwardMove: 0
     rightMove: 0
@@ -271,10 +266,10 @@ MonoBehaviour:
     lastDelta: {x: 0, y: 0, z: 0}
     floorAngle: 0
     floor: {fileID: 0}
-  groundHeight: 0
   debugDirection: {x: 0, y: 0, z: 0}
   stuckPosition: {x: 0, y: 0, z: 0}
-  debugPosition: {x: 0, y: 0, z: 0}
+  debugPoint: {x: 0, y: 0, z: 0}
+  debugPoint2: {x: 0, y: 0, z: 0}
 --- !u!4 &963864505
 Transform:
   m_ObjectHideFlags: 0
@@ -465,7 +460,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94a24f0c5b765cd4785c37e80b572577, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
+  player: {fileID: 963864504}
   distance: 6
   targetOffset: {x: 0, y: 1.09, z: 0}
   orbitSpeed: 2.5

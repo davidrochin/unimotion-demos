@@ -11,28 +11,88 @@ ModelImporter:
     100006: Cube
     100008: demo_doorway_01
     100010: demo_test_wall
+    100012: demo_01
+    100014: demo_02
+    100016: demo_03
+    100018: demo_04
+    100020: demo_05
+    100022: demo_01.001
+    100024: demo_06
+    100026: demo_07
+    100028: demo_08
+    100030: demo_09
+    100032: demo_10
+    100034: demo_ramp_01
     400000: //RootNode
     400002: demo_plane_01
     400004: reference
     400006: Cube
     400008: demo_doorway_01
     400010: demo_test_wall
+    400012: demo_01
+    400014: demo_02
+    400016: demo_03
+    400018: demo_04
+    400020: demo_05
+    400022: demo_01.001
+    400024: demo_06
+    400026: demo_07
+    400028: demo_08
+    400030: demo_09
+    400032: demo_10
+    400034: demo_ramp_01
     2100000: No Name
     2300000: demo_plane_01
     2300002: reference
     2300004: Cube
     2300006: demo_doorway_01
     2300008: demo_test_wall
+    2300010: demo_01
+    2300012: demo_02
+    2300014: demo_03
+    2300016: demo_04
+    2300018: demo_05
+    2300020: demo_01.001
+    2300022: demo_06
+    2300024: demo_07
+    2300026: demo_08
+    2300028: demo_09
+    2300030: demo_10
+    2300032: demo_ramp_01
     3300000: demo_plane_01
     3300002: reference
     3300004: Cube
     3300006: demo_doorway_01
     3300008: demo_test_wall
+    3300010: demo_01
+    3300012: demo_02
+    3300014: demo_03
+    3300016: demo_04
+    3300018: demo_05
+    3300020: demo_01.001
+    3300022: demo_06
+    3300024: demo_07
+    3300026: demo_08
+    3300028: demo_09
+    3300030: demo_10
+    3300032: demo_ramp_01
     4300000: demo_plane_01
     4300002: reference
     4300004: Cube
     4300006: demo_doorway_01
     4300008: demo_test_wall
+    4300010: demo_02
+    4300012: demo_01
+    4300014: demo_03
+    4300016: demo_04
+    4300018: demo_05
+    4300020: demo_01.001
+    4300022: demo_06
+    4300024: demo_07
+    4300026: demo_08
+    4300028: demo_09
+    4300030: demo_10
+    4300032: demo_ramp_01
   externalObjects: {}
   materials:
     importMaterials: 1
