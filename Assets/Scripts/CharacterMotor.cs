@@ -20,6 +20,7 @@ public class CharacterMotor : MonoBehaviour {
 
     [Header("Jumping")]
     [Range(1f, 10f)] public float jumpForce = 10f;
+    public JumpStyle jumpStyle;
 
     [Header("Collision")]
     [Tooltip("A mask that defines what are the objects the Character can collide with.")]
@@ -104,8 +105,6 @@ public class CharacterMotor : MonoBehaviour {
 
         int slideCount = 0;
 
-        //FollowFloor();
-
         //Store the position from before moving
         Vector3 startingPos = transform.position;
 
@@ -115,6 +114,10 @@ public class CharacterMotor : MonoBehaviour {
             transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
             radius, delta.normalized, delta.magnitude, collisionMask); lastDistance = (hits.Length > 0 ? hits[0].distance : lastDistance);
         bool didHit = (hits.Length > 0 ? true : false); Vector3 lastNormal = (hits.Length > 0 ? hits[0].normal : Vector3.zero);
+
+        foreach (RaycastHit hit in hits) {
+            Debug.DrawRay(hit.point, hit.normal, Color.magenta);
+        }
 
         //Move and slide on the hit plane
         if (didHit) {
@@ -385,6 +388,7 @@ public class CharacterMotor : MonoBehaviour {
 
     public enum Part { BottomSphere, TopSphere, Center, Top, Bottom }
     public enum MovementStyle { Raw, Smoothed }
+    public enum JumpStyle { TotalControl, FixedVelocity, SmoothControl }
 
 }
 
