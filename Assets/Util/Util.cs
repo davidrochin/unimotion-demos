@@ -16,7 +16,7 @@ namespace Util {
 
     public class Physics {
 
-        public static RaycastHit CapsuleCastPastItself(Vector3 point1, Vector3 point2, float radius, Vector3 direction) {
+        public static RaycastHit CapsuleCastPastItself(Directions point1, Directions point2, float radius, Directions direction) {
             return new RaycastHit();
         }
 
@@ -29,6 +29,21 @@ namespace Util {
             tex.SetPixel(0, 0, color);
             tex.Apply();
             return tex;
+        }
+
+    }
+
+    public class Directions {
+
+        public static Vector3 MeanDirection(Vector3[] directions) {
+            Vector3 meanDirection = directions[0];
+            if (directions.Length > 1) {
+                for (int i = 1; i < directions.Length; i++) {
+                    meanDirection = Vector3.Slerp(meanDirection, directions[i], 0.5f);
+                }
+            }
+
+            return meanDirection;
         }
 
     }

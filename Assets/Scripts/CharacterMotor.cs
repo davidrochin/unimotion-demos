@@ -105,34 +105,31 @@ public class CharacterMotor : MonoBehaviour {
 
         int slideCount = 0;
 
-        //Store the position from before moving
+        // Store the position from before moving
         Vector3 startingPos = transform.position;
 
-        //Capsule cast to delta
+        // Capsule cast to delta
         float lastDistance = 0f;
         RaycastHit[] hits = Physics.CapsuleCastAll(
             transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
             radius, delta.normalized, delta.magnitude, collisionMask); lastDistance = (hits.Length > 0 ? hits[0].distance : lastDistance);
         bool didHit = (hits.Length > 0 ? true : false); Vector3 lastNormal = (hits.Length > 0 ? hits[0].normal : Vector3.zero);
+        System.Array.Sort(hits, (x,y) => x.distance.CompareTo(y.distance));
 
-        foreach (RaycastHit hit in hits) {
-            Debug.DrawRay(hit.point, hit.normal, Color.magenta);
-        }
-
-        //Move and slide on the hit plane
+        // Move and slide on the hit plane
         if (didHit) {
 
             slideCount++;
 
-            //[This could be replaced for something better]
+            // Move until it the point it hits
             transform.position += delta.normalized * hits[0].distance + hits[0].normal * SkinWidth;
 
-            //Calculate the direction in which the Character should slide
+            // Calculate the direction in which the Character should slide
             Vector3 slideDirection = Vector3.Cross(Vector3.Cross(hits[0].normal, delta.normalized), hits[0].normal).normalized;
             debugDirection = slideDirection;
             float slideMagnitude = Mathf.Clamp(Vector3.Dot(delta.normalized * (delta.magnitude - hits[0].distance), slideDirection), 0f, float.MaxValue);
 
-            //Cast to see if the Character is free to move or must slide on another plane
+            // Cast to see if the Character is free to move or must slide on another plane
             hits = Physics.CapsuleCastAll(
                 transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
                 radius, slideDirection, slideMagnitude, collisionMask);
@@ -140,45 +137,46 @@ public class CharacterMotor : MonoBehaviour {
 
             Vector3 remainingDelta = delta.normalized * (delta.magnitude - lastDistance);
 
-            //If the Character cannot move freely
+            // If the Character cannot move freely
             while (didHit && slideCount < 20) {
 
                 lastNormal = hits[0].normal;
                 slideCount++;
 
-                //Slide util it hits
+                // Slide util it hits
                 transform.position += slideDirection * hits[0].distance + hits[0].normal * SkinWidth;
 
-                //Calculate the direction in which the Character should slide
+                // Calculate the direction in which the Character should slide
                 Vector3 previousDelta = slideDirection * slideMagnitude;
                 slideDirection = Vector3.Cross(Vector3.Cross(hits[0].normal, slideDirection.normalized), hits[0].normal).normalized;
                 slideMagnitude = Mathf.Clamp(Vector3.Dot(previousDelta.normalized * (previousDelta.magnitude - hits[0].distance), slideDirection), 0f, float.MaxValue);
                 debugDirection = slideDirection;
 
-                //Cast to see if the Character is free to move or must slide on another plane
+                // Cast to see if the Character is free to move or must slide on another plane
                 hits = Physics.CapsuleCastAll(
                     transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
                     radius, slideDirection, slideMagnitude, collisionMask);
                 didHit = (hits.Length > 0 ? true : false); lastDistance = (hits.Length > 0 ? hits[0].distance : lastDistance); lastNormal = (hits.Length > 0 ? hits[0].normal : lastNormal);
+                System.Array.Sort(hits, (x, y) => x.distance.CompareTo(y.distance));
 
-                //Calculate how much delta is left to travel
+                // Calculate how much delta is left to travel
                 if (didHit) {
                     remainingDelta = remainingDelta.normalized * (remainingDelta.magnitude - hits[0].distance);
                 }
             }
 
-            //If the Character is free to move
+            // If the Character is free to move
             if (!didHit) {
                 transform.position += slideDirection * Mathf.Clamp(Vector3.Dot(remainingDelta, slideDirection), 0f, float.MaxValue);
             }
         }
 
-        //If the cast didn't hit anything, just move
+        // If the cast didn't hit anything, just move
         else {
             transform.position += delta;
         }
 
-        //Check if this is a valid position. If not, return to the position from before moving
+        // Check if this is a valid position. If not, return to the position from before moving
         bool invalidPos = Physics.CheckCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, collisionMask);
         if (invalidPos) {
             Debug.LogError("Character Motor " + name + " got stuck with " + slideCount + " slides.");
@@ -189,10 +187,10 @@ public class CharacterMotor : MonoBehaviour {
 
     void CheckGrounded() {
 
-        //Save whether if the Character was grounded or not before the check
+        // Save whether if the Character was grounded or not before the check
         state.previouslyGrounded = state.grounded;
 
-        //Check the floor beneath (even if the Character is not touching it)
+        // Check the floor beneath (even if the Character is not touching it)
         RaycastHit floorHit; bool didHit = Physics.SphereCast(transform.position + transform.up * height - transform.up * radius, radius, -transform.up, out floorHit, float.MaxValue, collisionMask);
         if (didHit) {
             state.floor = floorHit.transform;
@@ -225,7 +223,7 @@ public class CharacterMotor : MonoBehaviour {
         }
     }
 
-    bool CheckPosition() {
+    bool CheckInvalid() {
         return Physics.CheckCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, collisionMask);
     }
 

@@ -40,6 +40,10 @@ public class CharacterControl : MonoBehaviour {
             Physics.gravity = -Physics.gravity;
         }
 
+        if(Input.GetKeyDown(KeyCode.P)) {
+            Debug.Break();
+        }
+
     }
 
     Vector3 GetInputVector() {
