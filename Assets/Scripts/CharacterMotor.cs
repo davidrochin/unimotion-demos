@@ -21,6 +21,7 @@ public class CharacterMotor : MonoBehaviour {
     [Header("Jumping")]
     [Range(1f, 10f)] public float jumpForce = 10f;
     public JumpStyle jumpStyle;
+    public bool canJumpWhileSliding = true;
 
     [Header("Collision")]
     [Tooltip("A mask that defines what are the objects the Character can collide with.")]
@@ -186,7 +187,7 @@ public class CharacterMotor : MonoBehaviour {
     }
 
     void CheckGrounded() {
-
+        Debug.Log("==================");
         // Save whether if the Character was grounded or not before the check
         state.previouslyGrounded = state.grounded;
 
@@ -198,7 +199,7 @@ public class CharacterMotor : MonoBehaviour {
             state.floor = null;
         }
 
-        RaycastHit[] hits = Physics.SphereCastAll(transform.position + transform.up * height - transform.up * radius, radius, -transform.up, height - radius * 2f + SkinWidth * 2f, collisionMask);
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position + transform.up * height - transform.up * radius, radius + SkinWidth * 2f, -transform.up, height - radius * 2f, collisionMask);
         if (hits.Length > 0 && Vector3.Dot(velocity, Physics.gravity.normalized) >= 0f) {
             bool validFloor = false;
 
@@ -206,8 +207,14 @@ public class CharacterMotor : MonoBehaviour {
 
                 float angle = Vector3.Angle(-Physics.gravity.normalized, hit.normal);
                 state.floorAngle = angle;
-                if (Vector3.Dot(hit.normal, -Physics.gravity.normalized) > 0f && angle <= 45f) {
-                    validFloor = true;
+
+                Debug.Log("Dist: " + hit.distance + ", Point: " + hit.point);
+
+                if (Vector3.Dot(hit.normal, -Physics.gravity.normalized) > 0f && angle < 90f && !(hit.distance == 0f && hit.point == Vector3.zero) ) {
+                    bool onCylinder = Vector3.Distance(transform.position + transform.up * Vector3.Dot(hit.point - transform.position, transform.up), hit.point) <= radius ? true : false;
+                    
+                    if(onCylinder)
+                        validFloor = true;
                 }
             }
 
@@ -368,8 +375,9 @@ public class CharacterMotor : MonoBehaviour {
 
     private void OnDrawGizmosSelected() {
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position + transform.up * radius, radius);
         Gizmos.DrawWireSphere(transform.position + transform.up * height - transform.up * radius, radius);
+        Gizmos.color = (state.grounded ? Color.blue : Color.green);
+        Gizmos.DrawWireSphere(transform.position + transform.up * radius, radius);
         Gizmos.DrawRay(transform.position, inputVectorSmoothed);
 
         Gizmos.color = Color.red;
