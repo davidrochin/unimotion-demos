@@ -68,12 +68,14 @@ public class CharacterMotor : MonoBehaviour {
 
         //Unblock();
 
-        // Apply movement from velocity
-        Move(velocity * Time.deltaTime);
-
         // Apply movement from input
         inputVectorSmoothed = inputVector; inputVector = Vector3.zero;
         Move(inputVectorSmoothed * walkSpeed * Time.deltaTime);
+
+        // Apply movement from velocity
+        Move(velocity * Time.deltaTime);
+
+        
 
         // Push away Rigidbodies
         Collider[] cols = Physics.OverlapCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, rigidbodiesLayer);
@@ -187,7 +189,7 @@ public class CharacterMotor : MonoBehaviour {
     }
 
     void CheckGrounded() {
-        Debug.Log("==================");
+
         // Save whether if the Character was grounded or not before the check
         state.previouslyGrounded = state.grounded;
 
@@ -207,8 +209,6 @@ public class CharacterMotor : MonoBehaviour {
 
                 float angle = Vector3.Angle(-Physics.gravity.normalized, hit.normal);
                 state.floorAngle = angle;
-
-                Debug.Log("Dist: " + hit.distance + ", Point: " + hit.point);
 
                 if (Vector3.Dot(hit.normal, -Physics.gravity.normalized) > 0f && angle < 90f && !(hit.distance == 0f && hit.point == Vector3.zero) ) {
                     bool onCylinder = Vector3.Distance(transform.position + transform.up * Vector3.Dot(hit.point - transform.position, transform.up), hit.point) <= radius ? true : false;
@@ -312,6 +312,7 @@ public class CharacterMotor : MonoBehaviour {
 
             transform.position += Physics.gravity.normalized * hit.distance + hyp;
             state.grounded = true;
+            velocity = Vector3.zero;
         }
     }
 
