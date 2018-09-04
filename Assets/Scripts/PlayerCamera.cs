@@ -6,7 +6,7 @@ public class PlayerCamera : MonoBehaviour {
 
     [Header("Target Settings")]
     public CharacterMotor player;
-    public float distance = 6f;
+    [Range(0f, 20f)] public float distance = 6f;
     public Vector3 targetOffset = new Vector3(0f, 1.09f, 0f);
 
     [Header("Orbit Settings")]
