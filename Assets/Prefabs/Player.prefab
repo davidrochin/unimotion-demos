@@ -54,7 +54,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4426778065525408}
   - component: {fileID: 33791225685153460}
-  - component: {fileID: 64902350493642016}
   - component: {fileID: 23408702483479746}
   m_Layer: 10
   m_Name: Quad
@@ -145,8 +144,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1999045143486084}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -59, y: 8, z: -60}
+  m_LocalRotation: {x: 0, y: 0.053425767, z: 0, w: 0.9985719}
+  m_LocalPosition: {x: 29.746813, y: 6.3243265, z: -20.083006}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4317762883585878}
@@ -330,20 +329,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1551277242128628}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!64 &64902350493642016
-MeshCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1551277242128628}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_SkinWidth: 0.01
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &114144568754205070
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -373,6 +358,7 @@ MonoBehaviour:
   turningSpeed: 400
   jumpForce: 10
   jumpStyle: 0
+  canJumpWhileSliding: 1
   collisionMask:
     serializedVersion: 2
     m_Bits: 1
@@ -386,13 +372,13 @@ MonoBehaviour:
     rightMove: 0
     moveSpeed: 0
     moving: 0
-    grounded: 0
-    previouslyGrounded: 0
-    stuck: 0
+    grounded: 1
+    previouslyGrounded: 1
+    stuck: 1
     lastDelta: {x: 0, y: 0, z: 0}
-    floorAngle: 0
+    floorAngle: 32.973255
     floor: {fileID: 0}
-  debugDirection: {x: 0, y: 0, z: 0}
-  stuckPosition: {x: 0, y: 0, z: 0}
-  debugPoint: {x: 0, y: 0, z: 0}
-  debugPoint2: {x: 0, y: 0, z: 0}
+  debugDirection: {x: 0.14034185, y: 0.8468411, z: 0.51299536}
+  stuckPosition: {x: 29.76857, y: 6.44566, z: -19.986883}
+  debugPoint: {x: 29.746813, y: 7.3243265, z: -20.083006}
+  debugPoint2: {x: 29.746813, y: 7.3243265, z: -20.083006}

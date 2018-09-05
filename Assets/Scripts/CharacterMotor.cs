@@ -122,6 +122,8 @@ public class CharacterMotor : MonoBehaviour {
         // Move and slide on the hit plane
         if (didHit) {
 
+            Debug.DrawRay(hits[0].point, hits[0].normal);
+
             slideCount++;
 
             // Move until it the point it hits
@@ -142,6 +144,8 @@ public class CharacterMotor : MonoBehaviour {
 
             // If the Character cannot move freely
             while (didHit && slideCount < 20) {
+
+                Debug.DrawRay(hits[0].point, hits[0].normal);
 
                 lastNormal = hits[0].normal;
                 slideCount++;
@@ -181,8 +185,10 @@ public class CharacterMotor : MonoBehaviour {
 
         // Check if this is a valid position. If not, return to the position from before moving
         bool invalidPos = Physics.CheckCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, collisionMask);
+        Collider[] colliders = Physics.OverlapCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, collisionMask);
+
         if (invalidPos) {
-            Debug.LogError("Character Motor " + name + " got stuck with " + slideCount + " slides.");
+            Debug.LogError("Character Motor " + name + " got stuck with " + slideCount + " slides. (" + colliders[0].gameObject.name + ")");
             stuckPosition = transform.position;
             transform.position = startingPos;
         }

@@ -25,6 +25,10 @@ ModelImporter:
     100034: demo_ramp_01
     100036: demo_11
     100038: demo_12
+    100040: demo_13
+    100042: demo_14
+    100044: demo_15
+    100046: demo_cube
     400000: //RootNode
     400002: demo_plane_01
     400004: reference
@@ -45,6 +49,10 @@ ModelImporter:
     400034: demo_ramp_01
     400036: demo_11
     400038: demo_12
+    400040: demo_13
+    400042: demo_14
+    400044: demo_15
+    400046: demo_cube
     2100000: No Name
     2300000: demo_plane_01
     2300002: reference
@@ -65,6 +73,10 @@ ModelImporter:
     2300032: demo_ramp_01
     2300034: demo_11
     2300036: demo_12
+    2300038: demo_13
+    2300040: demo_14
+    2300042: demo_15
+    2300044: demo_cube
     3300000: demo_plane_01
     3300002: reference
     3300004: Cube
@@ -84,6 +96,10 @@ ModelImporter:
     3300032: demo_ramp_01
     3300034: demo_11
     3300036: demo_12
+    3300038: demo_13
+    3300040: demo_14
+    3300042: demo_15
+    3300044: demo_cube
     4300000: demo_plane_01
     4300002: reference
     4300004: Cube
@@ -103,6 +119,10 @@ ModelImporter:
     4300032: demo_ramp_01
     4300034: demo_11
     4300036: demo_12
+    4300038: demo_13
+    4300040: demo_14
+    4300042: demo_15
+    4300044: demo_cube
   externalObjects: {}
   materials:
     importMaterials: 1
