@@ -55,6 +55,14 @@ public class CharacterMotor : MonoBehaviour {
 
     const float SkinWidth = 0.01f;
 
+    void Start() {
+        // Test events
+        OnWalk += () => Debug.Log("OnWalk");
+        OnRun += () => Debug.Log("OnRun");
+        OnJump += () => Debug.Log("OnJump");
+        OnLand += () => Debug.Log("OnLand");
+    }
+
     void Update() {
 
         FollowFloor();
@@ -358,6 +366,7 @@ public class CharacterMotor : MonoBehaviour {
         if (state.grounded || Debug.isDebugBuild) {
             velocity = velocity - Physics.gravity.normalized * jumpForce;
             state.grounded = false;
+            if (OnJump != null) OnJump();
         }
     }
 

@@ -29,6 +29,11 @@ ModelImporter:
     100042: demo_14
     100044: demo_15
     100046: demo_cube
+    100048: demo_plane_02
+    100050: demo_plane_03
+    100052: demo_terrain_01
+    100054: demo_terrain_02
+    100056: demo_terrain_03
     400000: //RootNode
     400002: demo_plane_01
     400004: reference
@@ -53,6 +58,11 @@ ModelImporter:
     400042: demo_14
     400044: demo_15
     400046: demo_cube
+    400048: demo_plane_02
+    400050: demo_plane_03
+    400052: demo_terrain_01
+    400054: demo_terrain_02
+    400056: demo_terrain_03
     2100000: No Name
     2300000: demo_plane_01
     2300002: reference
@@ -77,6 +87,11 @@ ModelImporter:
     2300040: demo_14
     2300042: demo_15
     2300044: demo_cube
+    2300046: demo_plane_02
+    2300048: demo_plane_03
+    2300050: demo_terrain_01
+    2300052: demo_terrain_02
+    2300054: demo_terrain_03
     3300000: demo_plane_01
     3300002: reference
     3300004: Cube
@@ -100,6 +115,11 @@ ModelImporter:
     3300040: demo_14
     3300042: demo_15
     3300044: demo_cube
+    3300046: demo_plane_02
+    3300048: demo_plane_03
+    3300050: demo_terrain_01
+    3300052: demo_terrain_02
+    3300054: demo_terrain_03
     4300000: demo_plane_01
     4300002: reference
     4300004: Cube
@@ -123,6 +143,11 @@ ModelImporter:
     4300040: demo_14
     4300042: demo_15
     4300044: demo_cube
+    4300046: demo_plane_02
+    4300048: demo_plane_03
+    4300050: demo_terrain_02
+    4300052: demo_terrain_03
+    4300054: demo_terrain_01
   externalObjects: {}
   materials:
     importMaterials: 1

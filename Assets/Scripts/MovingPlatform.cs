@@ -12,11 +12,15 @@ public class MovingPlatform : MonoBehaviour {
     Vector3 startPos;
     Vector3 endPos;
 
+    [HideInInspector]
     public State state = State.Going;
+
+    Mesh mesh;
 
     void Start () {
         startPos = transform.position;
         endPos = transform.position + secondPositionOffset;
+        mesh = (GetComponent<MeshFilter>() != null ? GetComponent<MeshFilter>().sharedMesh : null);
 	}
 	
 	void Update () {
@@ -48,10 +52,17 @@ public class MovingPlatform : MonoBehaviour {
         state = newState;
     }
 
+    bool noMesh = false;
     private void OnDrawGizmos() {
-        Gizmos.color = Color.yellow;
+        Gizmos.color = new Color(Color.yellow.r, Color.yellow.g, Color.yellow.b, 0.5f);
         if (!Application.isPlaying) {
-            Gizmos.DrawWireCube(transform.position + secondPositionOffset, transform.localScale);
+            if (mesh != null) {
+                Gizmos.DrawMesh(mesh, transform.position + secondPositionOffset, transform.rotation, transform.localScale);
+            } else if(noMesh == false) {
+                mesh = (GetComponent<MeshFilter>() != null ? GetComponent<MeshFilter>().sharedMesh : null);
+                if(mesh == null) { noMesh = true; }
+            }
+
             Gizmos.DrawLine(transform.position, transform.position + secondPositionOffset);
         }  
     }
