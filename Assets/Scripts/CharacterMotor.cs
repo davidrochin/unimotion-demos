@@ -14,6 +14,8 @@ public class CharacterMotor : MonoBehaviour {
 
     [Header("Walking")]
     [Tooltip("How fast the character should walk (in m/s).")] [Range(0.01f, 10)] public float walkSpeed = 7f;
+    public float slopeLimit = 50f;
+    public SlopeBehaviour slopeBehaviour;
 
     [Header("Turning")]
     [Tooltip("How fast the character should turn (in degrees/s).")] public float turningSpeed = 400f;
@@ -26,9 +28,10 @@ public class CharacterMotor : MonoBehaviour {
     [Header("Collision")]
     [Tooltip("A mask that defines what are the objects the Character can collide with.")]
     public LayerMask collisionMask;
+    public CharacterMotorCollisionBehaviour characterMotorCollisionBehaviour;
 
     [Header("Rigidbody Interaction")]
-    public bool canPushRigidbodies = true;
+    public RigidbodyCollisionBehaviour rigidbodyCollisionBehaviour;
     public LayerMask rigidbodiesLayer;
 
     #endregion
@@ -67,7 +70,7 @@ public class CharacterMotor : MonoBehaviour {
 
         FollowFloor();
 
-        Unblock();
+        Depenetrate();
 
         // Apply gravity if necessary (terminal velocity of a human in freefall is about 53 m/s)
         if (!state.grounded && Vector3.Dot(velocity, Physics.gravity.normalized) < 50f) {
@@ -83,13 +86,11 @@ public class CharacterMotor : MonoBehaviour {
         // Apply movement from velocity
         Move(velocity * Time.deltaTime);
 
-        
-
         // Push away Rigidbodies
-        Collider[] cols = Physics.OverlapCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, rigidbodiesLayer);
+        /*Collider[] cols = Physics.OverlapCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, rigidbodiesLayer);
         foreach (Collider col in cols) {
             col.GetComponent<Rigidbody>().AddExplosionForce(50f, transform.position, 10f);
-        }
+        }*/
 
         // Rotate feet towards gravity direction
         Quaternion fromToRotation = Quaternion.FromToRotation(transform.up, -Physics.gravity.normalized);
@@ -100,7 +101,7 @@ public class CharacterMotor : MonoBehaviour {
     void LateUpdate() {
 
         FollowFloor();
-        Unblock();
+        Depenetrate();
         CheckGrounded();
         StickToSlope();
 
@@ -200,6 +201,7 @@ public class CharacterMotor : MonoBehaviour {
             stuckPosition = transform.position;
             transform.position = startingPos;
         }
+
     }
 
     void CheckGrounded() {
@@ -248,7 +250,7 @@ public class CharacterMotor : MonoBehaviour {
         return Physics.CheckCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, collisionMask);
     }
 
-    void Unblock() {
+    void Depenetrate() {
         Collider[] cols = Physics.OverlapCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, collisionMask);
         if (cols.Length > 0) {
 
@@ -411,6 +413,9 @@ public class CharacterMotor : MonoBehaviour {
     public enum Part { BottomSphere, TopSphere, Center, Top, Bottom }
     public enum MovementStyle { Raw, Smoothed }
     public enum JumpStyle { TotalControl, FixedVelocity, SmoothControl }
+    public enum SlopeBehaviour { PreventClimbing, Slide, PreventClimbingAndSlide }
+    public enum RigidbodyCollisionBehaviour { Collide, CollideAndPush, Push }
+    public enum CharacterMotorCollisionBehaviour { Collide, CollideAndPush, Push }
 
 }
 

@@ -87,6 +87,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4870911301964062}
+  - component: {fileID: 136844507336448752}
   - component: {fileID: 114144568754205070}
   - component: {fileID: 114552827695539114}
   m_Layer: 10
@@ -144,8 +145,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1999045143486084}
-  m_LocalRotation: {x: 0, y: 0.053425767, z: 0, w: 0.9985719}
-  m_LocalPosition: {x: 29.746813, y: 6.3243265, z: -20.083006}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1, y: 1, z: -34}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4317762883585878}
@@ -355,6 +356,8 @@ MonoBehaviour:
   height: 2
   radius: 0.5
   walkSpeed: 7
+  slopeLimit: 50
+  slopeBehaviour: 1
   turningSpeed: 400
   jumpForce: 10
   jumpStyle: 0
@@ -362,7 +365,8 @@ MonoBehaviour:
   collisionMask:
     serializedVersion: 2
     m_Bits: 1
-  canPushRigidbodies: 1
+  characterMotorCollisionBehaviour: 0
+  rigidbodyCollisionBehaviour: 0
   rigidbodiesLayer:
     serializedVersion: 2
     m_Bits: 2048
@@ -382,3 +386,16 @@ MonoBehaviour:
   stuckPosition: {x: 29.76857, y: 6.44566, z: -19.986883}
   debugPoint: {x: 29.746813, y: 7.3243265, z: -20.083006}
   debugPoint2: {x: 29.746813, y: 7.3243265, z: -20.083006}
+--- !u!136 &136844507336448752
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1999045143486084}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
