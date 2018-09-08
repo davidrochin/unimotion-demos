@@ -149,11 +149,12 @@ public class CharacterMotor : MonoBehaviour {
 
             // Move until it the point it hits
             Vector3 previousPos = transform.position;
-            transform.position += delta.normalized * hits[0].distance + hits[0].normal * SkinWidth;
+            /*transform.position += delta.normalized * hits[0].distance + hits[0].normal * SkinWidth;
             if (!ValidatePosition()) {
                 transform.position = previousPos;
                 transform.position += delta.normalized * (hits[0].distance - SkinWidth);
-            }
+            }*/
+            transform.position += delta.normalized * (hits[0].distance - SkinWidth);
             Debug.Log("Slide " + slideCount + ": " + ValidatePosition());
             //if (!ValidatePosition()) { transform.position = previousPos; return; }
             if (!ValidatePosition()) { Depenetrate(); }
@@ -162,6 +163,7 @@ public class CharacterMotor : MonoBehaviour {
             Vector3 slideDirection = Vector3.Cross(Vector3.Cross(hits[0].normal, delta.normalized), hits[0].normal).normalized;
             debugDirection = slideDirection;
             float slideMagnitude = Mathf.Clamp(Vector3.Dot(delta.normalized * (delta.magnitude - hits[0].distance), slideDirection), 0f, float.MaxValue);
+            Debug.Log("Magnitude = " + slideMagnitude + ". Zero? = " + (slideMagnitude == 0f) + ". Aproximatedly zero? = " + Mathf.Approximately(slideMagnitude, 0f));
 
             // Cast to see if the Character is free to move or must slide on another plane
             hits = Physics.CapsuleCastAll(
@@ -182,20 +184,23 @@ public class CharacterMotor : MonoBehaviour {
                 previousPos = transform.position;
 
                 // Slide util it hits
-                transform.position += slideDirection * hits[0].distance + hits[0].normal * SkinWidth;
+                /*transform.position += slideDirection * hits[0].distance + hits[0].normal * SkinWidth;
                 if (!ValidatePosition()) {
                     transform.position = previousPos;
                     transform.position += slideDirection.normalized * (hits[0].distance - SkinWidth);
-                }
-                Debug.Log("Slide " + slideCount + ": " + ValidatePosition());
+                }*/
+                transform.position += slideDirection.normalized * (hits[0].distance - SkinWidth);
+                Debug.Log("Slide " + slideCount + ". Valid Position? = " + ValidatePosition());
                 //if (!ValidatePosition()) { transform.position = previousPos; return; }
                 if (!ValidatePosition()) { Depenetrate(); }
 
                 // Calculate the direction in which the Character should slide
                 Vector3 previousDelta = slideDirection * slideMagnitude;
                 slideDirection = Vector3.Cross(Vector3.Cross(hits[0].normal, slideDirection.normalized), hits[0].normal).normalized;
-                slideMagnitude = Mathf.Clamp(Vector3.Dot(previousDelta.normalized * (previousDelta.magnitude - hits[0].distance), slideDirection), 0f, float.MaxValue);
+                //slideMagnitude = Mathf.Clamp(Vector3.Dot(previousDelta.normalized * (previousDelta.magnitude - hits[0].distance), slideDirection), 0f, float.MaxValue);
+                slideMagnitude = Mathf.Clamp(Vector3.Dot(remainingDelta, slideDirection), 0f, float.MaxValue);
                 debugDirection = slideDirection;
+                Debug.Log("Magnitude = " + slideMagnitude + ". Zero? = " + (slideMagnitude == 0f) + ". Aproximatedly zero? = " + Mathf.Approximately(slideMagnitude, 0f));
 
                 // Cast to see if the Character is free to move or must slide on another plane
                 hits = Physics.CapsuleCastAll(
