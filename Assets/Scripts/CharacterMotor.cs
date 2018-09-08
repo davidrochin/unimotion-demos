@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [SelectionBase]
+[RequireComponent(typeof(CapsuleCollider))]
 public class CharacterMotor : MonoBehaviour {
 
     #region User Settings
@@ -44,6 +45,7 @@ public class CharacterMotor : MonoBehaviour {
     public event Action OnLand;
     public event Action OnFrameStart;
     public event Action OnFrameFinish;
+    public event Action OnDepenetrate;
 
     #endregion
 
@@ -52,11 +54,18 @@ public class CharacterMotor : MonoBehaviour {
 
     public CharacterMotorState state;
 
+    new CapsuleCollider collider;
+
     bool jump; 
     Vector3 inputVector;
     Vector3 inputVectorSmoothed;
 
     const float SkinWidth = 0.01f;
+    const float TerminalSpeed = 50f;
+
+    private void Awake() {
+        collider = GetComponent<CapsuleCollider>();
+    }
 
     void Start() {
         // Test events
@@ -64,13 +73,14 @@ public class CharacterMotor : MonoBehaviour {
         OnRun += () => Debug.Log("OnRun");
         OnJump += () => Debug.Log("OnJump");
         OnLand += () => Debug.Log("OnLand");
+        OnDepenetrate += () => Debug.Log("OnDepenetrate");
     }
 
     void Update() {
 
         FollowFloor();
 
-        Depenetrate();
+        if (!ValidatePosition()) { Depenetrate(); }
 
         // Apply gravity if necessary (terminal velocity of a human in freefall is about 53 m/s)
         if (!state.grounded && Vector3.Dot(velocity, Physics.gravity.normalized) < 50f) {
@@ -87,10 +97,10 @@ public class CharacterMotor : MonoBehaviour {
         Move(velocity * Time.deltaTime);
 
         // Push away Rigidbodies
-        /*Collider[] cols = Physics.OverlapCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, rigidbodiesLayer);
+        Collider[] cols = Physics.OverlapCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, rigidbodiesLayer);
         foreach (Collider col in cols) {
-            col.GetComponent<Rigidbody>().AddExplosionForce(50f, transform.position, 10f);
-        }*/
+            col.GetComponent<Rigidbody>().WakeUp();
+        }
 
         // Rotate feet towards gravity direction
         Quaternion fromToRotation = Quaternion.FromToRotation(transform.up, -Physics.gravity.normalized);
@@ -101,9 +111,10 @@ public class CharacterMotor : MonoBehaviour {
     void LateUpdate() {
 
         FollowFloor();
-        Depenetrate();
+        if (!ValidatePosition()) { Depenetrate(); }
         CheckGrounded();
         StickToSlope();
+        if (!ValidatePosition()) { Depenetrate(); }
 
         if (OnFrameFinish != null) { OnFrameFinish(); }
         
@@ -113,6 +124,7 @@ public class CharacterMotor : MonoBehaviour {
 
     void Move(Vector3 delta) {
 
+        // Do not do anything if delta is zero
         if (delta == Vector3.zero) { return; }
 
         int slideCount = 0;
@@ -131,12 +143,20 @@ public class CharacterMotor : MonoBehaviour {
         // Move and slide on the hit plane
         if (didHit) {
 
-            Debug.DrawRay(hits[0].point, hits[0].normal);
+            //Debug.DrawRay(hits[0].point, hits[0].normal);
 
             slideCount++;
 
             // Move until it the point it hits
+            Vector3 previousPos = transform.position;
             transform.position += delta.normalized * hits[0].distance + hits[0].normal * SkinWidth;
+            if (!ValidatePosition()) {
+                transform.position = previousPos;
+                transform.position += delta.normalized * (hits[0].distance - SkinWidth);
+            }
+            Debug.Log("Slide " + slideCount + ": " + ValidatePosition());
+            //if (!ValidatePosition()) { transform.position = previousPos; return; }
+            if (!ValidatePosition()) { Depenetrate(); }
 
             // Calculate the direction in which the Character should slide
             Vector3 slideDirection = Vector3.Cross(Vector3.Cross(hits[0].normal, delta.normalized), hits[0].normal).normalized;
@@ -159,8 +179,17 @@ public class CharacterMotor : MonoBehaviour {
                 lastNormal = hits[0].normal;
                 slideCount++;
 
+                previousPos = transform.position;
+
                 // Slide util it hits
                 transform.position += slideDirection * hits[0].distance + hits[0].normal * SkinWidth;
+                if (!ValidatePosition()) {
+                    transform.position = previousPos;
+                    transform.position += slideDirection.normalized * (hits[0].distance - SkinWidth);
+                }
+                Debug.Log("Slide " + slideCount + ": " + ValidatePosition());
+                //if (!ValidatePosition()) { transform.position = previousPos; return; }
+                if (!ValidatePosition()) { Depenetrate(); }
 
                 // Calculate the direction in which the Character should slide
                 Vector3 previousDelta = slideDirection * slideMagnitude;
@@ -183,24 +212,28 @@ public class CharacterMotor : MonoBehaviour {
 
             // If the Character is free to move
             if (!didHit) {
-                transform.position += slideDirection * Mathf.Clamp(Vector3.Dot(remainingDelta, slideDirection), 0f, float.MaxValue);
+                transform.position += slideDirection * slideMagnitude;
+                if (!ValidatePosition()) { Depenetrate(); }
             }
         }
 
         // If the cast didn't hit anything, just move
         else {
             transform.position += delta;
+            if (!ValidatePosition()) { Depenetrate(); }
         }
 
         // Check if this is a valid position. If not, return to the position from before moving
         bool invalidPos = Physics.CheckCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, collisionMask);
         Collider[] colliders = Physics.OverlapCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, collisionMask);
 
-        if (invalidPos) {
+        /*if (invalidPos) {
             Debug.LogError("Character Motor " + name + " got stuck with " + slideCount + " slides. (" + colliders[0].gameObject.name + ")");
             stuckPosition = transform.position;
             transform.position = startingPos;
-        }
+        }*/
+
+        Debug.Log("Move ended. Valid Position = " + ValidatePosition());
 
     }
 
@@ -226,7 +259,7 @@ public class CharacterMotor : MonoBehaviour {
                 float angle = Vector3.Angle(-Physics.gravity.normalized, hit.normal);
                 state.floorAngle = angle;
 
-                if (Vector3.Dot(hit.normal, -Physics.gravity.normalized) > 0f && angle < 90f && !(hit.distance == 0f && hit.point == Vector3.zero) ) {
+                if (Vector3.Dot(hit.normal, -Physics.gravity.normalized) > 0f && angle < 85f && !(hit.distance == 0f && hit.point == Vector3.zero) ) {
                     bool onCylinder = Vector3.Distance(transform.position + transform.up * Vector3.Dot(hit.point - transform.position, transform.up), hit.point) <= radius ? true : false;
                     
                     if(onCylinder)
@@ -237,6 +270,9 @@ public class CharacterMotor : MonoBehaviour {
             if (validFloor) {
                 state.grounded = true;
                 velocity = Vector3.zero;
+
+                if (state.previouslyGrounded == false && OnLand != null) { OnLand(); }
+
             } else {
                 state.grounded = false;
             }
@@ -246,19 +282,32 @@ public class CharacterMotor : MonoBehaviour {
         }
     }
 
-    bool CheckInvalid() {
-        return Physics.CheckCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, collisionMask);
+    bool ValidatePosition() {
+        return !Physics.CheckCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, collisionMask);
     }
 
     void Depenetrate() {
+
+        int iterations = 0;
+
         Collider[] cols = Physics.OverlapCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, collisionMask);
-        if (cols.Length > 0) {
+        bool stuck = (cols.Length > 0 ? true : false);
+
+        if (stuck) {
 
             state.stuck = true;
 
             foreach (Collider col in cols) {
 
-                Vector3 closestPointInCollider = col.ClosestPoint(GetPartPosition(Part.Center));
+                Vector3 direction; float distance;
+                if (Physics.ComputePenetration(collider, transform.position, transform.rotation, col, col.transform.position, col.transform.rotation, out direction, out distance)) {
+                    transform.position += direction * Mathf.Clamp((distance + SkinWidth), 0f, TerminalSpeed * Time.deltaTime);
+                    Debug.DrawRay(GetPartPosition(Part.Center), direction, Color.magenta);
+                }
+
+                break;
+
+                /*Vector3 closestPointInCollider = col.ClosestPoint(GetPartPosition(Part.Center));
                 Vector3 closestPointInCapsule = ClosestPoint(closestPointInCollider);
 
                 // Calculate where the character needs to move to get unblocked
@@ -272,14 +321,41 @@ public class CharacterMotor : MonoBehaviour {
                 debugPoint = closestPointInCollider;
                 debugPoint2 = closestPointInCapsule;
 
-                //Debug.Break();
+                //Debug.Break();*/
 
-                break;
+                //break;
+            }
+
+            iterations++;
+
+            cols = Physics.OverlapCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, collisionMask);
+            stuck = (cols.Length > 0 ? true : false);
+
+            while (stuck && iterations < 100) {
+
+                foreach (Collider col in cols) {
+                    Vector3 direction; float distance;
+                    if (Physics.ComputePenetration(collider, transform.position, transform.rotation, col, col.transform.position, col.transform.rotation, out direction, out distance)) {
+                        transform.position += direction * Mathf.Clamp((distance + SkinWidth), 0f, TerminalSpeed * Time.deltaTime);
+                        if (OnDepenetrate != null) OnDepenetrate();
+                        Debug.DrawRay(GetPartPosition(Part.Center), direction, Color.magenta);
+                    }
+                    break;
+                }
+
+                iterations++;
+
+                cols = Physics.OverlapCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, collisionMask);
+                stuck = (cols.Length > 0 ? true : false);
+
             }
 
         } else {
             state.stuck = false;
         }
+
+        if (OnDepenetrate != null) OnDepenetrate();
+
     }
 
     void FollowFloor() {
