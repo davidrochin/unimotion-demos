@@ -9,10 +9,6 @@ public class CharacterMotor : MonoBehaviour {
 
     #region User Settings
 
-    [Header("Size")]
-    [Tooltip("The total height of the player capsule.")] public float height;
-    [Tooltip("The radius of the player capsule.")] public float radius;
-
     [Header("Walking")]
     [Tooltip("How fast the character should walk (in m/s).")] [Range(0.01f, 20)] public float walkSpeed = 7f;
     public float slopeLimit = 50f;
@@ -73,6 +69,9 @@ public class CharacterMotor : MonoBehaviour {
 
     private void Awake() {
         collider = GetComponent<CapsuleCollider>();
+
+        // Make sure SphereCollider center is correct
+        collider.center = new Vector3(0f, collider.height * 0.5f, 0f);
     }
 
     void Start() {
@@ -113,7 +112,7 @@ public class CharacterMotor : MonoBehaviour {
         Move(velocity * Time.deltaTime);
 
         // Push away Rigidbodies
-        Collider[] cols = Physics.OverlapCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, rigidbodiesLayer);
+        Collider[] cols = Physics.OverlapCapsule(transform.position + transform.up * collider.radius, transform.position + transform.up * collider.height - transform.up * collider.radius, collider.radius, rigidbodiesLayer);
         foreach (Collider col in cols) {
             col.GetComponent<Rigidbody>().WakeUp();
         }
@@ -170,8 +169,8 @@ public class CharacterMotor : MonoBehaviour {
         float lastDistance = 0f;
 
         RaycastHit hit = UnimotionUtil.CapsuleCastIgnoreSelf(
-            transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
-            radius, delta.normalized, delta.magnitude, finalCollisionMask, QueryTriggerInteraction.Ignore, collider);
+            transform.position + transform.up * collider.radius, transform.position + transform.up * collider.height - transform.up * collider.radius,
+            collider.radius, delta.normalized, delta.magnitude, finalCollisionMask, QueryTriggerInteraction.Ignore, collider);
         lastDistance = (hit.collider != null ? hit.distance : lastDistance);
         bool didHit = (hit.collider != null ? true : false);
         Vector3 lastNormal = (hit.collider != null ? hit.normal : Vector3.zero);
@@ -195,8 +194,8 @@ public class CharacterMotor : MonoBehaviour {
 
             // Cast to see if the Character is free to move or must slide on another plane
             hit = UnimotionUtil.CapsuleCastIgnoreSelf(
-                transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
-                radius, slideDirection, slideMagnitude, finalCollisionMask, QueryTriggerInteraction.Ignore, collider);
+                transform.position + transform.up * collider.radius, transform.position + transform.up * collider.height - transform.up * collider.radius,
+                collider.radius, slideDirection, slideMagnitude, finalCollisionMask, QueryTriggerInteraction.Ignore, collider);
                 lastDistance = (hit.collider != null ? hit.distance : lastDistance);
             didHit = (hit.collider != null ? true : false);
             lastDistance = (hit.collider != null ? hit.distance : lastDistance);
@@ -224,8 +223,8 @@ public class CharacterMotor : MonoBehaviour {
 
                 // Cast to see if the Character is free to move or must slide on another plane
                 hit = UnimotionUtil.CapsuleCastIgnoreSelf(
-                    transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius,
-                    radius, slideDirection, slideMagnitude, finalCollisionMask, QueryTriggerInteraction.Ignore, collider);
+                    transform.position + transform.up * collider.radius, transform.position + transform.up * collider.height - transform.up * collider.radius,
+                    collider.radius, slideDirection, slideMagnitude, finalCollisionMask, QueryTriggerInteraction.Ignore, collider);
                     lastDistance = (hit.collider != null ? hit.distance : lastDistance);
                 didHit = (hit.collider != null ? true : false);
                 lastDistance = (hit.collider != null ? hit.distance : lastDistance);
@@ -258,7 +257,7 @@ public class CharacterMotor : MonoBehaviour {
         state.previouslyGrounded = state.grounded;
 
         // Check the floor beneath (even if the Character is not touching it)
-        RaycastHit floorHit; bool didHit = Physics.SphereCast(transform.position + transform.up * height - transform.up * radius, radius, -transform.up, out floorHit, float.MaxValue, collisionMask);
+        RaycastHit floorHit; bool didHit = Physics.SphereCast(transform.position + transform.up * collider.height - transform.up * collider.radius, collider.radius, -transform.up, out floorHit, float.MaxValue, collisionMask);
         if (didHit) {
             state.floor = floorHit.transform;
         } else {
@@ -268,7 +267,7 @@ public class CharacterMotor : MonoBehaviour {
         state.sliding = true;
 
         // Check for ground
-        RaycastHit[] hits = Physics.SphereCastAll(transform.position + transform.up * height - transform.up * radius, radius + SkinWidth * 2f, -transform.up, height - radius * 2f, collisionMask);
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position + transform.up * collider.height - transform.up * collider.radius, collider.radius + SkinWidth * 2f, -transform.up, collider.height - collider.radius * 2f, collisionMask);
         if (hits.Length > 0 && Vector3.Dot(velocity, Physics.gravity.normalized) >= 0f) {
             bool validFloor = false;
 
@@ -287,7 +286,7 @@ public class CharacterMotor : MonoBehaviour {
                     }
 
                     // Check if the hit point is does not go past the Character cylinder area
-                    bool onCylinder = Vector3.Distance(transform.position + transform.up * Vector3.Dot(hit.point - transform.position, transform.up), hit.point) <= radius ? true : false;
+                    bool onCylinder = Vector3.Distance(transform.position + transform.up * Vector3.Dot(hit.point - transform.position, transform.up), hit.point) <= collider.radius ? true : false;
                     if (onCylinder) {
                         validFloor = true;
                     }
@@ -352,7 +351,7 @@ public class CharacterMotor : MonoBehaviour {
     void StickToSlope() {
 
         RaycastHit hit;
-        bool didHit = Physics.SphereCast(transform.position + transform.up * radius, radius, Physics.gravity.normalized, out hit, radius, collisionMask);
+        bool didHit = Physics.SphereCast(transform.position + transform.up * collider.radius, collider.radius, Physics.gravity.normalized, out hit, collider.radius, collisionMask);
 
         if (state.previouslyGrounded && didHit && Vector3.Angle(-Physics.gravity.normalized, hit.normal) <= 45f && Vector3.Dot(velocity, Physics.gravity.normalized) >= 0f) {
             Vector3 hyp;
@@ -368,15 +367,15 @@ public class CharacterMotor : MonoBehaviour {
     Vector3 GetPartPosition(Part part) {
         switch (part) {
             case Part.BottomSphere:
-                return transform.position + transform.up * radius;
+                return transform.position + transform.up * collider.radius;
             case Part.TopSphere:
-                return transform.position + transform.up * height - transform.up * radius;
+                return transform.position + transform.up * collider.height - transform.up * collider.radius;
             case Part.Center:
-                return transform.position + transform.up * height * 0.5f;
+                return transform.position + transform.up * collider.height * 0.5f;
             case Part.Bottom:
                 return transform.position;
             case Part.Top:
-                return transform.position + transform.up * height;
+                return transform.position + transform.up * collider.height;
             default:
                 return transform.position;
         }
@@ -389,9 +388,9 @@ public class CharacterMotor : MonoBehaviour {
     Collider[] Overlap(LayerMask mask, QueryTriggerInteraction queryTriggerInteraction) {
 
         Collider[] all = Physics.OverlapCapsule(
-            transform.position + transform.up * radius,
-            transform.position + transform.up * (height - radius), 
-            radius, mask, queryTriggerInteraction);
+            transform.position + transform.up * collider.radius,
+            transform.position + transform.up * (collider.height - collider.radius), 
+            collider.radius, mask, queryTriggerInteraction);
 
         for (int i = 0; i < all.Length; i++) {
             if (all[i] == collider) {
@@ -412,7 +411,6 @@ public class CharacterMotor : MonoBehaviour {
 
         Collider[] cols = Overlap(finalCollisionMask, QueryTriggerInteraction.UseGlobal);
         bool stuck = (cols.Length > 0 ? true : false);
-        Debug.Log(cols.Length);
 
         if (stuck) {
 
@@ -507,8 +505,8 @@ public class CharacterMotor : MonoBehaviour {
         Gizmos.DrawRay(transform.position, debugDirection);
 
         //Gizmos.color = new Color(Color.red.r, Color.red.g, Color.red.b, 0.5f);
-        Gizmos.DrawWireSphere(stuckPosition + transform.up * radius, radius);
-        Gizmos.DrawWireSphere(stuckPosition + transform.up * height - transform.up * radius, radius);
+        //Gizmos.DrawWireSphere(stuckPosition + transform.up * collider.radius, collider.radius);
+        //Gizmos.DrawWireSphere(stuckPosition + transform.up * collider.height - transform.up * collider.radius, collider.radius);
 
         Gizmos.DrawSphere(debugPoint, 0.05f);
         Gizmos.color = Color.blue;
