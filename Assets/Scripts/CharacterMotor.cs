@@ -14,16 +14,16 @@ public class CharacterMotor : MonoBehaviour {
     [Tooltip("The radius of the player capsule.")] public float radius;
 
     [Header("Walking")]
-    [Tooltip("How fast the character should walk (in m/s).")] [Range(0.01f, 10)] public float walkSpeed = 7f;
+    [Tooltip("How fast the character should walk (in m/s).")] [Range(0.01f, 20)] public float walkSpeed = 7f;
     public float slopeLimit = 50f;
-    public SlopeBehaviour slopeBehaviour;
+    public SlopeBehaviour slopeBehaviour = SlopeBehaviour.Slide;
 
     [Header("Turning")]
     [Tooltip("How fast the character should turn (in degrees/s).")] public float turningSpeed = 400f;
 
     [Header("Jumping")]
-    [Range(1f, 10f)] public float jumpForce = 10f;
-    public JumpStyle jumpStyle;
+    [Range(1f, 30f)] public float jumpForce = 10f;
+    public JumpStyle jumpStyle = JumpStyle.TotalControl;
     public bool canJumpWhileSliding = true;
 
     [Header("Collision")]
@@ -62,6 +62,8 @@ public class CharacterMotor : MonoBehaviour {
 
     const float SkinWidth = 0.01f;
     const float TerminalSpeed = 50f;
+    const float FloorFriction = 16f;
+    const float AirFriction = 4f;
 
     private void Awake() {
         collider = GetComponent<CapsuleCollider>();
@@ -83,8 +85,14 @@ public class CharacterMotor : MonoBehaviour {
         if (!ValidatePosition()) { Depenetrate(); }
 
         // Apply gravity if necessary (terminal velocity of a human in freefall is about 53 m/s)
-        if (!state.grounded && Vector3.Dot(velocity, Physics.gravity.normalized) < 50f) {
-            velocity = velocity + Physics.gravity * 2f * Time.deltaTime;
+        if ((!state.grounded || state.sliding) && Vector3.Dot(velocity, Physics.gravity.normalized) < 50f) {
+            //velocity = velocity + Physics.gravity * 2f * Time.deltaTime;
+
+            if(Vector3.Dot(velocity, -Physics.gravity.normalized) >= 0f) {
+                velocity = velocity + Physics.gravity * Time.deltaTime;
+            } else {
+                velocity = velocity + Physics.gravity * 2f * Time.deltaTime;
+            }
         }
 
         //Unblock();
@@ -112,7 +120,27 @@ public class CharacterMotor : MonoBehaviour {
 
         FollowFloor();
         if (!ValidatePosition()) { Depenetrate(); }
+
         CheckGrounded();
+        if(state.grounded && !state.sliding) {
+            Debug.Log("Applying GROUND friction because: grounded: " + state.grounded + ", sliding: " + state.sliding);
+
+            // Change velocity so it doesnt go towards the floor
+            velocity = velocity - Physics.gravity.normalized * Vector3.Dot(velocity, Physics.gravity.normalized);
+
+            // Apply floor friction
+            velocity = Vector3.MoveTowards(velocity, Vector3.zero, FloorFriction * Time.deltaTime);
+        } else {
+            Debug.Log("Applying AIR friction because: grounded: " + state.grounded + ", sliding: " + state.sliding);
+
+            // Apply air friction
+            float towardsGravity = Vector3.Dot(velocity, Physics.gravity.normalized);
+            velocity = velocity - Physics.gravity.normalized * towardsGravity;
+            velocity = Vector3.MoveTowards(velocity, Vector3.zero, AirFriction * Time.deltaTime);
+            velocity = velocity + Physics.gravity.normalized * towardsGravity;
+
+        }
+
         StickToSlope();
         if (!ValidatePosition()) { Depenetrate(); }
 
@@ -142,28 +170,19 @@ public class CharacterMotor : MonoBehaviour {
 
         // Move and slide on the hit plane
         if (didHit) {
-
-            //Debug.DrawRay(hits[0].point, hits[0].normal);
-
             slideCount++;
+
+            Debug.DrawRay(hits[0].point, hits[0].normal);
 
             // Move until it the point it hits
             Vector3 previousPos = transform.position;
-            /*transform.position += delta.normalized * hits[0].distance + hits[0].normal * SkinWidth;
-            if (!ValidatePosition()) {
-                transform.position = previousPos;
-                transform.position += delta.normalized * (hits[0].distance - SkinWidth);
-            }*/
             transform.position += delta.normalized * (hits[0].distance - SkinWidth);
-            Debug.Log("Slide " + slideCount + ": " + ValidatePosition());
-            //if (!ValidatePosition()) { transform.position = previousPos; return; }
             if (!ValidatePosition()) { Depenetrate(); }
 
             // Calculate the direction in which the Character should slide
             Vector3 slideDirection = Vector3.Cross(Vector3.Cross(hits[0].normal, delta.normalized), hits[0].normal).normalized;
             debugDirection = slideDirection;
             float slideMagnitude = Mathf.Clamp(Vector3.Dot(delta.normalized * (delta.magnitude - hits[0].distance), slideDirection), 0f, float.MaxValue);
-            Debug.Log("Magnitude = " + slideMagnitude + ". Zero? = " + (slideMagnitude == 0f) + ". Aproximatedly zero? = " + Mathf.Approximately(slideMagnitude, 0f));
 
             // Cast to see if the Character is free to move or must slide on another plane
             hits = Physics.CapsuleCastAll(
@@ -175,32 +194,21 @@ public class CharacterMotor : MonoBehaviour {
 
             // If the Character cannot move freely
             while (didHit && slideCount < 20) {
-
-                Debug.DrawRay(hits[0].point, hits[0].normal);
-
-                lastNormal = hits[0].normal;
                 slideCount++;
 
-                previousPos = transform.position;
+                Debug.DrawRay(hits[0].point, hits[0].normal);
+                lastNormal = hits[0].normal;
 
                 // Slide util it hits
-                /*transform.position += slideDirection * hits[0].distance + hits[0].normal * SkinWidth;
-                if (!ValidatePosition()) {
-                    transform.position = previousPos;
-                    transform.position += slideDirection.normalized * (hits[0].distance - SkinWidth);
-                }*/
+                previousPos = transform.position;
                 transform.position += slideDirection.normalized * (hits[0].distance - SkinWidth);
-                Debug.Log("Slide " + slideCount + ". Valid Position? = " + ValidatePosition());
-                //if (!ValidatePosition()) { transform.position = previousPos; return; }
                 if (!ValidatePosition()) { Depenetrate(); }
 
                 // Calculate the direction in which the Character should slide
                 Vector3 previousDelta = slideDirection * slideMagnitude;
                 slideDirection = Vector3.Cross(Vector3.Cross(hits[0].normal, slideDirection.normalized), hits[0].normal).normalized;
-                //slideMagnitude = Mathf.Clamp(Vector3.Dot(previousDelta.normalized * (previousDelta.magnitude - hits[0].distance), slideDirection), 0f, float.MaxValue);
                 slideMagnitude = Mathf.Clamp(Vector3.Dot(remainingDelta, slideDirection), 0f, float.MaxValue);
                 debugDirection = slideDirection;
-                Debug.Log("Magnitude = " + slideMagnitude + ". Zero? = " + (slideMagnitude == 0f) + ". Aproximatedly zero? = " + Mathf.Approximately(slideMagnitude, 0f));
 
                 // Cast to see if the Character is free to move or must slide on another plane
                 hits = Physics.CapsuleCastAll(
@@ -228,18 +236,6 @@ public class CharacterMotor : MonoBehaviour {
             if (!ValidatePosition()) { Depenetrate(); }
         }
 
-        // Check if this is a valid position. If not, return to the position from before moving
-        bool invalidPos = Physics.CheckCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, collisionMask);
-        Collider[] colliders = Physics.OverlapCapsule(transform.position + transform.up * radius, transform.position + transform.up * height - transform.up * radius, radius, collisionMask);
-
-        /*if (invalidPos) {
-            Debug.LogError("Character Motor " + name + " got stuck with " + slideCount + " slides. (" + colliders[0].gameObject.name + ")");
-            stuckPosition = transform.position;
-            transform.position = startingPos;
-        }*/
-
-        Debug.Log("Move ended. Valid Position = " + ValidatePosition());
-
     }
 
     void CheckGrounded() {
@@ -255,34 +251,49 @@ public class CharacterMotor : MonoBehaviour {
             state.floor = null;
         }
 
+        state.sliding = true;
+
+        // Check for ground
         RaycastHit[] hits = Physics.SphereCastAll(transform.position + transform.up * height - transform.up * radius, radius + SkinWidth * 2f, -transform.up, height - radius * 2f, collisionMask);
         if (hits.Length > 0 && Vector3.Dot(velocity, Physics.gravity.normalized) >= 0f) {
             bool validFloor = false;
 
+            // Check each hit for valid ground
             foreach (RaycastHit hit in hits) {
 
+                // Calculate the angle of the floor
                 float angle = Vector3.Angle(-Physics.gravity.normalized, hit.normal);
                 state.floorAngle = angle;
 
                 if (Vector3.Dot(hit.normal, -Physics.gravity.normalized) > 0f && angle < 85f && !(hit.distance == 0f && hit.point == Vector3.zero) ) {
+                      
+                    // Check if it should slide
+                    if(angle < slopeLimit) {
+                        state.sliding = false;
+                    }
+
+                    // Check if the hit point is does not go past the Character cylinder area
                     bool onCylinder = Vector3.Distance(transform.position + transform.up * Vector3.Dot(hit.point - transform.position, transform.up), hit.point) <= radius ? true : false;
-                    
-                    if(onCylinder)
+                    if (onCylinder) {
                         validFloor = true;
+                    }
                 }
             }
 
+            // Ground the player if a valid floor was found
             if (validFloor) {
                 state.grounded = true;
-                velocity = Vector3.zero;
 
+                // If the player was previously ungrounded, run the OnLand event
                 if (state.previouslyGrounded == false && OnLand != null) { OnLand(); }
 
             } else {
                 state.grounded = false;
+                state.sliding = false;
             }
 
         } else {
+            state.sliding = false;
             state.grounded = false;
         }
     }
@@ -400,8 +411,8 @@ public class CharacterMotor : MonoBehaviour {
         RaycastHit hit;
         bool didHit = Physics.SphereCast(transform.position + transform.up * radius, radius, Physics.gravity.normalized, out hit, radius, collisionMask);
 
-        if (state.previouslyGrounded && didHit && Vector3.Angle(-Physics.gravity.normalized, hit.normal) <= 45f) {
-
+        if (state.previouslyGrounded && didHit && Vector3.Angle(-Physics.gravity.normalized, hit.normal) <= 45f && Vector3.Dot(velocity, Physics.gravity.normalized) >= 0f) {
+            Debug.Log("Sticked");
             Vector3 hyp;
             float topAngle = Vector3.Angle(Physics.gravity.normalized, -hit.normal);
             float bottomAngle = 180f - topAngle - 90f;
@@ -409,7 +420,7 @@ public class CharacterMotor : MonoBehaviour {
 
             transform.position += Physics.gravity.normalized * hit.distance + hyp;
             state.grounded = true;
-            velocity = Vector3.zero;
+            //velocity = Vector3.zero;
         }
     }
 
@@ -473,10 +484,6 @@ public class CharacterMotor : MonoBehaviour {
     public Vector3 debugPoint2;
 
     private void OnDrawGizmosSelected() {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position + transform.up * height - transform.up * radius, radius);
-        Gizmos.color = (state.grounded ? Color.blue : Color.green);
-        Gizmos.DrawWireSphere(transform.position + transform.up * radius, radius);
         Gizmos.DrawRay(transform.position, inputVectorSmoothed);
 
         Gizmos.color = Color.red;
@@ -493,7 +500,7 @@ public class CharacterMotor : MonoBehaviour {
 
     public enum Part { BottomSphere, TopSphere, Center, Top, Bottom }
     public enum MovementStyle { Raw, Smoothed }
-    public enum JumpStyle { TotalControl, FixedVelocity, SmoothControl }
+    public enum JumpStyle { None, TotalControl, FixedVelocity, SmoothControl }
     public enum SlopeBehaviour { PreventClimbing, Slide, PreventClimbingAndSlide }
     public enum RigidbodyCollisionBehaviour { Collide, CollideAndPush, Push }
     public enum CharacterMotorCollisionBehaviour { Collide, CollideAndPush, Push }
@@ -508,6 +515,7 @@ public class CharacterMotorState {
 
     public bool moving;
     public bool grounded;
+    public bool sliding;
     public bool previouslyGrounded;
 
     public bool stuck;

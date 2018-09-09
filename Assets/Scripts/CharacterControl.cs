@@ -44,6 +44,10 @@ public class CharacterControl : MonoBehaviour {
             Debug.Break();
         }
 
+        if (Input.GetKeyDown(KeyCode.R)) {
+            character.velocity = (new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized + Vector3.up) * Random.Range(10f, 40f);
+        }
+
     }
 
     Vector3 GetInputVector() {
