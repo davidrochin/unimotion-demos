@@ -9,20 +9,22 @@ public class CharacterMotor : MonoBehaviour {
 
     #region User Settings
 
-    [Header("Walking")]
+    // Walking
+    public WalkBehaviour walkBehaviour;
     [Tooltip("How fast the character should walk (in m/s).")] [Range(0.01f, 20)] public float walkSpeed = 7f;
-    public float slopeLimit = 50f;
+    [Range(5f, 85f)] public float slopeLimit = 50f;
     public SlopeBehaviour slopeBehaviour = SlopeBehaviour.Slide;
 
-    [Header("Turning")]
-    [Tooltip("How fast the character should turn (in degrees/s).")] public float turningSpeed = 400f;
+    // Turning
+    public TurnBehaviour turnBehaviour = TurnBehaviour.Normal;
+    [Tooltip("How fast the character should turn (in degrees/s).")] public float turnSpeed = 400f;
 
-    [Header("Jumping")]
+    // Jumping
     [Range(1f, 30f)] public float jumpForce = 10f;
-    public JumpStyle jumpStyle = JumpStyle.TotalControl;
+    public JumpBehaviour jumpBehaviour = JumpBehaviour.TotalControl;
     public bool canJumpWhileSliding = true;
 
-    [Header("Masks")]
+    // Masks
     [Tooltip("A mask that defines what are the objects the Character can collide with.")]
     public LayerMask collisionMask;
     public LayerMask characterMask;
@@ -30,12 +32,12 @@ public class CharacterMotor : MonoBehaviour {
 
     LayerMask finalCollisionMask;
 
-    [Header("Collision")]
+    // Collision
     public CharacterMotorCollisionBehaviour characterMotorCollisionBehaviour;
 
-    [Header("Rigidbody Interaction")]
+    // Rigidbody Interaction
     public RigidbodyCollisionBehaviour rigidbodyCollisionBehaviour;
-    public LayerMask rigidbodiesLayer;
+    public LayerMask rigidbodyMask;
 
     #endregion
 
@@ -48,6 +50,7 @@ public class CharacterMotor : MonoBehaviour {
     public event Action OnFrameStart;
     public event Action OnFrameFinish;
     public event Action OnDepenetrate;
+    public event Action OnCrush;
 
     #endregion
 
@@ -80,6 +83,7 @@ public class CharacterMotor : MonoBehaviour {
         OnRun += () => Debug.Log("OnRun");
         OnJump += () => Debug.Log("OnJump");
         OnLand += () => Debug.Log("OnLand");
+        OnCrush += () => Debug.LogWarning("OnCrush");
         //OnDepenetrate += () => Debug.Log("OnDepenetrate");
     }
 
@@ -112,7 +116,7 @@ public class CharacterMotor : MonoBehaviour {
         Move(velocity * Time.deltaTime);
 
         // Push away Rigidbodies
-        Collider[] cols = Physics.OverlapCapsule(transform.position + transform.up * collider.radius, transform.position + transform.up * collider.height - transform.up * collider.radius, collider.radius, rigidbodiesLayer);
+        Collider[] cols = Physics.OverlapCapsule(transform.position + transform.up * collider.radius, transform.position + transform.up * collider.height - transform.up * collider.radius, collider.radius, rigidbodyMask);
         foreach (Collider col in cols) {
             col.GetComponent<Rigidbody>().WakeUp();
         }
@@ -401,12 +405,28 @@ public class CharacterMotor : MonoBehaviour {
         return UnimotionUtil.RemoveNull(all);
     }
 
+    Collider[] OverlapCenter(LayerMask mask, QueryTriggerInteraction queryTriggerInteraction) {
+
+        Collider[] all = Physics.OverlapSphere(
+            transform.position + transform.up * collider.height * 0.5f,
+            collider.radius, mask, queryTriggerInteraction);
+
+        for (int i = 0; i < all.Length; i++) {
+            if (all[i] == collider) {
+                all[i] = null;
+            }
+        }
+
+        return UnimotionUtil.RemoveNull(all);
+    }
+
     RaycastHit Cast(Vector3 direction, float distance, LayerMask mask, QueryTriggerInteraction queryTriggerInteraction) {
         throw new System.NotImplementedException();
     }
 
     void Depenetrate() {
 
+        int maxIterations = 30;
         int iterations = 0;      
 
         Collider[] cols = Overlap(finalCollisionMask, QueryTriggerInteraction.UseGlobal);
@@ -433,7 +453,7 @@ public class CharacterMotor : MonoBehaviour {
             cols = Overlap(finalCollisionMask, QueryTriggerInteraction.UseGlobal);
             stuck = (cols.Length > 0 ? true : false);
 
-            while (stuck && iterations < 20) {
+            while (stuck && iterations < maxIterations) {
 
                 foreach (Collider col in cols) {
                     Vector3 direction; float distance;
@@ -451,6 +471,8 @@ public class CharacterMotor : MonoBehaviour {
 
             }
 
+            if (iterations >= maxIterations && OverlapCenter(finalCollisionMask, QueryTriggerInteraction.Ignore).Length > 0 && OnCrush != null) { OnCrush(); }
+
             if (OnDepenetrate != null) OnDepenetrate();
 
         } else {
@@ -467,12 +489,13 @@ public class CharacterMotor : MonoBehaviour {
     #region Public methods
 
     public void Walk(Vector3 delta) {
-        //inputVector = Vector3.ClampMagnitude(delta, 1f);
-        inputVector = delta;
+        if (walkBehaviour != WalkBehaviour.None) {
+            inputVector = delta;
+        }
     }
 
     public void Jump() {
-        if (state.grounded || Debug.isDebugBuild) {
+        if ((state.grounded || Debug.isDebugBuild) && jumpBehaviour != JumpBehaviour.None ) {
             velocity = velocity - Physics.gravity.normalized * jumpForce;
             state.grounded = false;
             if (OnJump != null) OnJump();
@@ -488,7 +511,11 @@ public class CharacterMotor : MonoBehaviour {
     }
 
     public void TurnTowards(Vector3 direction) {
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(direction, -Physics.gravity.normalized), turningSpeed * Time.deltaTime);
+        if (turnBehaviour == TurnBehaviour.Normal) {
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(direction, -Physics.gravity.normalized), turnSpeed * Time.deltaTime);
+        } else if (turnBehaviour == TurnBehaviour.Instant) {
+            transform.rotation = Quaternion.LookRotation(direction, -Physics.gravity.normalized);
+        }
     }
 
     #endregion
@@ -515,7 +542,9 @@ public class CharacterMotor : MonoBehaviour {
 
     public enum Part { BottomSphere, TopSphere, Center, Top, Bottom }
     public enum MovementStyle { Raw, Smoothed }
-    public enum JumpStyle { None, TotalControl, FixedVelocity, SmoothControl }
+    public enum WalkBehaviour { None, Normal }
+    public enum JumpBehaviour { None, TotalControl, FixedVelocity, SmoothControl }
+    public enum TurnBehaviour { None, Normal, Persistant, Instant }
     public enum SlopeBehaviour { Slide, PreventClimbing, PreventClimbingAndSlide }
     public enum RigidbodyCollisionBehaviour { Ignore, Collide, CollideAndPush, Push }
     public enum CharacterMotorCollisionBehaviour { Ignore, Collide, Push }

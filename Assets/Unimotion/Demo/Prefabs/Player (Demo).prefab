@@ -209,13 +209,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee4659e43e29d674e9e5debb5301643e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  walkBehaviour: 1
   walkSpeed: 7
   slopeLimit: 50
-  slopeBehaviour: 1
-  turningSpeed: 400
+  slopeBehaviour: 0
+  turnBehaviour: 1
+  turnSpeed: 400
   jumpForce: 6
-  jumpStyle: 1
-  canJumpWhileSliding: 1
+  jumpBehaviour: 1
+  canJumpWhileSliding: 0
   collisionMask:
     serializedVersion: 2
     m_Bits: 1
@@ -226,8 +228,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 16
   characterMotorCollisionBehaviour: 1
-  rigidbodyCollisionBehaviour: 0
-  rigidbodiesLayer:
+  rigidbodyCollisionBehaviour: 3
+  rigidbodyMask:
     serializedVersion: 2
     m_Bits: 2048
   velocity: {x: 0, y: 0, z: 0}
