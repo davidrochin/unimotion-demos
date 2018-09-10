@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [SelectionBase]
+[AddComponentMenu("Unimotion/Character Motor")]
 [RequireComponent(typeof(CapsuleCollider))]
 public class CharacterMotor : MonoBehaviour {
 
@@ -12,7 +13,8 @@ public class CharacterMotor : MonoBehaviour {
     // Walking
     public WalkBehaviour walkBehaviour;
     [Tooltip("How fast the character should walk (in m/s).")] [Range(0.01f, 20)] public float walkSpeed = 7f;
-    [Range(5f, 85f)] public float slopeLimit = 50f;
+    [Range(0f, 32f)] public float walkSmoothness = 16f;
+    [Tooltip("The maximum slope angle the Character can climb.")] [Range(5f, 85f)] public float slopeLimit = 50f;
     public SlopeBehaviour slopeBehaviour = SlopeBehaviour.Slide;
 
     // Turning
@@ -22,6 +24,7 @@ public class CharacterMotor : MonoBehaviour {
     // Jumping
     [Range(1f, 30f)] public float jumpForce = 10f;
     public JumpBehaviour jumpBehaviour = JumpBehaviour.TotalControl;
+    [Range(0f, 10f)]public float airControl = 4f;
     public bool canJumpWhileSliding = true;
 
     // Masks
@@ -30,10 +33,10 @@ public class CharacterMotor : MonoBehaviour {
     public LayerMask characterMask;
     public LayerMask waterMask;
 
-    LayerMask finalCollisionMask;
-
     // Collision
-    public CharacterMotorCollisionBehaviour characterMotorCollisionBehaviour;
+    public Quality collisionQuality = Quality.High;
+    public CharacterMotorCollisionBehaviour characterCollisionBehaviour;
+    [Range(0.01f, 5f)] public float characterPushForce = 4f;
 
     // Rigidbody Interaction
     public RigidbodyCollisionBehaviour rigidbodyCollisionBehaviour;
@@ -65,16 +68,18 @@ public class CharacterMotor : MonoBehaviour {
     Vector3 inputVector;
     Vector3 inputVectorSmoothed;
 
-    const float SkinWidth = 0.01f;
-    const float TerminalSpeed = 50f;
-    const float FloorFriction = 16f;
-    const float AirFriction = 4f;
+    public float skinWidth = 0.01f;
+    public float terminalSpeed = 50f;
+    public float floorFriction = 16f;
+    public float airFriction = 3f;
+    public float mass = 1f;
 
     private void Awake() {
         collider = GetComponent<CapsuleCollider>();
 
         // Make sure SphereCollider center is correct
         collider.center = new Vector3(0f, collider.height * 0.5f, 0f);
+        collider.direction = 1;
     }
 
     void Start() {
@@ -88,10 +93,6 @@ public class CharacterMotor : MonoBehaviour {
     }
 
     void Update() {
-
-        // Calculate the Final Collision Mask
-        finalCollisionMask = collisionMask;
-        if (characterMotorCollisionBehaviour == CharacterMotorCollisionBehaviour.Collide) { finalCollisionMask = finalCollisionMask | characterMask; }
 
         FollowFloor();
 
@@ -109,11 +110,20 @@ public class CharacterMotor : MonoBehaviour {
         }
 
         // Apply movement from input
-        inputVectorSmoothed = inputVector; inputVector = Vector3.zero;
-        Move(inputVectorSmoothed * walkSpeed * Time.deltaTime);
+        if(state.grounded || jumpBehaviour == JumpBehaviour.TotalControl) {
+            inputVectorSmoothed = inputVector; inputVector = Vector3.zero;
+            Move(inputVectorSmoothed * walkSpeed * Time.deltaTime);
+        } else if (jumpBehaviour == JumpBehaviour.FixedVelocity) {
+            Move(inputVectorSmoothed * walkSpeed * Time.deltaTime);
+        } else if(jumpBehaviour == JumpBehaviour.SmoothControl) {
+            inputVectorSmoothed = Vector3.MoveTowards(inputVectorSmoothed, inputVector, airControl * Time.deltaTime); inputVector = Vector3.zero;
+            Move(inputVectorSmoothed * walkSpeed * Time.deltaTime);
+        }
 
         // Apply movement from velocity
         Move(velocity * Time.deltaTime);
+
+        Push();
 
         // Push away Rigidbodies
         Collider[] cols = Physics.OverlapCapsule(transform.position + transform.up * collider.radius, transform.position + transform.up * collider.height - transform.up * collider.radius, collider.radius, rigidbodyMask);
@@ -139,13 +149,14 @@ public class CharacterMotor : MonoBehaviour {
             velocity = velocity - Physics.gravity.normalized * Vector3.Dot(velocity, Physics.gravity.normalized);
 
             // Apply floor friction
-            velocity = Vector3.MoveTowards(velocity, Vector3.zero, FloorFriction * Time.deltaTime);
+            velocity = Vector3.MoveTowards(velocity, Vector3.zero, state.floorCollider.material.dynamicFriction * 50f * Time.deltaTime);
+            //velocity = Vector3.MoveTowards(velocity, Vector3.zero, floorFriction * Time.deltaTime);
         } else {
 
             // Apply air friction
             float towardsGravity = Vector3.Dot(velocity, Physics.gravity.normalized);
             velocity = velocity - Physics.gravity.normalized * towardsGravity;
-            velocity = Vector3.MoveTowards(velocity, Vector3.zero, AirFriction * Time.deltaTime);
+            velocity = Vector3.MoveTowards(velocity, Vector3.zero, airFriction * Time.deltaTime);
             velocity = velocity + Physics.gravity.normalized * towardsGravity;
 
         }
@@ -159,12 +170,19 @@ public class CharacterMotor : MonoBehaviour {
 
     #region Private methods
 
-    void Move(Vector3 delta) {
+    public void Move(Vector3 delta) {
 
         // Do not do anything if delta is zero
         if (delta == Vector3.zero) { return; }
 
         int slideCount = 0;
+
+        int[] maxIterations = { 50, 20, 5, 2 };
+
+        // Calculate the LayerMask to use
+        LayerMask finalCollisionMask = collisionMask;
+        if (characterCollisionBehaviour == CharacterMotorCollisionBehaviour.Collide) { finalCollisionMask = finalCollisionMask | characterMask; }
+        if (rigidbodyCollisionBehaviour == RigidbodyCollisionBehaviour.Collide) { finalCollisionMask = finalCollisionMask | rigidbodyMask; }
 
         // Store the position from before moving
         Vector3 startingPos = transform.position;
@@ -188,7 +206,7 @@ public class CharacterMotor : MonoBehaviour {
 
             // Move until it the point it hits
             Vector3 previousPos = transform.position;
-            transform.position += delta.normalized * (hit.distance - SkinWidth);
+            transform.position += delta.normalized * (hit.distance - skinWidth);
             if (!ValidatePosition()) { Depenetrate(); }
 
             // Calculate the direction in which the Character should slide
@@ -205,10 +223,10 @@ public class CharacterMotor : MonoBehaviour {
             lastDistance = (hit.collider != null ? hit.distance : lastDistance);
             lastNormal = (hit.collider != null ? hit.normal : lastNormal);
 
-            Vector3 remainingDelta = delta.normalized * (delta.magnitude - lastDistance);
+            Vector3 remainingDelta = delta.normalized * (delta.magnitude - lastDistance) * 0.95f;
 
             // If the Character cannot move freely
-            while (didHit && slideCount < 20) {
+            while (didHit && slideCount < maxIterations[(int)collisionQuality]) {
                 slideCount++;
 
                 Debug.DrawRay(hit.point, hit.normal);
@@ -216,7 +234,7 @@ public class CharacterMotor : MonoBehaviour {
 
                 // Slide util it hits
                 previousPos = transform.position;
-                transform.position += slideDirection.normalized * (hit.distance - SkinWidth);
+                transform.position += slideDirection.normalized * (hit.distance - skinWidth);
                 if (!ValidatePosition()) { Depenetrate(); }
 
                 // Calculate the direction in which the Character should slide
@@ -236,7 +254,7 @@ public class CharacterMotor : MonoBehaviour {
 
                 // Calculate how much delta is left to travel
                 if (didHit) {
-                    remainingDelta = remainingDelta.normalized * (remainingDelta.magnitude - hit.distance);
+                    remainingDelta = remainingDelta.normalized * (remainingDelta.magnitude - hit.distance) * 0.95f;
                 }
             }
 
@@ -255,6 +273,31 @@ public class CharacterMotor : MonoBehaviour {
 
     }
 
+    void Push() {
+
+        // Push Characters
+        if (characterCollisionBehaviour == CharacterMotorCollisionBehaviour.Push || characterCollisionBehaviour == CharacterMotorCollisionBehaviour.SoftPush) {
+
+            Collider[] characters = Overlap(characterMask, QueryTriggerInteraction.Ignore);
+
+            if (characters.Length > 0) {
+                for (int i = 0; i < characters.Length; i++) {
+                    Vector3 direction; float distance;
+                    Physics.ComputePenetration(collider, transform.position, transform.rotation, characters[i], characters[i].transform.position, characters[i].transform.rotation, out direction, out distance);
+
+                    if (characterCollisionBehaviour == CharacterMotorCollisionBehaviour.Push) {
+                        characters[i].GetComponent<CharacterMotor>().Move(direction * -distance);
+                    } else if (characterCollisionBehaviour == CharacterMotorCollisionBehaviour.SoftPush) {
+                        characters[i].GetComponent<CharacterMotor>().Move(-direction * characterPushForce * Time.deltaTime);
+                    }
+
+                }
+            }
+
+        }
+
+    }
+
     void CheckGrounded() {
 
         // Save whether if the Character was grounded or not before the check
@@ -264,14 +307,16 @@ public class CharacterMotor : MonoBehaviour {
         RaycastHit floorHit; bool didHit = Physics.SphereCast(transform.position + transform.up * collider.height - transform.up * collider.radius, collider.radius, -transform.up, out floorHit, float.MaxValue, collisionMask);
         if (didHit) {
             state.floor = floorHit.transform;
+            state.floorCollider = floorHit.collider;
         } else {
             state.floor = null;
+            state.floorCollider = null;
         }
 
         state.sliding = true;
 
         // Check for ground
-        RaycastHit[] hits = Physics.SphereCastAll(transform.position + transform.up * collider.height - transform.up * collider.radius, collider.radius + SkinWidth * 2f, -transform.up, collider.height - collider.radius * 2f, collisionMask);
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position + transform.up * collider.height - transform.up * collider.radius, collider.radius + skinWidth * 2f, -transform.up, collider.height - collider.radius * 2f, collisionMask);
         if (hits.Length > 0 && Vector3.Dot(velocity, Physics.gravity.normalized) >= 0f) {
             bool validFloor = false;
 
@@ -316,6 +361,12 @@ public class CharacterMotor : MonoBehaviour {
     }
 
     bool ValidatePosition() {
+
+        // Calculate the LayerMask to use
+        LayerMask finalCollisionMask = collisionMask;
+        if (characterCollisionBehaviour == CharacterMotorCollisionBehaviour.Collide) { finalCollisionMask = finalCollisionMask | characterMask; }
+        if (rigidbodyCollisionBehaviour == RigidbodyCollisionBehaviour.Collide) { finalCollisionMask = finalCollisionMask | rigidbodyMask; }
+
         return (Overlap(finalCollisionMask, QueryTriggerInteraction.UseGlobal).Length > 0 ? false : true);
     }
 
@@ -352,6 +403,68 @@ public class CharacterMotor : MonoBehaviour {
         }
     }
 
+    void Depenetrate() {
+
+        int[] maxIterations = { 100, 50, 20, 2 };
+        int iterations = 0;
+
+        // Calculate the LayerMask to use
+        LayerMask finalCollisionMask = collisionMask;
+        if (characterCollisionBehaviour == CharacterMotorCollisionBehaviour.Collide) { finalCollisionMask = finalCollisionMask | characterMask; }
+        if (rigidbodyCollisionBehaviour == RigidbodyCollisionBehaviour.Collide) { finalCollisionMask = finalCollisionMask | rigidbodyMask; }
+
+        Collider[] cols = Overlap(finalCollisionMask, QueryTriggerInteraction.UseGlobal);
+        bool stuck = (cols.Length > 0 ? true : false);
+
+        if (stuck) {
+
+            state.stuck = true;
+
+            foreach (Collider col in cols) {
+
+                Vector3 direction; float distance;
+                if (col != collider && Physics.ComputePenetration(collider, transform.position, transform.rotation, col, col.transform.position, col.transform.rotation, out direction, out distance)) {
+                    transform.position += direction * Mathf.Clamp((distance + skinWidth), 0f, terminalSpeed * Time.deltaTime);
+                    Debug.DrawRay(GetPartPosition(Part.Center), direction, Color.magenta);
+                }
+
+                break;
+
+            }
+
+            iterations++;
+
+            cols = Overlap(finalCollisionMask, QueryTriggerInteraction.UseGlobal);
+            stuck = (cols.Length > 0 ? true : false);
+
+            while (stuck && iterations < maxIterations[(int)collisionQuality]) {
+
+                foreach (Collider col in cols) {
+                    Vector3 direction; float distance;
+                    if (Physics.ComputePenetration(collider, transform.position, transform.rotation, col, col.transform.position, col.transform.rotation, out direction, out distance)) {
+                        transform.position += direction * Mathf.Clamp((distance + skinWidth), 0f, terminalSpeed * Time.deltaTime);
+                        Debug.DrawRay(GetPartPosition(Part.Center), direction, Color.magenta);
+                    }
+                    break;
+                }
+
+                iterations++;
+
+                cols = Overlap(finalCollisionMask, QueryTriggerInteraction.UseGlobal);
+                stuck = (cols.Length > 0 ? true : false);
+
+            }
+
+            if (iterations >= maxIterations[(int)collisionQuality] && OverlapCenter(finalCollisionMask, QueryTriggerInteraction.Ignore).Length > 0 && OnCrush != null) { OnCrush(); }
+
+            if (OnDepenetrate != null) OnDepenetrate();
+
+        } else {
+            state.stuck = false;
+        }
+
+    }
+
     void StickToSlope() {
 
         RaycastHit hit;
@@ -361,7 +474,7 @@ public class CharacterMotor : MonoBehaviour {
             Vector3 hyp;
             float topAngle = Vector3.Angle(Physics.gravity.normalized, -hit.normal);
             float bottomAngle = 180f - topAngle - 90f;
-            hyp = -Physics.gravity.normalized * (SkinWidth / Mathf.Sin(Mathf.Deg2Rad * bottomAngle)) * Mathf.Sin(Mathf.Deg2Rad * 90f);
+            hyp = -Physics.gravity.normalized * (skinWidth / Mathf.Sin(Mathf.Deg2Rad * bottomAngle)) * Mathf.Sin(Mathf.Deg2Rad * 90f);
 
             transform.position += Physics.gravity.normalized * hit.distance + hyp;
             state.grounded = true;
@@ -389,7 +502,7 @@ public class CharacterMotor : MonoBehaviour {
 
     #region Physics
 
-    Collider[] Overlap(LayerMask mask, QueryTriggerInteraction queryTriggerInteraction) {
+    public Collider[] Overlap(LayerMask mask, QueryTriggerInteraction queryTriggerInteraction) {
 
         Collider[] all = Physics.OverlapCapsule(
             transform.position + transform.up * collider.radius,
@@ -420,69 +533,13 @@ public class CharacterMotor : MonoBehaviour {
         return UnimotionUtil.RemoveNull(all);
     }
 
-    RaycastHit Cast(Vector3 direction, float distance, LayerMask mask, QueryTriggerInteraction queryTriggerInteraction) {
+    public RaycastHit Cast(Vector3 direction, float distance, LayerMask mask, QueryTriggerInteraction queryTriggerInteraction) {
         throw new System.NotImplementedException();
     }
 
-    void Depenetrate() {
-
-        int maxIterations = 30;
-        int iterations = 0;      
-
-        Collider[] cols = Overlap(finalCollisionMask, QueryTriggerInteraction.UseGlobal);
-        bool stuck = (cols.Length > 0 ? true : false);
-
-        if (stuck) {
-
-            state.stuck = true;
-
-            foreach (Collider col in cols) {
-
-                Vector3 direction; float distance;
-                if (col != collider && Physics.ComputePenetration(collider, transform.position, transform.rotation, col, col.transform.position, col.transform.rotation, out direction, out distance)) {
-                    transform.position += direction * Mathf.Clamp((distance + SkinWidth), 0f, TerminalSpeed * Time.deltaTime);
-                    Debug.DrawRay(GetPartPosition(Part.Center), direction, Color.magenta);
-                }
-
-                break;
-
-            }
-
-            iterations++;
-
-            cols = Overlap(finalCollisionMask, QueryTriggerInteraction.UseGlobal);
-            stuck = (cols.Length > 0 ? true : false);
-
-            while (stuck && iterations < maxIterations) {
-
-                foreach (Collider col in cols) {
-                    Vector3 direction; float distance;
-                    if (Physics.ComputePenetration(collider, transform.position, transform.rotation, col, col.transform.position, col.transform.rotation, out direction, out distance)) {
-                        transform.position += direction * Mathf.Clamp((distance + SkinWidth), 0f, TerminalSpeed * Time.deltaTime);
-                        Debug.DrawRay(GetPartPosition(Part.Center), direction, Color.magenta);
-                    }
-                    break;
-                }
-
-                iterations++;
-
-                cols = Overlap(finalCollisionMask, QueryTriggerInteraction.UseGlobal);
-                stuck = (cols.Length > 0 ? true : false);
-
-            }
-
-            if (iterations >= maxIterations && OverlapCenter(finalCollisionMask, QueryTriggerInteraction.Ignore).Length > 0 && OnCrush != null) { OnCrush(); }
-
-            if (OnDepenetrate != null) OnDepenetrate();
-
-        } else {
-            state.stuck = false;
-        }
-
+    public void AddForce(Vector3 force) {
+        velocity += force.normalized * Mathf.Sqrt((force.magnitude / mass));
     }
-
-    RaycastHit[] preAllocHits = new RaycastHit[20];
-    Collider[] preAllocCols = new Collider[20];
 
     #endregion
 
@@ -520,6 +577,7 @@ public class CharacterMotor : MonoBehaviour {
 
     #endregion
 
+
     public Vector3 debugDirection;
     public Vector3 stuckPosition;
     public Vector3 debugPoint;
@@ -540,14 +598,17 @@ public class CharacterMotor : MonoBehaviour {
         Gizmos.DrawSphere(debugPoint2, 0.05f);
     }
 
+    public enum Quality { Extreme, High, Medium, Low }
+
     public enum Part { BottomSphere, TopSphere, Center, Top, Bottom }
     public enum MovementStyle { Raw, Smoothed }
-    public enum WalkBehaviour { None, Normal }
+
+    public enum WalkBehaviour { None, Normal, Smoothed }
     public enum JumpBehaviour { None, TotalControl, FixedVelocity, SmoothControl }
     public enum TurnBehaviour { None, Normal, Persistant, Instant }
     public enum SlopeBehaviour { Slide, PreventClimbing, PreventClimbingAndSlide }
-    public enum RigidbodyCollisionBehaviour { Ignore, Collide, CollideAndPush, Push }
-    public enum CharacterMotorCollisionBehaviour { Ignore, Collide, Push }
+    public enum RigidbodyCollisionBehaviour { Ignore, Collide }
+    public enum CharacterMotorCollisionBehaviour { Ignore, Collide, Push, SoftPush }
 
 }
 
@@ -568,6 +629,7 @@ public class CharacterMotorState {
     public float floorAngle;
 
     public Transform floor;
+    public Collider floorCollider;
     public TransformState floorState;
 
     public CharacterMotorState() {

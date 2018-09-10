@@ -54,10 +54,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4870911301964062}
   - component: {fileID: 136844507336448752}
-  - component: {fileID: 114144568754205070}
   - component: {fileID: 114552827695539114}
+  - component: {fileID: 114944907344902206}
   m_Layer: 10
-  m_Name: Player (Demo)
+  m_Name: NPC (Demo)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -96,8 +96,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1999045143486084}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 47.25, y: 9.89, z: -22.678545}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 60.71, y: 8.14, z: -13.03}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4317762883585878}
@@ -186,18 +186,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1551277242128628}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &114144568754205070
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1999045143486084}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42104921d70ba5e49a9253fa7e5cdc58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inputType: 0
 --- !u!114 &114552827695539114
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -217,8 +205,7 @@ MonoBehaviour:
   turnBehaviour: 1
   turnSpeed: 400
   jumpForce: 6
-  jumpBehaviour: 3
-  airControl: 2
+  jumpBehaviour: 1
   canJumpWhileSliding: 0
   collisionMask:
     serializedVersion: 2
@@ -229,7 +216,7 @@ MonoBehaviour:
   waterMask:
     serializedVersion: 2
     m_Bits: 16
-  collisionQuality: 1
+  collisionQuality: 3
   characterCollisionBehaviour: 3
   characterPushForce: 2
   rigidbodyCollisionBehaviour: 3
@@ -249,16 +236,26 @@ MonoBehaviour:
     lastDelta: {x: 0, y: 0, z: 0}
     floorAngle: 32.973255
     floor: {fileID: 0}
-    floorCollider: {fileID: 0}
   skinWidth: 0.01
   terminalSpeed: 50
   floorFriction: 16
   airFriction: 4
-  mass: 1
   debugDirection: {x: 0.14034185, y: 0.8468411, z: 0.51299536}
   stuckPosition: {x: 29.76857, y: 6.44566, z: -19.986883}
   debugPoint: {x: 29.746813, y: 7.3243265, z: -20.083006}
   debugPoint2: {x: 29.746813, y: 7.3243265, z: -20.083006}
+--- !u!114 &114944907344902206
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1999045143486084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6429fdf9ef571094ebc10b0d864dbb1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wanderRadius: 10
 --- !u!136 &136844507336448752
 CapsuleCollider:
   m_ObjectHideFlags: 1

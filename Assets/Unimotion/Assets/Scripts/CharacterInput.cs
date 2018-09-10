@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[AddComponentMenu("Unimotion/Character Input")]
 [RequireComponent(typeof(CharacterMotor))]
-public class CharacterControl : MonoBehaviour {
+public class CharacterInput : MonoBehaviour {
 
     public InputType inputType; 
 
@@ -55,6 +56,9 @@ public class CharacterControl : MonoBehaviour {
             }
         }
 
+        if (Input.GetKeyDown(KeyCode.F)) {
+            character.AddForce(transform.forward * 500f);
+        }
     }
 
     Vector3 GetInputVector() {
