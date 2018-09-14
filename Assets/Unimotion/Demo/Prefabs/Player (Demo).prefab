@@ -54,8 +54,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4870911301964062}
   - component: {fileID: 136844507336448752}
-  - component: {fileID: 114144568754205070}
   - component: {fileID: 114552827695539114}
+  - component: {fileID: 114144568754205070}
   m_Layer: 10
   m_Name: Player (Demo)
   m_TagString: Untagged
@@ -97,7 +97,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1999045143486084}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 47.25, y: 9.89, z: -22.678545}
+  m_LocalPosition: {x: 45.25, y: 8.89, z: -35.68}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4317762883585878}
@@ -232,10 +232,13 @@ MonoBehaviour:
   collisionQuality: 1
   characterCollisionBehaviour: 3
   characterPushForce: 2
-  rigidbodyCollisionBehaviour: 3
+  rigidbodyCollisionBehaviour: 2
+  rigidbodyPushForce: 600
   rigidbodyMask:
     serializedVersion: 2
     m_Bits: 2048
+  outputToAnimator: 0
+  animator: {fileID: 0}
   velocity: {x: 0, y: 0, z: 0}
   state:
     forwardMove: 0

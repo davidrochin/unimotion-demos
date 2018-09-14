@@ -12,7 +12,7 @@ public class CharacterMotor : MonoBehaviour {
 
     // Walking
     public WalkBehaviour walkBehaviour;
-    [Tooltip("How fast the character should walk (in m/s).")] [Range(0.01f, 20)] public float walkSpeed = 7f;
+    [Tooltip("How fast the character should walk (in m/s).")] [Range(0.01f, 20)] public float walkSpeed = 7f; public float maxWalkMagnitude = 2f;
     [Range(0f, 32f)] public float walkSmoothness = 16f;
     [Tooltip("The maximum slope angle the Character can climb.")] [Range(5f, 85f)] public float slopeLimit = 50f;
     public SlopeBehaviour slopeBehaviour = SlopeBehaviour.Slide;
@@ -40,14 +40,18 @@ public class CharacterMotor : MonoBehaviour {
 
     // Rigidbody Interaction
     public RigidbodyCollisionBehaviour rigidbodyCollisionBehaviour;
+    [Tooltip("The force this character applies to rigidbodies (in Newtons)")] public float rigidbodyPushForce = 600;
     public LayerMask rigidbodyMask;
+
+    // Animation
+    public bool outputToAnimator;
+    public Animator animator;
 
     #endregion
 
     #region Events
 
     public event Action OnWalk;
-    public event Action OnRun;
     public event Action OnJump;
     public event Action OnLand;
     public event Action OnFrameStart;
@@ -57,7 +61,7 @@ public class CharacterMotor : MonoBehaviour {
 
     #endregion
 
-    [Header("Debug")]
+    // Debug
     public Vector3 velocity;
 
     public CharacterMotorState state;
@@ -67,6 +71,7 @@ public class CharacterMotor : MonoBehaviour {
     bool jump; 
     Vector3 inputVector;
     Vector3 inputVectorSmoothed;
+    public Vector3 inputVectorCached;
 
     public float skinWidth = 0.01f;
     public float terminalSpeed = 50f;
@@ -85,7 +90,6 @@ public class CharacterMotor : MonoBehaviour {
     void Start() {
         // Test events
         OnWalk += () => Debug.Log("OnWalk");
-        OnRun += () => Debug.Log("OnRun");
         OnJump += () => Debug.Log("OnJump");
         OnLand += () => Debug.Log("OnLand");
         OnCrush += () => Debug.LogWarning("OnCrush");
@@ -119,6 +123,7 @@ public class CharacterMotor : MonoBehaviour {
             inputVectorSmoothed = Vector3.MoveTowards(inputVectorSmoothed, inputVector, airControl * Time.deltaTime); inputVector = Vector3.zero;
             Move(inputVectorSmoothed * walkSpeed * Time.deltaTime);
         }
+        inputVectorCached = inputVectorSmoothed;
 
         // Apply movement from velocity
         Move(velocity * Time.deltaTime);
@@ -163,6 +168,10 @@ public class CharacterMotor : MonoBehaviour {
 
         StickToSlope();
         if (!ValidatePosition()) { Depenetrate(); }
+
+        UpdateAnimator();
+
+        inputVectorCached = Vector3.zero;
 
         if (OnFrameFinish != null) { OnFrameFinish(); }
         
@@ -415,15 +424,17 @@ public class CharacterMotor : MonoBehaviour {
 
         Collider[] cols = Overlap(finalCollisionMask, QueryTriggerInteraction.UseGlobal);
         bool stuck = (cols.Length > 0 ? true : false);
+        //Debug.Log("stuck: " + stuck + ". length: " + cols.Length);
 
         if (stuck) {
-
             state.stuck = true;
 
             foreach (Collider col in cols) {
+                Vector3 v; float f;
+                //Debug.Log((col != collider) + ", " + Physics.ComputePenetration(collider, transform.position + collider.center, transform.rotation, col, col.transform.position, col.transform.rotation, out v, out f));
 
                 Vector3 direction; float distance;
-                if (col != collider && Physics.ComputePenetration(collider, transform.position, transform.rotation, col, col.transform.position, col.transform.rotation, out direction, out distance)) {
+                if (col != collider && Physics.ComputePenetration(collider, transform.position + collider.center, transform.rotation, col, col.transform.position, col.transform.rotation, out direction, out distance)) {
                     transform.position += direction * Mathf.Clamp((distance + skinWidth), 0f, terminalSpeed * Time.deltaTime);
                     Debug.DrawRay(GetPartPosition(Part.Center), direction, Color.magenta);
                 }
@@ -575,8 +586,25 @@ public class CharacterMotor : MonoBehaviour {
         }
     }
 
-    #endregion
+    public void ForceTurnTowards(Vector3 direction) {
+        transform.rotation = Quaternion.LookRotation(direction, -Physics.gravity.normalized);
+    }
 
+    public void UpdateAnimator() {
+        if (outputToAnimator && animator != null) {
+            animator.SetFloat("Forward Move", Vector3.Dot(inputVectorCached, transform.forward));
+            animator.SetFloat("Strafe Move", Vector3.Dot(inputVectorCached, transform.right));
+            animator.SetFloat("Move Speed", inputVectorCached.magnitude);
+            animator.SetFloat("Max Move Speed", maxWalkMagnitude);
+            animator.SetFloat("Upwards Speed", Vector3.Dot(velocity, -Physics.gravity.normalized));
+            animator.SetBool("Grounded", state.grounded);
+            animator.SetBool("Sliding", state.sliding);
+            animator.SetBool("Stuck", state.stuck);
+
+        }
+    }
+
+    #endregion
 
     public Vector3 debugDirection;
     public Vector3 stuckPosition;
@@ -607,7 +635,7 @@ public class CharacterMotor : MonoBehaviour {
     public enum JumpBehaviour { None, TotalControl, FixedVelocity, SmoothControl }
     public enum TurnBehaviour { None, Normal, Persistant, Instant }
     public enum SlopeBehaviour { Slide, PreventClimbing, PreventClimbingAndSlide }
-    public enum RigidbodyCollisionBehaviour { Ignore, Collide }
+    public enum RigidbodyCollisionBehaviour { Ignore, Collide, Push }
     public enum CharacterMotorCollisionBehaviour { Ignore, Collide, Push, SoftPush }
 
 }
@@ -659,3 +687,7 @@ public class CharacterMotorState {
 
 public delegate void Action();
 public delegate void FloatAction(float n);
+
+public delegate void OnLandHandler(float impactSpeed, float distanceFallen);
+public delegate void OnJumpHandler();
+public delegate void OnCrushHandler();

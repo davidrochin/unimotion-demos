@@ -19,7 +19,7 @@ public class CharacterInput : MonoBehaviour {
     }
 
     private void Start() {
-        Camera.main.GetComponent<PlayerCamera>().player = character;
+        //Camera.main.GetComponent<PlayerCamera>().player = character;
     }
 
     void Update () {
@@ -82,14 +82,20 @@ public class CharacterInput : MonoBehaviour {
         //Hacer que el Vector no apunte hacia arriba.
         //transDirection = new Vector3(transDirection.x, 0f, transDirection.z).normalized;
         finalMovementVector = transDirection;
-        return transDirection;
+        return transDirection.normalized;
     }
 
     float GetInputMagnitude() {
         Vector3 input = Vector3.zero;
+
+        // Get Input from standard Input methods
         if (inputType == InputType.Normal) { input = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical")); } 
         else if (inputType == InputType.Raw) { input = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")); }
+
+        // Get Input from Virtual Joystick if available
         if (virtualJoystick != null) { input = new Vector3(input.x + virtualJoystick.input.x, 0f, input.y + virtualJoystick.input.y); }
+
+        // Clamp magnitude to 1
         return Vector3.ClampMagnitude(input, 1f).magnitude;
     }
 

@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerCamera : MonoBehaviour {
 
     [Header("Target Settings")]
-    public CharacterMotor player;
+    public CharacterMotor character;
     [Range(0f, 20f)] public float distance = 6f;
     public Vector3 targetOffset = new Vector3(0f, 1.09f, 0f);
 
@@ -15,19 +15,30 @@ public class PlayerCamera : MonoBehaviour {
 
     VirtualJoystick virtualJoystick;
 
+    Collider playerCollider;
+
     void Awake() {
         Cursor.lockState = CursorLockMode.Locked;
         virtualJoystick = VirtualJoystick.GetById(1);
 
-        if(player != null) {
-            player.OnFrameFinish += Follow;
+        if(character != null) {
+            playerCollider = character.GetComponent<Collider>();
+            character.OnFrameFinish += Follow;
         }
     }
 
-    public void Follow() {
+    private void Update() {
+        if (Input.GetMouseButton(1)) {
+            Vector3 dir = (character.transform.position - transform.position);
+            character.ForceTurnTowards(new Vector3(dir.x, 0f, dir.z).normalized);
+        }
+    }
+
+    public void Follow() 
+        {
 
         //Get the real target position (add offset)
-        Vector3 realTarget = player.transform.position + targetOffset;
+        Vector3 realTarget = character.transform.position + targetOffset;
 
         //Make a vector from mouse/joystick movement
         Vector3 input = Vector3.zero;
@@ -45,7 +56,7 @@ public class PlayerCamera : MonoBehaviour {
         transform.RotateAround(transform.position, transform.right, input.y * orbitSpeed);
 
         //Antes de acomodarse en la distancia necesaria, revisar si hay una obstrucción para no pasar de ella
-        RaycastHit hit = RaycastUtil.RaycastPastItself(player.gameObject, realTarget, transform.forward * -1f, distance, obstructionLayer);
+        RaycastHit hit = RaycastPastItself(playerCollider, realTarget, transform.forward * -1f, distance, obstructionLayer);
 
         float maxDistance = 0f;
         Vector3 addition = Vector3.zero;
@@ -67,5 +78,15 @@ public class PlayerCamera : MonoBehaviour {
 
         //Zoom if user uses mousewheel
         distance = distance - Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * 100f;
+    }
+
+    public static RaycastHit RaycastPastItself(Collider col, Vector3 startPos, Vector3 direction, float lenght, LayerMask mask) {
+        RaycastHit[] rayHits = Physics.RaycastAll(startPos, direction, lenght, mask);
+        foreach (RaycastHit hit in rayHits) {
+            if (hit.collider != col) {
+                return hit;
+            }
+        }
+        return new RaycastHit();
     }
 }

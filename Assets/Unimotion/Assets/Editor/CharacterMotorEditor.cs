@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.Animations;
 
 [CustomEditor(typeof(CharacterMotor))]
 [CanEditMultipleObjects]
@@ -9,6 +10,7 @@ public class CharacterMotorEditor : Editor {
 
     CharacterMotor motor;
     CapsuleCollider collider;
+    Animator animator;
 
     GUIStyle sectionHeaderStyle = new GUIStyle();
     GUIStyle sectionPanel = new GUIStyle();
@@ -33,6 +35,8 @@ public class CharacterMotorEditor : Editor {
     public override void OnInspectorGUI() {
 
         serializedObject.Update();
+
+        collider.center = new Vector3(0f, collider.height * 0.5f, 0f);
 
         // Capsule center warning
         if (collider.center.x != 0f || collider.center.z != 0f) {
@@ -109,7 +113,46 @@ public class CharacterMotorEditor : Editor {
         if (motor.characterCollisionBehaviour == CharacterMotor.CharacterMotorCollisionBehaviour.SoftPush) {
             EditorGUILayout.PropertyField(serializedObject.FindProperty("characterPushForce"), new GUIContent("Push force"));
         }
+        EditorGUILayout.EndVertical();
+
+        // Rigidbodies
+        EditorGUILayout.BeginVertical(EditorStyles.helpBox);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("rigidbodyCollisionBehaviour"), new GUIContent("Rigidbody Collision"));
+        if (motor.rigidbodyCollisionBehaviour == CharacterMotor.RigidbodyCollisionBehaviour.Push) {
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("rigidbodyPushForce"), new GUIContent("Push force"));
+        }
+        EditorGUILayout.EndVertical();
+
+        // Animation
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Animation", EditorStyles.boldLabel);
+
+        EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("outputToAnimator"), new GUIContent("Output to Animator"));
+        if (motor.outputToAnimator) {
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("animator"), new GUIContent("Animator"));
+
+            // Create Animation Parameters Button
+            if (GUILayout.Button("Create Animator Parameters")) {
+                animator = motor.animator;
+                if (animator != null && EditorUtility.DisplayDialog("Current parameters will be deleted", "This functions creates parameters in the Animator Controller for the Character Motor to fill. If you continue, all other parameters will be deleted.", "Continue", "Cancel")) {
+                    AnimatorController ac = (AnimatorController)animator.runtimeAnimatorController;
+                    ac.parameters = new AnimatorControllerParameter[0];
+                    ac.AddParameter("Forward Move", AnimatorControllerParameterType.Float);
+                    ac.AddParameter("Strafe Move", AnimatorControllerParameterType.Float);
+                    ac.AddParameter("Move Speed", AnimatorControllerParameterType.Float);
+                    ac.AddParameter("Max Move Speed", AnimatorControllerParameterType.Float);
+                    ac.AddParameter("Upwards Speed", AnimatorControllerParameterType.Float);
+                    ac.AddParameter("Sideways Speed", AnimatorControllerParameterType.Float);
+                    ac.AddParameter("Grounded", AnimatorControllerParameterType.Bool);
+                    ac.AddParameter("Sliding", AnimatorControllerParameterType.Bool);
+                    ac.AddParameter("Stuck", AnimatorControllerParameterType.Bool);
+                } else {
+                    // Alert: Animator not configured
+                }
+            }
+            
+        }
         EditorGUILayout.EndVertical();
 
         // Constants
