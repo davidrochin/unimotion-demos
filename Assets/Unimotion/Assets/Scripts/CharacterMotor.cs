@@ -325,18 +325,19 @@ public class CharacterMotor : MonoBehaviour {
         state.sliding = true;
 
         // Check for ground
-        RaycastHit[] hits = Physics.SphereCastAll(transform.position + transform.up * collider.height - transform.up * collider.radius, collider.radius + skinWidth * 2f, -transform.up, collider.height - collider.radius * 2f, collisionMask);
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position + transform.up * collider.height - transform.up * collider.radius, collider.radius, -transform.up, collider.height - collider.radius * 2f + collider.radius, collisionMask);
+
         if (hits.Length > 0 && Vector3.Dot(velocity, Physics.gravity.normalized) >= 0f) {
             bool validFloor = false;
 
             // Check each hit for valid ground
-            foreach (RaycastHit hit in hits) {
+            foreach (RaycastHit hit in hits) { 
 
                 // Calculate the angle of the floor
                 float angle = Vector3.Angle(-Physics.gravity.normalized, hit.normal);
                 state.floorAngle = angle;
 
-                if (Vector3.Dot(hit.normal, -Physics.gravity.normalized) > 0f && angle < 85f && !(hit.distance == 0f && hit.point == Vector3.zero) ) {
+                if (Vector3.Dot(hit.normal, -Physics.gravity.normalized) > 0f && angle < 85f && !(hit.distance == 0f && hit.point == Vector3.zero) && Vector3.Distance(hit.point, GetPartPosition(Part.BottomSphere)) <= collider.radius + skinWidth * 2f) {
                       
                     // Check if it should slide
                     if(angle < slopeLimit) {
