@@ -18,10 +18,10 @@ public class PlayerCamera : MonoBehaviour {
     Collider playerCollider;
 
     void Awake() {
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.lockState = CursorLockMode.Locked;
         virtualJoystick = VirtualJoystick.GetById(1);
 
-        if(character != null) {
+        if (character != null) {
             playerCollider = character.GetComponent<Collider>();
             character.OnFrameFinish += Follow;
         }
@@ -32,10 +32,15 @@ public class PlayerCamera : MonoBehaviour {
             Vector3 dir = (character.transform.position - transform.position);
             character.ForceTurnTowards(new Vector3(dir.x, 0f, dir.z).normalized);
         }
+
+        /*if (Input.GetKeyDown(KeyCode.Z)) {
+            Cursor.lockState = Cursor.lockState == CursorLockMode.Locked ? CursorLockMode.None : CursorLockMode.Locked;
+        }*/
     }
 
-    public void Follow() 
-        {
+    public void Follow() {
+
+        if (enabled == false) { return; }
 
         //Get the real target position (add offset)
         Vector3 realTarget = character.transform.position + targetOffset;
@@ -72,12 +77,16 @@ public class PlayerCamera : MonoBehaviour {
         Vector3 desiredPosition = realTarget - transform.forward * (maxDistance - 0.1f);
         transform.position = desiredPosition;
 
-        if (Input.GetKeyDown(KeyCode.Z)) {
-            Cursor.lockState = Cursor.lockState == CursorLockMode.Locked ? CursorLockMode.None : CursorLockMode.Locked;
-        }
-
         //Zoom if user uses mousewheel
         distance = distance - Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * 100f;
+    } 
+
+    public void SetTarget(CharacterMotor newTarget) {
+        character = newTarget;
+        if (character != null) {
+            playerCollider = character.GetComponent<Collider>();
+            character.OnFrameFinish += Follow;
+        }
     }
 
     public static RaycastHit RaycastPastItself(Collider col, Vector3 startPos, Vector3 direction, float lenght, LayerMask mask) {

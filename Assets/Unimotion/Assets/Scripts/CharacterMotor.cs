@@ -337,7 +337,7 @@ public class CharacterMotor : MonoBehaviour {
                 float angle = Vector3.Angle(-Physics.gravity.normalized, hit.normal);
                 state.floorAngle = angle;
 
-                if (Vector3.Dot(hit.normal, -Physics.gravity.normalized) > 0f && angle < 85f && !(hit.distance == 0f && hit.point == Vector3.zero) && Vector3.Distance(hit.point, GetPartPosition(Part.BottomSphere)) <= collider.radius + skinWidth * 2f) {
+                if (Vector3.Dot(hit.normal, -Physics.gravity.normalized) > 0f && angle < 85f && !(hit.distance == 0f && hit.point == Vector3.zero) && Vector3.Distance(hit.point, GetPartPosition(Part.BottomSphere)) <= collider.radius + skinWidth * 4f) {
                       
                     // Check if it should slide
                     if(angle < slopeLimit) {
@@ -435,7 +435,7 @@ public class CharacterMotor : MonoBehaviour {
                 //Debug.Log((col != collider) + ", " + Physics.ComputePenetration(collider, transform.position + collider.center, transform.rotation, col, col.transform.position, col.transform.rotation, out v, out f));
 
                 Vector3 direction; float distance;
-                if (col != collider && Physics.ComputePenetration(collider, transform.position + collider.center, transform.rotation, col, col.transform.position, col.transform.rotation, out direction, out distance)) {
+                if (col != collider && Physics.ComputePenetration(collider, transform.position, transform.rotation, col, col.transform.position, col.transform.rotation, out direction, out distance)) {
                     transform.position += direction * Mathf.Clamp((distance + skinWidth), 0f, terminalSpeed * Time.deltaTime);
                     Debug.DrawRay(GetPartPosition(Part.Center), direction, Color.magenta);
                 }
@@ -598,6 +598,7 @@ public class CharacterMotor : MonoBehaviour {
             animator.SetFloat("Move Speed", inputVectorCached.magnitude);
             animator.SetFloat("Max Move Speed", maxWalkMagnitude);
             animator.SetFloat("Upwards Speed", Vector3.Dot(velocity, -Physics.gravity.normalized));
+            animator.SetFloat("Sideways Speed", (velocity - Vector3.Project(velocity, -Physics.gravity.normalized)).magnitude);
             animator.SetBool("Grounded", state.grounded);
             animator.SetBool("Sliding", state.sliding);
             animator.SetBool("Stuck", state.stuck);

@@ -1350,7 +1350,7 @@ GameObject:
   - component: {fileID: 114505687000137532}
   m_Layer: 10
   m_Name: Animated Player (Demo)
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1944,7 +1944,7 @@ Transform:
   m_GameObject: {fileID: 1408157836548522}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 100, y: 99.99997, z: 99.99997}
+  m_LocalScale: {x: 100, y: 100, z: 100}
   m_Children:
   - {fileID: 4307451444745384}
   m_Father: {fileID: 4870911301964062}
@@ -2453,7 +2453,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1999045143486084}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -42.17, y: 9, z: -63.18}
+  m_LocalPosition: {x: -43.17, y: 13, z: -76.18}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4508252769085336}
@@ -2686,6 +2686,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   springDistance: 0.03
   timerMultiplier: 10
+  factor: 2
 --- !u!114 &114505687000137532
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2697,7 +2698,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c909211cab33157449f69d26774518ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  character: {fileID: 0}
   animator: {fileID: 95606734047883468}
+  torsoRadius: 0.1
 --- !u!114 &114552827695539114
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2711,6 +2714,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkBehaviour: 1
   walkSpeed: 7
+  maxWalkMagnitude: 2
   walkSmoothness: 16
   slopeLimit: 50
   slopeBehaviour: 0
@@ -2772,7 +2776,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.27
+  m_Radius: 0.25
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}

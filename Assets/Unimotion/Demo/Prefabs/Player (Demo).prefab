@@ -58,7 +58,7 @@ GameObject:
   - component: {fileID: 114144568754205070}
   m_Layer: 10
   m_Name: Player (Demo)
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -211,6 +211,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkBehaviour: 1
   walkSpeed: 7
+  maxWalkMagnitude: 2
   walkSmoothness: 16
   slopeLimit: 50
   slopeBehaviour: 0
@@ -253,6 +254,7 @@ MonoBehaviour:
     floorAngle: 32.973255
     floor: {fileID: 0}
     floorCollider: {fileID: 0}
+  inputVectorCached: {x: 0, y: 0, z: 0}
   skinWidth: 0.01
   terminalSpeed: 50
   floorFriction: 16

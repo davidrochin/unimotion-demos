@@ -5,13 +5,20 @@ using UnityEngine;
 public class CharacterDemoExtras : MonoBehaviour {
 
     [Header("Landing Spring Animation")]
-    float spring = 0f;
     public float springDistance = 0.1f;
-    float timer = 0f;
     public float timerMultiplier = 0.5f;
+    float spring = 0f;
+    float timer = 0f;
+
+    [Header("Running Animation Multiplier")]
+    public float factor = 1.1f;
 
     CharacterMotor character;
     Animator animator;
+    SkinnedMeshRenderer renderer;
+
+    Transform[] bones;
+    Quaternion[] bonesOriginalRotations;
 
     Vector3 dpos;
 
@@ -24,6 +31,8 @@ public class CharacterDemoExtras : MonoBehaviour {
     void Awake () {
         character = GetComponent<CharacterMotor>();
         animator = GetComponent<Animator>();
+        renderer = GetComponentInChildren<SkinnedMeshRenderer>();
+        bones = renderer.rootBone.GetComponentsInChildren<Transform>();
 
         hips = animator.GetBoneTransform(HumanBodyBones.Hips);
         spine = animator.GetBoneTransform(HumanBodyBones.Spine);

@@ -40,6 +40,7 @@ ModelImporter:
     100064: demo_structure_01
     100066: demo_16
     100068: demo_17
+    100070: demo_18
     400000: //RootNode
     400002: demo_plane_01
     400004: reference
@@ -75,6 +76,7 @@ ModelImporter:
     400064: demo_structure_01
     400066: demo_16
     400068: demo_17
+    400070: demo_18
     2100000: No Name
     2300000: demo_plane_01
     2300002: reference
@@ -110,6 +112,7 @@ ModelImporter:
     2300062: demo_structure_01
     2300064: demo_16
     2300066: demo_17
+    2300068: demo_18
     3300000: demo_plane_01
     3300002: reference
     3300004: Cube
@@ -144,6 +147,7 @@ ModelImporter:
     3300062: demo_structure_01
     3300064: demo_16
     3300066: demo_17
+    3300068: demo_18
     4300000: demo_plane_01
     4300002: reference
     4300004: Cube
@@ -178,6 +182,7 @@ ModelImporter:
     4300062: demo_structure_01
     4300064: demo_16
     4300066: demo_17
+    4300068: demo_18
   externalObjects: {}
   materials:
     importMaterials: 1
