@@ -114,14 +114,24 @@ public class CharacterMotor : MonoBehaviour {
         }
 
         // Apply movement from input
-        if(state.grounded || jumpBehaviour == JumpBehaviour.TotalControl) {
-            inputVectorSmoothed = inputVector; inputVector = Vector3.zero;
-            Move(inputVectorSmoothed * walkSpeed * Time.deltaTime);
-        } else if (jumpBehaviour == JumpBehaviour.FixedVelocity) {
-            Move(inputVectorSmoothed * walkSpeed * Time.deltaTime);
-        } else if(jumpBehaviour == JumpBehaviour.SmoothControl) {
-            inputVectorSmoothed = Vector3.MoveTowards(inputVectorSmoothed, inputVector, airControl * Time.deltaTime); inputVector = Vector3.zero;
-            Move(inputVectorSmoothed * walkSpeed * Time.deltaTime);
+        if (state.grounded) {
+            if (walkBehaviour == WalkBehaviour.Normal) {
+                inputVectorSmoothed = inputVector; inputVector = Vector3.zero;
+                Move(inputVectorSmoothed * walkSpeed * Time.deltaTime);
+            } else if (walkBehaviour == WalkBehaviour.Smoothed) {
+                inputVectorSmoothed = Vector3.MoveTowards(inputVectorSmoothed, inputVector, walkSmoothness * Time.deltaTime); inputVector = Vector3.zero;
+                Move(inputVectorSmoothed * walkSpeed * Time.deltaTime);
+            }
+        } else {
+            if (jumpBehaviour == JumpBehaviour.TotalControl) {
+                inputVectorSmoothed = inputVector; inputVector = Vector3.zero;
+                Move(inputVectorSmoothed * walkSpeed * Time.deltaTime);
+            } else if (jumpBehaviour == JumpBehaviour.FixedVelocity) {
+                Move(inputVectorSmoothed * walkSpeed * Time.deltaTime);
+            } else if (jumpBehaviour == JumpBehaviour.SmoothControl) {
+                inputVectorSmoothed = Vector3.MoveTowards(inputVectorSmoothed, inputVector, airControl * Time.deltaTime); inputVector = Vector3.zero;
+                Move(inputVectorSmoothed * walkSpeed * Time.deltaTime);
+            }
         }
         inputVectorCached = inputVectorSmoothed;
 
@@ -216,12 +226,13 @@ public class CharacterMotor : MonoBehaviour {
             // Move until it the point it hits
             Vector3 previousPos = transform.position;
             transform.position += delta.normalized * (hit.distance - skinWidth);
+            
             if (!ValidatePosition()) { Depenetrate(); }
 
             // Calculate the direction in which the Character should slide
             Vector3 slideDirection = Vector3.Cross(Vector3.Cross(hit.normal, delta.normalized), hit.normal).normalized;
             debugDirection = slideDirection;
-            float slideMagnitude = Mathf.Clamp(Vector3.Dot(delta.normalized * (delta.magnitude - hit.distance), slideDirection), 0f, float.MaxValue);
+            float slideMagnitude = Mathf.Clamp(Vector3.Dot(delta.normalized * (delta.magnitude - hit.distance + skinWidth), slideDirection), 0f, float.MaxValue);
 
             // Cast to see if the Character is free to move or must slide on another plane
             hit = UnimotionUtil.CapsuleCastIgnoreSelf(
@@ -232,7 +243,7 @@ public class CharacterMotor : MonoBehaviour {
             lastDistance = (hit.collider != null ? hit.distance : lastDistance);
             lastNormal = (hit.collider != null ? hit.normal : lastNormal);
 
-            Vector3 remainingDelta = delta.normalized * (delta.magnitude - lastDistance) * 0.95f;
+            Vector3 remainingDelta = delta.normalized * (delta.magnitude - lastDistance + skinWidth) * 0.95f;
 
             // If the Character cannot move freely
             while (didHit && slideCount < maxIterations[(int)collisionQuality]) {
@@ -263,7 +274,7 @@ public class CharacterMotor : MonoBehaviour {
 
                 // Calculate how much delta is left to travel
                 if (didHit) {
-                    remainingDelta = remainingDelta.normalized * (remainingDelta.magnitude - hit.distance) * 0.95f;
+                    remainingDelta = remainingDelta.normalized * (remainingDelta.magnitude - hit.distance + skinWidth) * 0.95f;
                 }
             }
 

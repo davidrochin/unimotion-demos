@@ -97,7 +97,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1999045143486084}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 45.25, y: 8.89, z: -35.68}
+  m_LocalPosition: {x: -44.8, y: 9.89, z: -59.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4317762883585878}
@@ -212,7 +212,7 @@ MonoBehaviour:
   walkBehaviour: 1
   walkSpeed: 7
   maxWalkMagnitude: 2
-  walkSmoothness: 16
+  walkSmoothness: 5
   slopeLimit: 50
   slopeBehaviour: 0
   turnBehaviour: 1

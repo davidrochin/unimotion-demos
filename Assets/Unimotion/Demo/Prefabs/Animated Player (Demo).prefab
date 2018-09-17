@@ -2715,7 +2715,7 @@ MonoBehaviour:
   walkBehaviour: 1
   walkSpeed: 7
   maxWalkMagnitude: 2
-  walkSmoothness: 16
+  walkSmoothness: 5
   slopeLimit: 50
   slopeBehaviour: 0
   turnBehaviour: 1

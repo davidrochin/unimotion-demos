@@ -14,6 +14,7 @@ public class DemoMenu : MonoBehaviour {
 
     [Header("Sliders")]
     public Slider walkSpeedSlider;
+    public Slider jumpForceSlider;
 
     bool panelOpen = false;
     Vector2 panelOpenPosition;
@@ -33,17 +34,27 @@ public class DemoMenu : MonoBehaviour {
             TogglePanel();
         });
 
+        // Walk Behaviour
         walkDropdown.onValueChanged.AddListener(delegate (int value) {
             GameObject.FindWithTag("Player").GetComponent<CharacterMotor>().walkBehaviour = (CharacterMotor.WalkBehaviour) value + 1;
         });
 
+        // Walk Speed
         walkSpeedSlider.onValueChanged.AddListener(delegate (float value) {
             GameObject.FindWithTag("Player").GetComponent<CharacterMotor>().walkSpeed = value;
         });
 
+        // Jump Behaviour
         jumpDropdown.onValueChanged.AddListener(delegate (int value) {
             GameObject.FindWithTag("Player").GetComponent<CharacterMotor>().jumpBehaviour = (CharacterMotor.JumpBehaviour)value + 1;
         });
+
+        // Jump Force
+        jumpForceSlider.onValueChanged.AddListener(delegate (float value) {
+            GameObject.FindWithTag("Player").GetComponent<CharacterMotor>().jumpForce = value;
+        });
+
+        UpdateValues();
 
     }
 	
@@ -84,6 +95,18 @@ public class DemoMenu : MonoBehaviour {
         GameObject newCharacter = Instantiate(prefab, oldCharacter.transform.position, oldCharacter.transform.rotation, null);
         FindObjectOfType<PlayerCamera>().SetTarget(newCharacter.GetComponent<CharacterMotor>());
 
-        Destroy(oldCharacter);
+        DestroyImmediate(oldCharacter);
+
+        UpdateValues();
+    }
+
+    public void UpdateValues() {
+        CharacterMotor character = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterMotor>();
+        /*walkDropdown.value = (int) character.walkBehaviour - 1;
+        jumpDropdown.value = (int) character.jumpBehaviour - 1;
+        walkSpeedSlider.value = character.walkSpeed;*/
+        character.walkBehaviour = (CharacterMotor.WalkBehaviour)walkDropdown.value + 1;
+        character.jumpBehaviour = (CharacterMotor.JumpBehaviour) jumpDropdown.value + 1;
+        character.walkSpeed = walkSpeedSlider.value;
     }
 }
