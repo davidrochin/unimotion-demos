@@ -17,7 +17,7 @@ public class PlayerCamera : MonoBehaviour {
 
     Collider playerCollider;
 
-    void Awake() {
+    public virtual void Awake() {
         //Cursor.lockState = CursorLockMode.Locked;
         virtualJoystick = VirtualJoystick.GetById(1);
 
@@ -27,7 +27,7 @@ public class PlayerCamera : MonoBehaviour {
         }
     }
 
-    private void Update() {
+    public virtual void Update() {
         if (Input.GetMouseButton(1)) {
             Vector3 dir = (character.transform.position - transform.position);
             character.ForceTurnTowards(new Vector3(dir.x, 0f, dir.z).normalized);
@@ -97,5 +97,10 @@ public class PlayerCamera : MonoBehaviour {
             }
         }
         return new RaycastHit();
+    }
+
+    private void OnDrawGizmosSelected() {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawSphere(character.transform.position + targetOffset, 0.1f);
     }
 }

@@ -95,6 +95,7 @@ ModelImporter:
     100174: UpperLeg.L
     100176: UpperLeg.R
     100178: Waist
+    100180: demo_character_b
     400000: //RootNode
     400002: anime_body_male
     400004: Armature
@@ -185,15 +186,18 @@ ModelImporter:
     400174: UpperLeg.L
     400176: UpperLeg.R
     400178: Waist
+    400180: demo_character_b
     2100000: Metal
     2100002: Leather
     2100004: Fabric
     2100006: Fabric Green
     2100008: Skin
     2100010: No Name
+    2100012: Skin.002
     4300000: armor_faraam
     4300002: human_body_male
     4300004: anime_body_male
+    4300006: demo_character_b
     7400000: Armature|man_a_tpose
     7400002: Armature|man_death_front
     7400004: Armature|man_falling
@@ -213,6 +217,7 @@ ModelImporter:
     13700000: anime_body_male
     13700002: armor_faraam
     13700004: human_body_male
+    13700006: demo_character_b
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -431,7 +436,21 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.14380863
+        functionName: SoundFootstep
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.5704057
+        functionName: SoundFootstep
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -468,22 +487,22 @@ ModelImporter:
       name: Armature|man_running_forward_3
       takeName: Armature|man_running_forward_3
       firstFrame: 0
-      lastFrame: 75
+      lastFrame: 16
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 1
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []

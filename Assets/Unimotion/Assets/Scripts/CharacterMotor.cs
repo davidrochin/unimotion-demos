@@ -591,8 +591,12 @@ public class CharacterMotor : MonoBehaviour {
     }
 
     public void TurnTowards(Vector3 direction) {
+        TurnTowards(direction, turnSpeed);
+    }
+
+    public void TurnTowards(Vector3 direction, float speed) {
         if (turnBehaviour == TurnBehaviour.Normal) {
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(direction, -Physics.gravity.normalized), turnSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(direction, -Physics.gravity.normalized), speed * Time.deltaTime);
         } else if (turnBehaviour == TurnBehaviour.Instant) {
             transform.rotation = Quaternion.LookRotation(direction, -Physics.gravity.normalized);
         }
