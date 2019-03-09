@@ -33,9 +33,9 @@ public class PlayerCamera : MonoBehaviour {
             character.ForceTurnTowards(new Vector3(dir.x, 0f, dir.z).normalized);
         }
 
-        /*if (Input.GetKeyDown(KeyCode.Z)) {
+        if (Input.GetKeyDown(KeyCode.Z)) {
             Cursor.lockState = Cursor.lockState == CursorLockMode.Locked ? CursorLockMode.None : CursorLockMode.Locked;
-        }*/
+        }
     }
 
     public void Follow() {

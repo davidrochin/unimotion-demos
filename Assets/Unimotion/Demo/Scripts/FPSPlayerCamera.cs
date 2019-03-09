@@ -12,7 +12,7 @@ public class FPSPlayerCamera : PlayerCamera {
 
     public override void Update() {
         base.Update();
-        character.TurnTowards(transform.forward - Vector3.Project(transform.forward, -Physics.gravity.normalized), 1000f);
+        //character.TurnTowards(transform.forward - Vector3.Project(transform.forward, -Physics.gravity.normalized), 1000f);
     }
 
 }

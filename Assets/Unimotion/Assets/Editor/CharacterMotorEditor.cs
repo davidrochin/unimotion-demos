@@ -175,7 +175,7 @@ public class CharacterMotorEditor : Editor {
             EditorGUILayout.LabelField("Velocity: " + motor.velocity, EditorStyles.helpBox);
 
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField(motor.state.grounded ? "Grounded" : "Not Grounded", EditorStyles.helpBox, GUILayout.MaxWidth(300));
+            EditorGUILayout.LabelField(motor.Grounded ? "Grounded" : "Not Grounded", EditorStyles.helpBox, GUILayout.MaxWidth(300));
             EditorGUILayout.LabelField(motor.state.sliding ? "Sliding" : "Not Sliding", EditorStyles.helpBox, GUILayout.MaxWidth(300));
             EditorGUILayout.LabelField(motor.state.stuck ? "Stuck" : "Not Stuck", EditorStyles.helpBox, GUILayout.MaxWidth(300));
             EditorGUILayout.EndHorizontal();

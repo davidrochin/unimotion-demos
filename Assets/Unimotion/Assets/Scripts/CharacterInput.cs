@@ -24,9 +24,12 @@ public class CharacterInput : MonoBehaviour {
 
     void Update () {
 
-        if(GetInputMagnitude() > 0.05f) {
-            character.TurnTowards(GetInputVector());
-            character.Walk(GetInputVector() * GetInputMagnitude() * (Input.GetButton("B") ? 1.5f : 1f));
+        float inputMagnitude = GetInputMagnitude();
+        Vector3 inputVector = GetInputVector();
+
+        if (inputMagnitude > 0.05f) {
+            character.TurnTowards(inputVector);
+            character.Walk(inputVector * inputMagnitude * (Input.GetKey(KeyCode.LeftShift) ? 1.5f : 1f) * (Input.GetKey(KeyCode.LeftAlt) ? 0.5f : 1f));
         }
 
         if (Input.GetButtonDown("Jump")) {
