@@ -11,6 +11,10 @@ public class CharacterMotor : MonoBehaviour {
     public WalkBehaviour walkBehaviour;
     [Tooltip("How fast the character should walk (in m/s).")] [Range(0.01f, 20)] public float walkSpeed = 7f; public float maxWalkMagnitude = 2f;
     [Range(0f, 32f)] public float walkSmoothness = 16f;
+    public bool smoothDirection = true;
+    public bool smoothSpeed = true;
+
+    // Slopes
     [Tooltip("The maximum slope angle the Character can climb.")] [Range(5f, 85f)] public float slopeLimit = 50f;
     public SlopeBehaviour slopeBehaviour = SlopeBehaviour.Slide;
 
@@ -655,10 +659,11 @@ public class CharacterMotor : MonoBehaviour {
     public Vector3 debugPoint2;
 
     private void OnDrawGizmosSelected() {
+        Gizmos.color = Color.blue;
         Gizmos.DrawRay(transform.position, procesedInput);
 
         Gizmos.color = Color.red;
-        Gizmos.DrawRay(transform.position, debugDirection);
+        //Gizmos.DrawRay(transform.position, debugDirection);
 
         //Gizmos.color = new Color(Color.red.r, Color.red.g, Color.red.b, 0.5f);
         //Gizmos.DrawWireSphere(stuckPosition + transform.up * collider.radius, collider.radius);

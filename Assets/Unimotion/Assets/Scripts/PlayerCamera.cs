@@ -18,7 +18,10 @@ public class PlayerCamera : MonoBehaviour {
     Collider playerCollider;
 
     public virtual void Awake() {
-        //Cursor.lockState = CursorLockMode.Locked;
+
+        DontDestroyOnLoad(this);
+
+        Cursor.lockState = CursorLockMode.Locked;
         virtualJoystick = VirtualJoystick.GetById(1);
 
         if (character != null) {

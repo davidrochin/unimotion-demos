@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor.Animations;
+#endif
+
 public class UnimotionUtil {
 
     public static RaycastHit[] hits = new RaycastHit[20];
@@ -56,5 +60,21 @@ public class UnimotionUtil {
         }
         return meanDirection;
     }
+
+    #if UNITY_EDITOR
+    public static void CreateParametersOnAnimator(Animator animator) {
+        AnimatorController ac = (AnimatorController)animator.runtimeAnimatorController;
+        ac.parameters = new AnimatorControllerParameter[0];
+        ac.AddParameter("Forward Move", AnimatorControllerParameterType.Float);
+        ac.AddParameter("Strafe Move", AnimatorControllerParameterType.Float);
+        ac.AddParameter("Move Speed", AnimatorControllerParameterType.Float);
+        ac.AddParameter("Max Move Speed", AnimatorControllerParameterType.Float);
+        ac.AddParameter("Upwards Speed", AnimatorControllerParameterType.Float);
+        ac.AddParameter("Sideways Speed", AnimatorControllerParameterType.Float);
+        ac.AddParameter("Grounded", AnimatorControllerParameterType.Bool);
+        ac.AddParameter("Sliding", AnimatorControllerParameterType.Bool);
+        ac.AddParameter("Stuck", AnimatorControllerParameterType.Bool);
+    }
+    #endif
 
 }

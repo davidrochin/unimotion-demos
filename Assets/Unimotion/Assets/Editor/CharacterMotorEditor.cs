@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEditor.Animations;
+using UnityEngine;
 
 [CustomEditor(typeof(CharacterMotor))]
 [CanEditMultipleObjects]
@@ -58,7 +56,11 @@ public class CharacterMotorEditor : Editor {
         EditorGUILayout.PropertyField(serializedObject.FindProperty("walkBehaviour"), new GUIContent("Walking"));
         if (motor.walkBehaviour != CharacterMotor.WalkBehaviour.None) {
             EditorGUILayout.PropertyField(serializedObject.FindProperty("walkSpeed"), new GUIContent("Speed"));
-            if (motor.walkBehaviour == CharacterMotor.WalkBehaviour.Smoothed) { EditorGUILayout.PropertyField(serializedObject.FindProperty("walkSmoothness"), new GUIContent("Smoothness")); }
+            if (motor.walkBehaviour == CharacterMotor.WalkBehaviour.Smoothed) {
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("walkSmoothness"), new GUIContent("Smoothness"));
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("smoothDirection"), new GUIContent("Smooth direction"));
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("smoothSpeed"), new GUIContent("Smooth speed"));
+            }
             EditorGUILayout.PropertyField(serializedObject.FindProperty("slopeLimit"), new GUIContent("Max Slope"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("slopeBehaviour"), new GUIContent("Slope Behaviour"));
         }
@@ -71,7 +73,7 @@ public class CharacterMotorEditor : Editor {
         EditorGUILayout.PropertyField(serializedObject.FindProperty("jumpBehaviour"), new GUIContent("Jumping"));
         if (motor.jumpBehaviour != CharacterMotor.JumpBehaviour.None) {
             EditorGUILayout.PropertyField(serializedObject.FindProperty("jumpForce"), new GUIContent("Force"));
-            if(motor.jumpBehaviour == CharacterMotor.JumpBehaviour.SmoothControl) {
+            if (motor.jumpBehaviour == CharacterMotor.JumpBehaviour.SmoothControl) {
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("airControl"), new GUIContent("Air control"));
             }
             EditorGUILayout.PropertyField(serializedObject.FindProperty("canJumpWhileSliding"), new GUIContent("Jump while sliding"));
@@ -151,7 +153,7 @@ public class CharacterMotorEditor : Editor {
                     // Alert: Animator not configured
                 }
             }
-            
+
         }
         EditorGUILayout.EndVertical();
 
