@@ -1,9 +1,12 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SceneLinkManager : MonoBehaviour {
 
     public static SceneLinkManager instance;
+
 
     void Awake() {
         if (instance != null) {
@@ -14,9 +17,8 @@ public class SceneLinkManager : MonoBehaviour {
         }
     }
 
-    // Update is called once per frame
     void Update() {
-
+        
     }
 
     public void TeleportPlayer(SceneLink link, Player player) {
@@ -24,7 +26,6 @@ public class SceneLinkManager : MonoBehaviour {
     }
 
     public void TeleportPlayer(string sceneName, string markerId, Player player) {
-        SceneManager.LoadScene(sceneName);
 
         UnityEngine.Events.UnityAction<Scene, LoadSceneMode> tmpDelegate = null;
         tmpDelegate = delegate (Scene scene, LoadSceneMode mode) {
@@ -38,8 +39,9 @@ public class SceneLinkManager : MonoBehaviour {
             }
             SceneManager.sceneLoaded -= tmpDelegate;
         };
-
+        
         SceneManager.sceneLoaded += tmpDelegate;
+        SceneManager.LoadScene(sceneName);
     }
 
 }

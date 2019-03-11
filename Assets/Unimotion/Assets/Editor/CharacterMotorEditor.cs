@@ -133,6 +133,7 @@ public class CharacterMotorEditor : Editor {
         EditorGUILayout.PropertyField(serializedObject.FindProperty("outputToAnimator"), new GUIContent("Output to Animator"));
         if (motor.outputToAnimator) {
             EditorGUILayout.PropertyField(serializedObject.FindProperty("animator"), new GUIContent("Animator"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("smoothMoveParameters"), new GUIContent("Smooth move parameters"));
 
             // Create Animation Parameters Button
             if (GUILayout.Button("Create Animator Parameters")) {
@@ -142,6 +143,7 @@ public class CharacterMotorEditor : Editor {
                     ac.parameters = new AnimatorControllerParameter[0];
                     ac.AddParameter("Forward Move", AnimatorControllerParameterType.Float);
                     ac.AddParameter("Strafe Move", AnimatorControllerParameterType.Float);
+                    ac.AddParameter("Move", AnimatorControllerParameterType.Float);
                     ac.AddParameter("Move Speed", AnimatorControllerParameterType.Float);
                     ac.AddParameter("Max Move Speed", AnimatorControllerParameterType.Float);
                     ac.AddParameter("Upwards Speed", AnimatorControllerParameterType.Float);

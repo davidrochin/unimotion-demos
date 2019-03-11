@@ -47,6 +47,7 @@ public class CharacterMotor : MonoBehaviour {
     // Animation
     public bool outputToAnimator;
     public Animator animator;
+    public bool smoothMoveParameters = true;
 
     #endregion
 
@@ -639,9 +640,19 @@ public class CharacterMotor : MonoBehaviour {
 
     public void UpdateAnimator() {
         if (outputToAnimator && animator != null) {
-            animator.SetFloat("Forward Move", Vector3.Dot(inputVectorCached, transform.forward));
-            animator.SetFloat("Strafe Move", Vector3.Dot(inputVectorCached, transform.right));
-            animator.SetFloat("Move Speed", inputVectorCached.magnitude);
+
+            const float Roughness = 4f;
+
+            float forwardMove = Vector3.Dot(inputVectorCached, transform.forward);
+            animator.SetFloat("Forward Move", smoothMoveParameters ? Mathf.MoveTowards(animator.GetFloat("Forward Move"), forwardMove, Roughness * Time.deltaTime) : forwardMove);
+
+            float strafeMove = Vector3.Dot(inputVectorCached, transform.right);
+            animator.SetFloat("Strafe Move", smoothMoveParameters ? Mathf.MoveTowards(animator.GetFloat("Strafe Move"), strafeMove, Roughness * Time.deltaTime) : strafeMove);
+
+            float speed = (inputVectorCached - Vector3.Project(inputVectorCached, -Physics.gravity.normalized)).magnitude;
+            animator.SetFloat("Move Speed", smoothMoveParameters ? Mathf.MoveTowards(animator.GetFloat("Move Speed"), speed, Roughness * Time.deltaTime) : speed);
+
+            animator.SetFloat("Move", inputVectorCached.magnitude);
             animator.SetFloat("Max Move Speed", maxWalkMagnitude);
             animator.SetFloat("Upwards Speed", Vector3.Dot(velocity, -Physics.gravity.normalized));
             animator.SetFloat("Sideways Speed", (velocity - Vector3.Project(velocity, -Physics.gravity.normalized)).magnitude);

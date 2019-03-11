@@ -23,8 +23,11 @@ public class Door : MonoBehaviour {
     private Vector3 openPos;
     private float slidingDistance = 1.2f;
 
+    private Quaternion initRotation;
+
 
     void Start() {
+        initRotation = transform.rotation;
         closedPos = transform.position;
         closedRot = transform.rotation;
         openPos = transform.position + transform.right * slidingDistance;
@@ -38,7 +41,7 @@ public class Door : MonoBehaviour {
             transform.rotation = Quaternion.RotateTowards(transform.rotation, open ? openRot : closedRot, rotatingSpeed * Time.deltaTime);
         }
 
-        if(Physics.OverlapSphere(closedPos + detectionOffset, detectionRadius, detectionLayer).Length > 0) {
+        if(Physics.OverlapSphere(closedPos + initRotation * detectionOffset, detectionRadius, detectionLayer).Length > 0) {
             open = true;
         } else {
             open = false;
@@ -48,7 +51,7 @@ public class Door : MonoBehaviour {
 
     void OnDrawGizmosSelected() {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position + detectionOffset, detectionRadius);
+        Gizmos.DrawWireSphere(transform.position + transform.rotation * detectionOffset, detectionRadius);
     }
 
     public enum Type { Rotating, Sliding }
