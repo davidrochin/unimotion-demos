@@ -12,6 +12,8 @@ ModelImporter:
     100012: sofa?01
     100014: sofa_01
     100016: curtain_pole
+    100018: chair_01
+    100020: curtain_01
     400000: bed_01
     400002: demo_character_b
     400004: floor_M
@@ -21,6 +23,8 @@ ModelImporter:
     400012: sofa?01
     400014: sofa_01
     400016: curtain_pole
+    400018: chair_01
+    400020: curtain_01
     2100000: No Name
     2100002: Skin.003
     2300000: bed_01
@@ -31,6 +35,8 @@ ModelImporter:
     2300010: sofa?01
     2300012: sofa_01
     2300014: curtain_pole
+    2300016: chair_01
+    2300018: curtain_01
     3300000: bed_01
     3300002: demo_character_b
     3300004: floor_M
@@ -39,6 +45,8 @@ ModelImporter:
     3300010: sofa?01
     3300012: sofa_01
     3300014: curtain_pole
+    3300016: chair_01
+    3300018: curtain_01
     4300000: bed_01
     4300002: floor_M
     4300004: demo_character_b
@@ -47,6 +55,9 @@ ModelImporter:
     4300010: sofa?01
     4300012: sofa_01
     4300014: curtain_pole
+    4300016: chair_01
+    4300018: curtain_01
+    2186277476908879412: ImportLogs
   externalObjects: {}
   materials:
     importMaterials: 1
