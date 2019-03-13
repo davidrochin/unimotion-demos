@@ -100,9 +100,9 @@ public class CharacterMotor : MonoBehaviour {
     void Start() {
         // Test events
         //OnWalk += () => Debug.Log("OnWalk");
-        OnJump += () => Debug.Log("OnJump");
+        /*OnJump += () => Debug.Log("OnJump");
         OnLand += () => Debug.Log("OnLand");
-        OnCrush += () => Debug.LogWarning("OnCrush");
+        OnCrush += () => Debug.LogWarning("OnCrush");*/
         //OnDepenetrate += () => Debug.Log("OnDepenetrate");
     }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unimotion;
 using UnityEngine;
 
 public class SceneLink : MonoBehaviour {
@@ -10,43 +11,52 @@ public class SceneLink : MonoBehaviour {
 
     public LayerMask characterMask;
 
+    private bool stop = false;
+
     void Start() {
 
     }
 
-    void LateUpdate() { 
+    void LateUpdate() {
 
-        if(fade){
-            fadeOverlay = new Color(fadeOverlay.r, fadeOverlay.g, fadeOverlay.b, Mathf.Clamp01(fadeOverlay.a + 1f * Time.deltaTime));
-        } else {
-            fadeOverlay = new Color(fadeOverlay.r, fadeOverlay.g, fadeOverlay.b, Mathf.Clamp01(fadeOverlay.a - 1f * Time.deltaTime));
-        }
+        if (stop == false) {
+            if (fade) {
+                fadeOverlay = new Color(fadeOverlay.r, fadeOverlay.g, fadeOverlay.b, Mathf.Clamp01(fadeOverlay.a + 2f * Time.deltaTime));
+            } else {
+                fadeOverlay = new Color(fadeOverlay.r, fadeOverlay.g, fadeOverlay.b, Mathf.Clamp01(fadeOverlay.a - 2f * Time.deltaTime));
+            }
 
-        if(fadeOverlay.a >= 1f) {
-            faded = true;
-            SceneLinkManager.instance.TeleportPlayer(this, player);
-        } else {
-            faded = false;
-        }
+            if (fadeOverlay.a >= 1f) {
+                faded = true;
+                GameManager.GoToScene(scene, markerId);
+                stop = true;
+            } else {
+                faded = false;
+            }
 
-        Collider[] cols = Physics.OverlapBox(transform.position, size * 0.5f, transform.rotation, characterMask);
-        if (cols.Length > 0) {
-            foreach(Collider c in cols){
-                Player player = c.GetComponent<Player>();
-                if(player != null) {
-                    fade = true;
-                    this.player = player;
-                    break;
+            if (!fade) {
+                Collider[] cols = Physics.OverlapBox(transform.position, size * 0.5f, transform.rotation, characterMask);
+                if (cols.Length > 0) {
+                    foreach (Collider c in cols) {
+                        Player player = c.GetComponent<Player>();
+                        if (player != null && player.photonView.IsMine) {
+                            Debug.Log("Link to " + scene + ", marker " + markerId + " activated...");
+                            fade = true;
+                            this.player = player;
+                            break;
+                        }
+                    }
                 }
             }
         }
-	}
+
+    }
 
     public Player player;
     public bool fade = false;
     public bool faded = false;
     public Color fadeOverlay = Color.clear;
-    
+
 
     void OnGUI() {
 
@@ -73,5 +83,5 @@ public class SceneLink : MonoBehaviour {
         Gizmos.color = new Color(0f, 0.3f, 0f, 0.3f);
         Gizmos.DrawWireCube(Vector3.zero, size);
     }
-    
+
 }

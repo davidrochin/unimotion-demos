@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4432185520692694490}
   - component: {fileID: 4464650569605588624}
   - component: {fileID: 4458167701066300776}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: curtain_pole_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}

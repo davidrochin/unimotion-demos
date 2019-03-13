@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Unimotion;
 
 public class SceneLinkManager : MonoBehaviour {
 
@@ -32,7 +33,7 @@ public class SceneLinkManager : MonoBehaviour {
             Marker[] markers = FindObjectsOfType<Marker>();
             foreach (Marker m in markers) {
                 if (markerId.Equals(m.id)) {
-                    player.transform.position = m.transform.position;
+                    player.transform.position = m.transform.position + Vector3.up * 0.01f;
                     player.transform.rotation = Quaternion.LookRotation(m.transform.forward, -Physics.gravity.normalized);
                     break;
                 }
