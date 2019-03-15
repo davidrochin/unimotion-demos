@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Unimotion;
 using Photon.Pun;
@@ -13,18 +14,24 @@ public class GameManager : MonoBehaviourPunCallbacks {
     public GameObject playerPrefab;
     public static Unimotion.Player localPlayer;
 
-    public static string targetScene = "apartment_01";
-    public static string targetMarkerId = "1";
+    [Header("Texts")]
+    public SystemText systemText;
 
-    public string startingSceneName;
+    private static string targetScene = "apartment_02";
+    private static string targetMarkerId = "1";
 
     void Awake() {
         DontDestroyOnLoad(this);
         DontDestroyOnLoad(Camera.main);
+
+        // Mark all the things on the current scene as DontDestroyOnLoad
+        foreach (GameObject mb in SceneManager.GetSceneByName("main").GetRootGameObjects()) {
+            DontDestroyOnLoad(mb);
+        }
     }
 
     void Start () {
-        Debug.Log("Connecting to master...");
+        systemText.ShowText("Connecting to master...");
         networkManager.ConnectToMaster();
     }
 
@@ -33,25 +40,37 @@ public class GameManager : MonoBehaviourPunCallbacks {
         targetScene = sceneName;
         targetMarkerId = markerId;
 
-        Debug.Log("Leaving room...");
-        if(PhotonNetwork.CurrentRoom != null) {
-            PhotonNetwork.LeaveRoom();
+        if(PhotonNetwork.OfflineMode == false) {
+            if (PhotonNetwork.CurrentRoom != null) {
+                PhotonNetwork.LeaveRoom();
+            }
+        } else {
+            PhotonNetwork.Destroy(localPlayer.photonView);
+            FindObjectOfType<GameManager>().OnJoinedRoom();
         }
         
     }
 
     public override void OnConnectedToMaster() {
         //GameManager.GoToScene("apartment_01", "1");
+
+        if(PhotonNetwork.OfflineMode == true) {
+            systemText.ShowText("Creating offline room...");
+            PhotonNetwork.JoinOrCreateRoom("offline", new RoomOptions() { MaxPlayers = 20 }, TypedLobby.Default);
+        }
+
         PhotonNetwork.JoinLobby();
     }
 
     public override void OnJoinedLobby() {
         Debug.Log("Creating or joining to room " + targetScene + "...");
+        systemText.ShowText("Joining " + targetScene + "...");
         PhotonNetwork.JoinOrCreateRoom(targetScene, new RoomOptions() { MaxPlayers = 20 }, TypedLobby.Default);
     }
 
     public override void OnJoinedRoom() {
         Debug.Log("Joined room");
+        systemText.ShowText("Joined " + targetScene + "...");
         localPlayer = PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.identity).GetComponent<Unimotion.Player>();
 
         PlayerCamera camera = Camera.main.GetComponent<PlayerCamera>();

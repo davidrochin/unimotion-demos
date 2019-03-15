@@ -62,6 +62,20 @@ public class CharacterInput : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.F)) {
             character.AddForce(transform.forward * 500f);
         }
+
+        // For object interactions
+
+        if(Input.mouseScrollDelta.y < 0f && Interactable.active != null) {
+            Interactable.active.SelectNext();
+        }
+
+        if (Input.mouseScrollDelta.y > 0f && Interactable.active != null) {
+            Interactable.active.SelectPrevious();
+        }
+
+        if (Input.GetMouseButtonDown(0) && Interactable.active != null) {
+            Interactable.active.DoSelectedAction();
+        }
     }
 
     Vector3 GetInputVector() {

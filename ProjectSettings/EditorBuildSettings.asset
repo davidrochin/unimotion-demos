@@ -17,3 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Personal/Scenes/apartment_01.unity
     guid: b0dfbd9d26eb50742b8c7799186c9e30
+  - enabled: 1
+    path: Assets/Personal/Scenes/apartment_02.unity
+    guid: 1b0db03da1e80e843b8550fd62197314
+  m_configObjects: {}

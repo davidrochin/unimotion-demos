@@ -24,6 +24,8 @@ ModelImporter:
     100036: stairs_02_O
     100038: wall_04
     100040: floor_S
+    100042: stairs_01_O
+    100044: wall_05
     400000: //RootNode
     400002: demo_character_b
     400004: floor
@@ -45,6 +47,8 @@ ModelImporter:
     400036: stairs_02_O
     400038: wall_04
     400040: floor_S
+    400042: stairs_01_O
+    400044: wall_05
     2100000: No Name
     2100002: Skin.003
     2300000: demo_character_b
@@ -67,6 +71,8 @@ ModelImporter:
     2300034: stairs_02_O
     2300036: wall_04
     2300038: floor_S
+    2300040: stairs_01_O
+    2300042: wall_05
     3300000: demo_character_b
     3300002: floor
     3300004: wall_classroom_01
@@ -87,6 +93,8 @@ ModelImporter:
     3300034: stairs_02_O
     3300036: wall_04
     3300038: floor_S
+    3300040: stairs_01_O
+    3300042: wall_05
     4300000: wall_classroom_01
     4300002: floor
     4300004: demo_character_b
@@ -107,6 +115,8 @@ ModelImporter:
     4300034: stairs_02_O
     4300036: wall_04
     4300038: floor_S
+    4300040: stairs_01_O
+    4300042: wall_05
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -141,6 +151,7 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
     importVisibility: 0
     importBlendShapes: 1
     importCameras: 0
@@ -165,6 +176,9 @@ ModelImporter:
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
   importAnimation: 1
   copyAvatar: 0
   humanDescription:

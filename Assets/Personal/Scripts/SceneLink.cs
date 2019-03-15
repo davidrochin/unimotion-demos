@@ -41,6 +41,7 @@ public class SceneLink : MonoBehaviour {
                         Player player = c.GetComponent<Player>();
                         if (player != null && player.photonView.IsMine) {
                             Debug.Log("Link to " + scene + ", marker " + markerId + " activated...");
+                            FindObjectOfType<SystemText>().ShowText("Leaving room...");
                             fade = true;
                             this.player = player;
                             break;
