@@ -8,6 +8,7 @@ public class CharacterMotor : MonoBehaviour {
     #region User Settings
 
     // Walking
+    public bool canWalk = true;
     public WalkBehaviour walkBehaviour;
     [Tooltip("How fast the character should walk (in m/s).")] [Range(0.01f, 20)] public float walkSpeed = 7f; public float maxWalkMagnitude = 2f;
     [Range(0f, 32f)] public float walkSmoothness = 16f;
@@ -19,12 +20,14 @@ public class CharacterMotor : MonoBehaviour {
     public SlopeBehaviour slopeBehaviour = SlopeBehaviour.Slide;
 
     // Turning
+    public bool canTurn = true;
     public TurnBehaviour turnBehaviour = TurnBehaviour.Normal;
     [Tooltip("How fast the character should turn (in degrees/s).")] public float turnSpeed = 400f;
 
     // Jumping
+    public bool canJump = true;
     [Range(1f, 30f)] public float jumpForce = 10f;
-    public JumpBehaviour jumpBehaviour = JumpBehaviour.TotalControl;
+    public AirBehaviour airBehaviour = AirBehaviour.TotalControl;
     [Range(0f, 10f)] public float airControl = 4f;
     public bool canJumpWhileSliding = true;
 
@@ -141,15 +144,15 @@ public class CharacterMotor : MonoBehaviour {
                     break;
             }
         } else {
-            switch (jumpBehaviour) {
-                case JumpBehaviour.TotalControl:
+            switch (airBehaviour) {
+                case AirBehaviour.TotalControl:
                     procesedInput = input; input = Vector3.zero;
                     Move(procesedInput * walkSpeed * Time.deltaTime);
                     break;
-                case JumpBehaviour.FixedVelocity:
+                case AirBehaviour.FixedVelocity:
                     Move(procesedInput * walkSpeed * Time.deltaTime);
                     break;
-                case JumpBehaviour.SmoothControl:
+                case AirBehaviour.SmoothControl:
                     procesedInput = Vector3.MoveTowards(procesedInput, input, airControl * Time.deltaTime); input = Vector3.zero;
                     Move(procesedInput * walkSpeed * Time.deltaTime);
                     break;
@@ -164,9 +167,10 @@ public class CharacterMotor : MonoBehaviour {
         // Apply movement from velocity
         Move(velocity * Time.deltaTime);
 
+        // Push away characters
         Push();
 
-        // Push away Rigidbodies
+        // Push away rigidbodies
         Collider[] cols = Physics.OverlapCapsule(transform.position + transform.up * collider.radius, transform.position + transform.up * collider.height - transform.up * collider.radius, collider.radius, rigidbodyMask);
         foreach (Collider col in cols) {
             col.GetComponent<Rigidbody>().WakeUp();
@@ -175,6 +179,15 @@ public class CharacterMotor : MonoBehaviour {
         // Rotate feet towards gravity direction
         Quaternion fromToRotation = Quaternion.FromToRotation(transform.up, -Physics.gravity.normalized);
         transform.rotation = fromToRotation * transform.rotation;
+
+        // If Turn Behaviour is Persistent, rotate to persistent direction
+        if(canTurn && turnBehaviour == TurnBehaviour.Persistant && persistantTurningDirection != null) {
+            TurnTowards(persistantTurningDirection.Value, TurnBehaviour.Normal);
+
+            if(transform.forward == persistantTurningDirection.Value) {
+                persistantTurningDirection = null;
+            }
+        }
 
     }
 
@@ -356,7 +369,7 @@ public class CharacterMotor : MonoBehaviour {
         state.previouslyGrounded = Grounded;
 
         // Check the floor beneath (even if the Character is not touching it)
-        RaycastHit floorHit; bool didHit = Physics.SphereCast(transform.position + transform.up * collider.height - transform.up * collider.radius, collider.radius, -transform.up, out floorHit, float.MaxValue, collisionMask);
+        RaycastHit floorHit; bool didHit = Physics.SphereCast(transform.position + transform.up * collider.height - transform.up * collider.radius, collider.radius, -transform.up, out floorHit, float.MaxValue, collisionMask, QueryTriggerInteraction.Ignore);
         if (didHit) {
             state.floor = floorHit.transform;
             state.floorCollider = floorHit.collider;
@@ -368,7 +381,7 @@ public class CharacterMotor : MonoBehaviour {
         state.sliding = true;
 
         // Check for ground
-        RaycastHit[] hits = Physics.SphereCastAll(transform.position + transform.up * collider.height - transform.up * collider.radius, collider.radius, -transform.up, collider.height - collider.radius * 2f + collider.radius, collisionMask);
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position + transform.up * collider.height - transform.up * collider.radius, collider.radius, -transform.up, collider.height - collider.radius * 2f + collider.radius, collisionMask, QueryTriggerInteraction.Ignore);
 
         if (hits.Length > 0 && Vector3.Dot(velocity, Physics.gravity.normalized) >= 0f) {
             bool validFloor = false;
@@ -466,7 +479,7 @@ public class CharacterMotor : MonoBehaviour {
         if (characterCollisionBehaviour == CharacterMotorCollisionBehaviour.Collide) { finalCollisionMask = finalCollisionMask | characterMask; }
         if (rigidbodyCollisionBehaviour == RigidbodyCollisionBehaviour.Collide) { finalCollisionMask = finalCollisionMask | rigidbodyMask; }
 
-        Collider[] cols = Overlap(finalCollisionMask, QueryTriggerInteraction.UseGlobal);
+        Collider[] cols = Overlap(finalCollisionMask, QueryTriggerInteraction.Ignore);
         bool stuck = (cols.Length > 0 ? true : false);
         //Debug.Log("stuck: " + stuck + ". length: " + cols.Length);
 
@@ -489,7 +502,7 @@ public class CharacterMotor : MonoBehaviour {
 
             iterations++;
 
-            cols = Overlap(finalCollisionMask, QueryTriggerInteraction.UseGlobal);
+            cols = Overlap(finalCollisionMask, QueryTriggerInteraction.Ignore);
             stuck = (cols.Length > 0 ? true : false);
 
             while (stuck && iterations < maxIterations[(int)collisionQuality]) {
@@ -505,7 +518,7 @@ public class CharacterMotor : MonoBehaviour {
 
                 iterations++;
 
-                cols = Overlap(finalCollisionMask, QueryTriggerInteraction.UseGlobal);
+                cols = Overlap(finalCollisionMask, QueryTriggerInteraction.Ignore);
                 stuck = (cols.Length > 0 ? true : false);
 
             }
@@ -524,7 +537,7 @@ public class CharacterMotor : MonoBehaviour {
     void StickToSlope() {
 
         RaycastHit hit;
-        bool didHit = Physics.SphereCast(transform.position + transform.up * collider.radius, collider.radius, Physics.gravity.normalized, out hit, collider.radius, collisionMask);
+        bool didHit = Physics.SphereCast(transform.position + transform.up * collider.radius, collider.radius, Physics.gravity.normalized, out hit, collider.radius, collisionMask, QueryTriggerInteraction.Ignore);
 
         if (state.previouslyGrounded && didHit && Vector3.Angle(-Physics.gravity.normalized, hit.normal) <= 45f && Vector3.Dot(velocity, Physics.gravity.normalized) >= 0f) {
             Vector3 hyp;
@@ -602,19 +615,17 @@ public class CharacterMotor : MonoBehaviour {
     #region Public methods
 
     public void Walk(Vector3 delta) {
-        if (walkBehaviour != WalkBehaviour.None) {
+        if (canWalk) {
             input = delta;
             if (OnWalk != null && procesedInput.magnitude <= 0f && input.magnitude > 0f) { OnWalk(); }
         }
     }
 
     public void Jump() {
-        if ((Grounded || Debug.isDebugBuild) && jumpBehaviour != JumpBehaviour.None) {
+        if ((Grounded || Debug.isDebugBuild) && canJump) {
             velocity = velocity - Physics.gravity.normalized * jumpForce;
             Grounded = false;
-            if (OnJump != null) {
-                OnJump();
-            }
+            OnJump?.Invoke();
         }
     }
 
@@ -626,10 +637,18 @@ public class CharacterMotor : MonoBehaviour {
         throw new System.NotImplementedException();
     }
 
+    public Vector3? persistantTurningDirection = null;
+
     public void TurnTowards(Vector3 direction) {
-        if (turnBehaviour == TurnBehaviour.Normal) {
+        TurnTowards(direction, turnBehaviour);
+    }
+
+    public void TurnTowards(Vector3 direction, TurnBehaviour behaviour) {
+        if (behaviour == TurnBehaviour.Normal) {
             transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(direction, -Physics.gravity.normalized), turnSpeed * Time.deltaTime);
-        } else if (turnBehaviour == TurnBehaviour.Instant) {
+        } else if (behaviour == TurnBehaviour.Persistant) {
+            persistantTurningDirection = direction;
+        } else if (behaviour == TurnBehaviour.Instant) {
             transform.rotation = Quaternion.LookRotation(direction, -Physics.gravity.normalized);
         }
     }
@@ -643,21 +662,31 @@ public class CharacterMotor : MonoBehaviour {
 
             const float Roughness = 4f;
 
+            // How much the character tries to move forward [0 - 1]
             float forwardMove = Vector3.Dot(inputVectorCached, transform.forward);
-            animator.SetFloat("Forward Move", smoothMoveParameters ? Mathf.MoveTowards(animator.GetFloat("Forward Move"), forwardMove, Roughness * Time.deltaTime) : forwardMove);
+            animator.SetFloat("Forward Input Magnitude", smoothMoveParameters ? Mathf.MoveTowards(animator.GetFloat("Forward Input Magnitude"), forwardMove, Roughness * Time.deltaTime) : forwardMove);
 
+            // How much the character tries to move sideways [0 - 1]
             float strafeMove = Vector3.Dot(inputVectorCached, transform.right);
-            animator.SetFloat("Strafe Move", smoothMoveParameters ? Mathf.MoveTowards(animator.GetFloat("Strafe Move"), strafeMove, Roughness * Time.deltaTime) : strafeMove);
+            animator.SetFloat("Sideways Input Magnitude", smoothMoveParameters ? Mathf.MoveTowards(animator.GetFloat("Sideways Input Magnitude"), strafeMove, Roughness * Time.deltaTime) : strafeMove);
 
+            // How much the character tries to move in any direction [0 - 1]
+            float anyMove = inputVectorCached.magnitude;
+            animator.SetFloat("Input Magnitude", smoothMoveParameters ? Mathf.MoveTowards(animator.GetFloat("Input Magnitude"), inputVectorCached.magnitude, Roughness * Time.deltaTime) : anyMove);
+
+            // How much the character tries to move in any direction, but without taking into account up and down [0 - 1]
             float speed = (inputVectorCached - Vector3.Project(inputVectorCached, -Physics.gravity.normalized)).magnitude;
-            animator.SetFloat("Move Speed", smoothMoveParameters ? Mathf.MoveTowards(animator.GetFloat("Move Speed"), speed, Roughness * Time.deltaTime) : speed);
+            animator.SetFloat("Non Up/Down Input Magnitude", smoothMoveParameters ? Mathf.MoveTowards(animator.GetFloat("Non Up/Down Input Magnitude"), speed, Roughness * Time.deltaTime) : speed);
 
-            animator.SetFloat("Move", inputVectorCached.magnitude);
-            animator.SetFloat("Max Move Speed", maxWalkMagnitude);
             animator.SetFloat("Upwards Speed", Vector3.Dot(velocity, -Physics.gravity.normalized));
             animator.SetFloat("Sideways Speed", (velocity - Vector3.Project(velocity, -Physics.gravity.normalized)).magnitude);
+
+            // Whether the character is touching valid ground or not
             animator.SetBool("Grounded", Grounded);
+
+            // Whether the character is touching a slope that is too steep to walk on, or not
             animator.SetBool("Sliding", state.sliding);
+
             animator.SetBool("Stuck", state.stuck);
         }
     }
@@ -690,9 +719,9 @@ public class CharacterMotor : MonoBehaviour {
     public enum Part { BottomSphere, TopSphere, Center, Top, Bottom }
     public enum MovementStyle { Raw, Smoothed }
 
-    public enum WalkBehaviour { None, Normal, Smoothed }
-    public enum JumpBehaviour { None, TotalControl, FixedVelocity, SmoothControl }
-    public enum TurnBehaviour { None, Normal, Persistant, Instant }
+    public enum WalkBehaviour { Normal, Smoothed }
+    public enum AirBehaviour { TotalControl, FixedVelocity, SmoothControl }
+    public enum TurnBehaviour { Normal, Persistant, Instant }
     public enum SlopeBehaviour { Slide, PreventClimbing, PreventClimbingAndSlide }
     public enum RigidbodyCollisionBehaviour { Ignore, Collide, Push }
     public enum CharacterMotorCollisionBehaviour { Ignore, Collide, Push, SoftPush }

@@ -21,7 +21,6 @@ public class PlayerCamera : MonoBehaviour {
 
         DontDestroyOnLoad(this);
 
-        Cursor.lockState = CursorLockMode.Locked;
         virtualJoystick = VirtualJoystick.GetById(1);
 
         if (character != null) {
@@ -38,6 +37,7 @@ public class PlayerCamera : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.Z)) {
             Cursor.lockState = Cursor.lockState == CursorLockMode.Locked ? CursorLockMode.None : CursorLockMode.Locked;
+            Cursor.visible = !(Cursor.lockState == CursorLockMode.Locked);
         }
     }
 
@@ -64,7 +64,7 @@ public class PlayerCamera : MonoBehaviour {
         transform.RotateAround(transform.position, transform.right, input.y * orbitSpeed);
 
         //Antes de acomodarse en la distancia necesaria, revisar si hay una obstrucción para no pasar de ella
-        RaycastHit hit = RaycastPastItself(playerCollider, realTarget, transform.forward * -1f, distance, obstructionLayer);
+        RaycastHit hit = RaycastPastItself(playerCollider, realTarget, transform.forward * -1f, distance, obstructionLayer, QueryTriggerInteraction.Ignore);
 
         float maxDistance = 0f;
         Vector3 addition = Vector3.zero;
@@ -92,8 +92,8 @@ public class PlayerCamera : MonoBehaviour {
         }
     }
 
-    public static RaycastHit RaycastPastItself(Collider col, Vector3 startPos, Vector3 direction, float lenght, LayerMask mask) {
-        RaycastHit[] rayHits = Physics.RaycastAll(startPos, direction, lenght, mask);
+    public static RaycastHit RaycastPastItself(Collider col, Vector3 startPos, Vector3 direction, float lenght, LayerMask mask, QueryTriggerInteraction queryTriggerInteraction) {
+        RaycastHit[] rayHits = Physics.RaycastAll(startPos, direction, lenght, mask, queryTriggerInteraction);
         foreach (RaycastHit hit in rayHits) {
             if (hit.collider != col) {
                 return hit;
@@ -104,6 +104,8 @@ public class PlayerCamera : MonoBehaviour {
 
     private void OnDrawGizmosSelected() {
         Gizmos.color = Color.blue;
-        Gizmos.DrawSphere(character.transform.position + targetOffset, 0.1f);
+        if(character != null) {
+            Gizmos.DrawSphere(character.transform.position + targetOffset, 0.1f);
+        }
     }
 }

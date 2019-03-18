@@ -53,8 +53,9 @@ public class CharacterMotorEditor : Editor {
         // Walking
         EditorGUILayout.BeginVertical(EditorStyles.helpBox);
 
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("walkBehaviour"), new GUIContent("Walking"));
-        if (motor.walkBehaviour != CharacterMotor.WalkBehaviour.None) {
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("canWalk"), new GUIContent("Can walk"));
+        if (motor.canWalk) {
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("walkBehaviour"), new GUIContent("Walking"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("walkSpeed"), new GUIContent("Speed"));
             if (motor.walkBehaviour == CharacterMotor.WalkBehaviour.Smoothed) {
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("walkSmoothness"), new GUIContent("Smoothness"));
@@ -70,10 +71,11 @@ public class CharacterMotorEditor : Editor {
         // Jumping
         EditorGUILayout.BeginVertical(EditorStyles.helpBox);
 
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("jumpBehaviour"), new GUIContent("Jumping"));
-        if (motor.jumpBehaviour != CharacterMotor.JumpBehaviour.None) {
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("canJump"), new GUIContent("Can jump"));
+        if (motor.canJump) {
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("airBehaviour"), new GUIContent("Air"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("jumpForce"), new GUIContent("Force"));
-            if (motor.jumpBehaviour == CharacterMotor.JumpBehaviour.SmoothControl) {
+            if (motor.airBehaviour == CharacterMotor.AirBehaviour.SmoothControl) {
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("airControl"), new GUIContent("Air control"));
             }
             EditorGUILayout.PropertyField(serializedObject.FindProperty("canJumpWhileSliding"), new GUIContent("Jump while sliding"));
@@ -84,8 +86,9 @@ public class CharacterMotorEditor : Editor {
         // Turning
         EditorGUILayout.BeginVertical(EditorStyles.helpBox);
 
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("turnBehaviour"), new GUIContent("Turning"));
-        if (motor.turnBehaviour != CharacterMotor.TurnBehaviour.None) {
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("canTurn"), new GUIContent("Can turn"));
+        if (motor.canTurn) {
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("turnBehaviour"), new GUIContent("Turning"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("turnSpeed"), new GUIContent("Speed"));
         }
 
@@ -138,14 +141,14 @@ public class CharacterMotorEditor : Editor {
             // Create Animation Parameters Button
             if (GUILayout.Button("Create Animator Parameters")) {
                 animator = motor.animator;
-                if (animator != null && EditorUtility.DisplayDialog("Current parameters will be deleted", "This functions creates parameters in the Animator Controller for the Character Motor to fill. If you continue, all other parameters will be deleted.", "Continue", "Cancel")) {
+                if (animator != null && EditorUtility.DisplayDialog("Current parameters will be deleted", "This function creates parameters in the Animator Controller for the Character Motor to fill. If you continue, all other parameters will be deleted.", "Continue", "Cancel")) {
                     AnimatorController ac = (AnimatorController)animator.runtimeAnimatorController;
                     ac.parameters = new AnimatorControllerParameter[0];
-                    ac.AddParameter("Forward Move", AnimatorControllerParameterType.Float);
-                    ac.AddParameter("Strafe Move", AnimatorControllerParameterType.Float);
-                    ac.AddParameter("Move", AnimatorControllerParameterType.Float);
-                    ac.AddParameter("Move Speed", AnimatorControllerParameterType.Float);
-                    ac.AddParameter("Max Move Speed", AnimatorControllerParameterType.Float);
+                    ac.AddParameter("Forward Input Magnitude", AnimatorControllerParameterType.Float);
+                    ac.AddParameter("Sideways Input Magnitude", AnimatorControllerParameterType.Float);
+                    ac.AddParameter("Input Magnitude", AnimatorControllerParameterType.Float);
+                    ac.AddParameter("Non Up/Down Input Magnitude", AnimatorControllerParameterType.Float);
+
                     ac.AddParameter("Upwards Speed", AnimatorControllerParameterType.Float);
                     ac.AddParameter("Sideways Speed", AnimatorControllerParameterType.Float);
                     ac.AddParameter("Grounded", AnimatorControllerParameterType.Bool);

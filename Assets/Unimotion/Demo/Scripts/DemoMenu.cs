@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class DemoMenu : MonoBehaviour {
 
+    public GameObject initialPlayerPrefab;
+
     public RectTransform sidePanel;
     public Button togglePanelButton;
 
@@ -34,9 +36,11 @@ public class DemoMenu : MonoBehaviour {
             TogglePanel();
         });
 
+        SwapCharacter(initialPlayerPrefab);
+
         // Walk Behaviour
         walkDropdown.onValueChanged.AddListener(delegate (int value) {
-            GameObject.FindWithTag("Player").GetComponent<CharacterMotor>().walkBehaviour = (CharacterMotor.WalkBehaviour) value + 1;
+            GameObject.FindWithTag("Player").GetComponent<CharacterMotor>().walkBehaviour = (CharacterMotor.WalkBehaviour) value;
         });
 
         // Walk Speed
@@ -46,7 +50,7 @@ public class DemoMenu : MonoBehaviour {
 
         // Jump Behaviour
         jumpDropdown.onValueChanged.AddListener(delegate (int value) {
-            GameObject.FindWithTag("Player").GetComponent<CharacterMotor>().jumpBehaviour = (CharacterMotor.JumpBehaviour)value + 1;
+            GameObject.FindWithTag("Player").GetComponent<CharacterMotor>().airBehaviour = (CharacterMotor.AirBehaviour)value;
         });
 
         // Jump Force
@@ -57,8 +61,8 @@ public class DemoMenu : MonoBehaviour {
         UpdateValues();
 
     }
-	
-	void Update () {
+
+    void Update () {
 
         if (Input.GetKeyDown(KeyCode.Q)) {
             TogglePanel();
@@ -91,8 +95,14 @@ public class DemoMenu : MonoBehaviour {
 
     public void SwapCharacter(GameObject prefab) {
         GameObject oldCharacter = GameObject.FindGameObjectWithTag("Player");
+        GameObject newCharacter;
+
+        if (oldCharacter != null) {
+            newCharacter = Instantiate(prefab, oldCharacter.transform.position, oldCharacter.transform.rotation, null);
+        } else {
+            newCharacter = Instantiate(prefab, Camera.main.transform.position, Quaternion.identity, null);
+        }
         
-        GameObject newCharacter = Instantiate(prefab, oldCharacter.transform.position, oldCharacter.transform.rotation, null);
         FindObjectOfType<PlayerCamera>().SetTarget(newCharacter.GetComponent<CharacterMotor>());
 
         DestroyImmediate(oldCharacter);
@@ -105,8 +115,8 @@ public class DemoMenu : MonoBehaviour {
         /*walkDropdown.value = (int) character.walkBehaviour - 1;
         jumpDropdown.value = (int) character.jumpBehaviour - 1;
         walkSpeedSlider.value = character.walkSpeed;*/
-        character.walkBehaviour = (CharacterMotor.WalkBehaviour)walkDropdown.value + 1;
-        character.jumpBehaviour = (CharacterMotor.JumpBehaviour) jumpDropdown.value + 1;
+        character.walkBehaviour = (CharacterMotor.WalkBehaviour) walkDropdown.value;
+        character.airBehaviour = (CharacterMotor.AirBehaviour) jumpDropdown.value;
         character.walkSpeed = walkSpeedSlider.value;
     }
 }

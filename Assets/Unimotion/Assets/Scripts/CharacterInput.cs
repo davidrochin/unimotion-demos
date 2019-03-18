@@ -18,8 +18,8 @@ public class CharacterInput : MonoBehaviour {
         virtualJoystick = VirtualJoystick.GetById(0);
     }
 
+
     private void Start() {
-        //Camera.main.GetComponent<PlayerCamera>().player = character;
     }
 
     void Update () {
@@ -63,19 +63,6 @@ public class CharacterInput : MonoBehaviour {
             character.AddForce(transform.forward * 500f);
         }
 
-        // For object interactions
-
-        if(Input.mouseScrollDelta.y < 0f && Interactable.active != null) {
-            Interactable.active.SelectNext();
-        }
-
-        if (Input.mouseScrollDelta.y > 0f && Interactable.active != null) {
-            Interactable.active.SelectPrevious();
-        }
-
-        if (Input.GetMouseButtonDown(0) && Interactable.active != null) {
-            Interactable.active.DoSelectedAction();
-        }
     }
 
     Vector3 GetInputVector() {
