@@ -47,6 +47,12 @@ public class CharacterMotor : MonoBehaviour {
     [Tooltip("The force this character applies to rigidbodies (in Newtons)")] public float rigidbodyPushForce = 600;
     public LayerMask rigidbodyMask;
 
+    // Gravity
+    public GravityBehaviour gravityBehaviour = GravityBehaviour.UsePhysics;
+    public static Vector3 globalGravity = new Vector3(0f, -9.14f, 0f);
+    public Vector3 customGravity = new Vector3(0f, -9.14f, 0f);
+    public GravityAlignmentType gravityAlignmentType = GravityAlignmentType.Instantaneous;
+
     // Animation
     public bool outputToAnimator;
     public Animator animator;
@@ -76,6 +82,7 @@ public class CharacterMotor : MonoBehaviour {
 
     // Debug
     public Vector3 velocity;
+    public Vector3 fullVelocity;
 
     public CharacterMotorState state;
 
@@ -118,13 +125,13 @@ public class CharacterMotor : MonoBehaviour {
         if (!ValidatePosition()) { Depenetrate(); }
 
         // Apply gravity if necessary (terminal velocity of a human in freefall is about 53 m/s)
-        if ((!Grounded || state.sliding) && Vector3.Dot(velocity, Physics.gravity.normalized) < 50f) {
-            //velocity = velocity + Physics.gravity * 2f * Time.deltaTime;
+        if ((!Grounded || state.sliding) && Vector3.Dot(velocity, GetGravity().normalized) < 50f) {
+            //velocity = velocity + GetGravity() * 2f * Time.deltaTime;
 
-            if (Vector3.Dot(velocity, -Physics.gravity.normalized) >= 0f) {
-                velocity = velocity + Physics.gravity * Time.deltaTime;
+            if (Vector3.Dot(velocity, -GetGravity().normalized) >= 0f) {
+                velocity = velocity + GetGravity() * Time.deltaTime;
             } else {
-                velocity = velocity + Physics.gravity * 2f * Time.deltaTime;
+                velocity = velocity + GetGravity() * 2f * Time.deltaTime;
             }
         }
 
@@ -176,15 +183,11 @@ public class CharacterMotor : MonoBehaviour {
             col.GetComponent<Rigidbody>().WakeUp();
         }
 
-        // Rotate feet towards gravity direction
-        Quaternion fromToRotation = Quaternion.FromToRotation(transform.up, -Physics.gravity.normalized);
-        transform.rotation = fromToRotation * transform.rotation;
-
         // If Turn Behaviour is Persistent, rotate to persistent direction
-        if(canTurn && turnBehaviour == TurnBehaviour.Persistant && persistantTurningDirection != null) {
+        if (canTurn && turnBehaviour == TurnBehaviour.Persistant && persistantTurningDirection != null) {
             TurnTowards(persistantTurningDirection.Value, TurnBehaviour.Normal);
 
-            if(transform.forward == persistantTurningDirection.Value) {
+            if (transform.forward == persistantTurningDirection.Value) {
                 persistantTurningDirection = null;
             }
         }
@@ -200,7 +203,7 @@ public class CharacterMotor : MonoBehaviour {
         if (Grounded && !state.sliding) {
 
             // Change velocity so it doesnt go towards the floor
-            velocity = velocity - Physics.gravity.normalized * Vector3.Dot(velocity, Physics.gravity.normalized);
+            velocity = velocity - GetGravity().normalized * Vector3.Dot(velocity, GetGravity().normalized);
 
             // Apply floor friction
             velocity = Vector3.MoveTowards(velocity, Vector3.zero, state.floorCollider.material.dynamicFriction * 50f * Time.deltaTime);
@@ -208,10 +211,10 @@ public class CharacterMotor : MonoBehaviour {
         } else {
 
             // Apply air friction
-            float towardsGravity = Vector3.Dot(velocity, Physics.gravity.normalized);
-            velocity = velocity - Physics.gravity.normalized * towardsGravity;
+            float towardsGravity = Vector3.Dot(velocity, GetGravity().normalized);
+            velocity = velocity - GetGravity().normalized * towardsGravity;
             velocity = Vector3.MoveTowards(velocity, Vector3.zero, airFriction * Time.deltaTime);
-            velocity = velocity + Physics.gravity.normalized * towardsGravity;
+            velocity = velocity + GetGravity().normalized * towardsGravity;
 
         }
 
@@ -223,9 +226,28 @@ public class CharacterMotor : MonoBehaviour {
             OnGroundedChange();
         }
 
+        // Rotate feet towards gravity direction
+        Quaternion fromToRotation = Quaternion.FromToRotation(transform.up, -GetGravity().normalized);
+        Quaternion targetRotation = fromToRotation * transform.rotation;
+
+        switch (gravityAlignmentType) {
+            case GravityAlignmentType.Instantaneous:
+                transform.rotation = targetRotation;
+                break;
+            case GravityAlignmentType.Constant:
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 400 * Time.deltaTime);
+                break;
+            case GravityAlignmentType.Smooth:
+                transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 4 * Time.deltaTime);
+                break;
+        }
+
         // Termina fisicas --------------------------------------------------------------------------
 
         UpdateAnimator();
+
+        // Calculate Full Velocity (read-only)
+        fullVelocity = velocity + inputVectorCached;
 
         inputVectorCached = Vector3.zero;
 
@@ -383,17 +405,17 @@ public class CharacterMotor : MonoBehaviour {
         // Check for ground
         RaycastHit[] hits = Physics.SphereCastAll(transform.position + transform.up * collider.height - transform.up * collider.radius, collider.radius, -transform.up, collider.height - collider.radius * 2f + collider.radius, collisionMask, QueryTriggerInteraction.Ignore);
 
-        if (hits.Length > 0 && Vector3.Dot(velocity, Physics.gravity.normalized) >= 0f) {
+        if (hits.Length > 0 && Vector3.Dot(velocity, GetGravity().normalized) >= 0f) {
             bool validFloor = false;
 
             // Check each hit for valid ground
             foreach (RaycastHit hit in hits) {
 
                 // Calculate the angle of the floor
-                float angle = Vector3.Angle(-Physics.gravity.normalized, hit.normal);
+                float angle = Vector3.Angle(-GetGravity().normalized, hit.normal);
                 state.floorAngle = angle;
 
-                if (Vector3.Dot(hit.normal, -Physics.gravity.normalized) > 0f && angle < 85f && !(hit.distance == 0f && hit.point == Vector3.zero) && Vector3.Distance(hit.point, GetPartPosition(Part.BottomSphere)) <= collider.radius + skinWidth * 4f) {
+                if (Vector3.Dot(hit.normal, -GetGravity().normalized) > 0f && angle < 85f && !(hit.distance == 0f && hit.point == Vector3.zero) && Vector3.Distance(hit.point, GetPartPosition(Part.BottomSphere)) <= collider.radius + skinWidth * 4f) {
 
                     // Check if it should slide
                     if (angle < slopeLimit) {
@@ -537,15 +559,15 @@ public class CharacterMotor : MonoBehaviour {
     void StickToSlope() {
 
         RaycastHit hit;
-        bool didHit = Physics.SphereCast(transform.position + transform.up * collider.radius, collider.radius, Physics.gravity.normalized, out hit, collider.radius, collisionMask, QueryTriggerInteraction.Ignore);
+        bool didHit = Physics.SphereCast(transform.position + transform.up * collider.radius, collider.radius, GetGravity().normalized, out hit, collider.radius, collisionMask, QueryTriggerInteraction.Ignore);
 
-        if (state.previouslyGrounded && didHit && Vector3.Angle(-Physics.gravity.normalized, hit.normal) <= 45f && Vector3.Dot(velocity, Physics.gravity.normalized) >= 0f) {
+        if (state.previouslyGrounded && didHit && Vector3.Angle(-GetGravity().normalized, hit.normal) <= 45f && Vector3.Dot(velocity, GetGravity().normalized) >= 0f) {
             Vector3 hyp;
-            float topAngle = Vector3.Angle(Physics.gravity.normalized, -hit.normal);
+            float topAngle = Vector3.Angle(GetGravity().normalized, -hit.normal);
             float bottomAngle = 180f - topAngle - 90f;
-            hyp = -Physics.gravity.normalized * (skinWidth / Mathf.Sin(Mathf.Deg2Rad * bottomAngle)) * Mathf.Sin(Mathf.Deg2Rad * 90f);
+            hyp = -GetGravity().normalized * (skinWidth / Mathf.Sin(Mathf.Deg2Rad * bottomAngle)) * Mathf.Sin(Mathf.Deg2Rad * 90f);
 
-            transform.position += Physics.gravity.normalized * hit.distance + hyp;
+            transform.position += GetGravity().normalized * hit.distance + hyp;
             Grounded = true;
         }
     }
@@ -610,6 +632,19 @@ public class CharacterMotor : MonoBehaviour {
         velocity += force.normalized * Mathf.Sqrt((force.magnitude / mass));
     }
 
+    public Vector3 GetGravity() {
+        switch (gravityBehaviour) {
+            case GravityBehaviour.UsePhysics:
+                return Physics.gravity;
+            case GravityBehaviour.UseGlobal:
+                return CharacterMotor.globalGravity;
+            case GravityBehaviour.UseCustom:
+                return customGravity;
+            default:
+                return Physics.gravity;
+        }
+    }
+
     #endregion
 
     #region Public methods
@@ -623,7 +658,7 @@ public class CharacterMotor : MonoBehaviour {
 
     public void Jump() {
         if ((Grounded || Debug.isDebugBuild) && canJump) {
-            velocity = velocity - Physics.gravity.normalized * jumpForce;
+            velocity = velocity - GetGravity().normalized * jumpForce;
             Grounded = false;
             OnJump?.Invoke();
         }
@@ -645,16 +680,12 @@ public class CharacterMotor : MonoBehaviour {
 
     public void TurnTowards(Vector3 direction, TurnBehaviour behaviour) {
         if (behaviour == TurnBehaviour.Normal) {
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(direction, -Physics.gravity.normalized), turnSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(direction, -GetGravity().normalized), turnSpeed * Time.deltaTime);
         } else if (behaviour == TurnBehaviour.Persistant) {
             persistantTurningDirection = direction;
         } else if (behaviour == TurnBehaviour.Instant) {
-            transform.rotation = Quaternion.LookRotation(direction, -Physics.gravity.normalized);
+            transform.rotation = Quaternion.LookRotation(direction, -GetGravity().normalized);
         }
-    }
-
-    public void ForceTurnTowards(Vector3 direction) {
-        transform.rotation = Quaternion.LookRotation(direction, -Physics.gravity.normalized);
     }
 
     public void UpdateAnimator() {
@@ -675,11 +706,11 @@ public class CharacterMotor : MonoBehaviour {
             animator.SetFloat("Input Magnitude", smoothMoveParameters ? Mathf.MoveTowards(animator.GetFloat("Input Magnitude"), inputVectorCached.magnitude, Roughness * Time.deltaTime) : anyMove);
 
             // How much the character tries to move in any direction, but without taking into account up and down [0 - 1]
-            float speed = (inputVectorCached - Vector3.Project(inputVectorCached, -Physics.gravity.normalized)).magnitude;
+            float speed = (inputVectorCached - Vector3.Project(inputVectorCached, -GetGravity().normalized)).magnitude;
             animator.SetFloat("Non Up/Down Input Magnitude", smoothMoveParameters ? Mathf.MoveTowards(animator.GetFloat("Non Up/Down Input Magnitude"), speed, Roughness * Time.deltaTime) : speed);
 
-            animator.SetFloat("Upwards Speed", Vector3.Dot(velocity, -Physics.gravity.normalized));
-            animator.SetFloat("Sideways Speed", (velocity - Vector3.Project(velocity, -Physics.gravity.normalized)).magnitude);
+            animator.SetFloat("Upwards Speed", Vector3.Dot(velocity, -GetGravity().normalized));
+            animator.SetFloat("Sideways Speed", (velocity - Vector3.Project(velocity, -GetGravity().normalized)).magnitude);
 
             // Whether the character is touching valid ground or not
             animator.SetBool("Grounded", Grounded);
@@ -723,6 +754,8 @@ public class CharacterMotor : MonoBehaviour {
     public enum AirBehaviour { TotalControl, FixedVelocity, SmoothControl }
     public enum TurnBehaviour { Normal, Persistant, Instant }
     public enum SlopeBehaviour { Slide, PreventClimbing, PreventClimbingAndSlide }
+    public enum GravityBehaviour { UsePhysics, UseGlobal, UseCustom }
+    public enum GravityAlignmentType { Instantaneous, Constant, Smooth }
     public enum RigidbodyCollisionBehaviour { Ignore, Collide, Push }
     public enum CharacterMotorCollisionBehaviour { Ignore, Collide, Push, SoftPush }
 

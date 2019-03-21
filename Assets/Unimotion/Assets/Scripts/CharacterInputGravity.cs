@@ -4,15 +4,18 @@ using UnityEngine;
 
 [AddComponentMenu("Unimotion/Character Input")]
 [RequireComponent(typeof(CharacterMotor))]
-public class CharacterInput : MonoBehaviour {
+public class CharacterInputGravity : MonoBehaviour {
 
     public InputType inputType; 
 
     //References
     CharacterMotor character;
 
+    VirtualJoystick virtualJoystick;
+
     void Awake () {
         character = GetComponent<CharacterMotor>();
+        virtualJoystick = VirtualJoystick.GetById(0);
     }
 
 
@@ -25,6 +28,7 @@ public class CharacterInput : MonoBehaviour {
         Vector3 inputVector = GetInputVector();
 
         if (inputMagnitude > 0.05f) {
+            character.TurnTowards(inputVector);
             character.Walk(inputVector * inputMagnitude * (Input.GetKey(KeyCode.LeftShift) ? 1.5f : 1f) * (Input.GetKey(KeyCode.LeftAlt) ? 0.5f : 1f));
         }
 
@@ -70,7 +74,8 @@ public class CharacterInput : MonoBehaviour {
         } else if (inputType == InputType.Raw) {
             input = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
         }
-    
+
+        if (virtualJoystick != null) { input = new Vector3(input.x + virtualJoystick.input.x, 0f, input.y + virtualJoystick.input.y); }
 
         //Transformar la direccion para que sea relativa a la camara.
         //Vector3 transDirection = Camera.main.transform.TransformDirection(input);
@@ -90,6 +95,9 @@ public class CharacterInput : MonoBehaviour {
         // Get Input from standard Input methods
         if (inputType == InputType.Normal) { input = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical")); } 
         else if (inputType == InputType.Raw) { input = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")); }
+
+        // Get Input from Virtual Joystick if available
+        if (virtualJoystick != null) { input = new Vector3(input.x + virtualJoystick.input.x, 0f, input.y + virtualJoystick.input.y); }
 
         // Clamp magnitude to 1
         return Vector3.ClampMagnitude(input, 1f).magnitude;

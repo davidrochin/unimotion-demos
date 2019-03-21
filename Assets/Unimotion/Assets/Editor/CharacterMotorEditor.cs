@@ -128,6 +128,20 @@ public class CharacterMotorEditor : Editor {
         }
         EditorGUILayout.EndVertical();
 
+        // Gravity
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Gravity", EditorStyles.boldLabel);
+
+        EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("gravityBehaviour"), new GUIContent("Behaviour"));
+        if (motor.gravityBehaviour == CharacterMotor.GravityBehaviour.UseCustom) {
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("customGravity"), new GUIContent("Gravity"));
+        } else if (motor.gravityBehaviour == CharacterMotor.GravityBehaviour.UseGlobal) {
+            EditorGUILayout.HelpBox("Global character gravity can only be modified via code, setting the static field CharacterMotor.globalGravity", MessageType.Info);
+        }
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("gravityAlignmentType"), new GUIContent("Alignment"));
+        EditorGUILayout.EndVertical();
+
         // Animation
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Animation", EditorStyles.boldLabel);
@@ -179,7 +193,11 @@ public class CharacterMotorEditor : Editor {
         debugFoldedOut = EditorGUILayout.Foldout(debugFoldedOut, "Debug");
 
         if (debugFoldedOut) {
+
+            EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("Velocity: " + motor.velocity, EditorStyles.helpBox);
+            EditorGUILayout.LabelField("Full Velocity: " + motor.fullVelocity, EditorStyles.helpBox);
+            EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField(motor.Grounded ? "Grounded" : "Not Grounded", EditorStyles.helpBox, GUILayout.MaxWidth(300));

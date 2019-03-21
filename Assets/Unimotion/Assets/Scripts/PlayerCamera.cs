@@ -32,7 +32,7 @@ public class PlayerCamera : MonoBehaviour {
     public virtual void Update() {
         if (Input.GetMouseButton(1)) {
             Vector3 dir = (character.transform.position - transform.position);
-            character.ForceTurnTowards(new Vector3(dir.x, 0f, dir.z).normalized);
+            character.TurnTowards(new Vector3(dir.x, 0f, dir.z).normalized, CharacterMotor.TurnBehaviour.Instant);
         }
 
         if (Input.GetKeyDown(KeyCode.Z)) {
