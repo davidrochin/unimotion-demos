@@ -21,6 +21,10 @@ public class FPSPlayerCamera : MonoBehaviour {
         if (target != null) {
             playerCollider = target.GetComponent<Collider>();
             target.OnFrameFinish += Follow;
+            /*target.OnGravityAlign += delegate (Quaternion delta) {
+                Debug.Log(delta);
+                transform.rotation
+            };*/
         }
     }
 
@@ -49,7 +53,10 @@ public class FPSPlayerCamera : MonoBehaviour {
         transform.RotateAround(transform.position, -target.GetGravity().normalized, input.x * orbitSpeed);
         transform.RotateAround(transform.position, transform.right, input.y * orbitSpeed);
 
-        transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, transform.localEulerAngles.y, 0f);
+        //transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, transform.localEulerAngles.y, 0f);
+        //transform.rotation = target.transform.rotation * transform.rotation;
+
+        transform.rotation = Quaternion.LookRotation(transform.forward, -target.GetGravity().normalized);
 
         float maxDistance = 0f;
 

@@ -26,6 +26,7 @@ public class CharacterInput : MonoBehaviour {
 
         if (inputMagnitude > 0.05f) {
             character.Walk(inputVector * inputMagnitude * (Input.GetKey(KeyCode.LeftShift) ? 1.5f : 1f) * (Input.GetKey(KeyCode.LeftAlt) ? 0.5f : 1f));
+            //character.TurnTowards(inputVector);
         }
 
         if (Input.GetButtonDown("Jump")) {

@@ -73,6 +73,8 @@ public class CharacterMotor : MonoBehaviour {
     public event Action OnDepenetrate;
     public event Action OnCrush;
 
+    //public event OnGravityAlignHandler OnGravityAlign;
+
     #endregion
 
     #region Properties
@@ -229,6 +231,7 @@ public class CharacterMotor : MonoBehaviour {
 
         // Rotate feet towards gravity direction
         if (alignToGravity) {
+            //Vector3 initialForward = transform.forward;
             Quaternion fromToRotation = Quaternion.FromToRotation(transform.up, -GetGravity().normalized);
             Quaternion targetRotation = fromToRotation * transform.rotation;
 
@@ -243,6 +246,8 @@ public class CharacterMotor : MonoBehaviour {
                     transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 8 * Time.deltaTime);
                     break;
             }
+
+            //OnGravityAlign?.Invoke(Quaternion.FromToRotation(initialForward, transform.forward));
         }
 
         // Physics ends --------------------------------------------------------------------------
@@ -254,8 +259,7 @@ public class CharacterMotor : MonoBehaviour {
 
         inputVectorCached = Vector3.zero;
 
-        if (OnFrameFinish != null) { OnFrameFinish(); }
-
+        OnFrameFinish?.Invoke();
     }
 
     #region Private methods
@@ -804,3 +808,4 @@ public delegate void OnWalkHandler(Vector3 direction, float speed);
 public delegate void OnLandHandler(float impactSpeed, float distanceFallen);
 public delegate void OnJumpHandler();
 public delegate void OnCrushHandler();
+public delegate void OnGravityAlignHandler(Quaternion delta);
