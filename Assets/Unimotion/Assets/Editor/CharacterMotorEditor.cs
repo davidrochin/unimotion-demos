@@ -139,7 +139,11 @@ public class CharacterMotorEditor : Editor {
         } else if (motor.gravityBehaviour == CharacterMotor.GravityBehaviour.UseGlobal) {
             EditorGUILayout.HelpBox("Global character gravity can only be modified via code, setting the static field CharacterMotor.globalGravity", MessageType.Info);
         }
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("gravityAlignmentType"), new GUIContent("Alignment"));
+
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("alignToGravity"), new GUIContent("Align"));
+        if (motor.alignToGravity) {
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("gravityAlignmentType"), new GUIContent("Alignment"));
+        }
         EditorGUILayout.EndVertical();
 
         // Animation

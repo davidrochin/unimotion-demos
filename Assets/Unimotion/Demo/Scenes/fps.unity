@@ -3342,6 +3342,7 @@ MonoBehaviour:
     m_Bits: 2048
   gravityBehaviour: 2
   customGravity: {x: 0, y: -9.14, z: 0}
+  alignToGravity: 1
   gravityAlignmentType: 1
   outputToAnimator: 1
   animator: {fileID: 95211880404872818}

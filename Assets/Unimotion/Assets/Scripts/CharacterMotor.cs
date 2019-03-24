@@ -51,6 +51,7 @@ public class CharacterMotor : MonoBehaviour {
     public GravityBehaviour gravityBehaviour = GravityBehaviour.UsePhysics;
     public static Vector3 globalGravity = new Vector3(0f, -9.14f, 0f);
     public Vector3 customGravity = new Vector3(0f, -9.14f, 0f);
+    public bool alignToGravity = true;
     public GravityAlignmentType gravityAlignmentType = GravityAlignmentType.Instantaneous;
 
     // Animation
@@ -227,22 +228,24 @@ public class CharacterMotor : MonoBehaviour {
         }
 
         // Rotate feet towards gravity direction
-        Quaternion fromToRotation = Quaternion.FromToRotation(transform.up, -GetGravity().normalized);
-        Quaternion targetRotation = fromToRotation * transform.rotation;
+        if (alignToGravity) {
+            Quaternion fromToRotation = Quaternion.FromToRotation(transform.up, -GetGravity().normalized);
+            Quaternion targetRotation = fromToRotation * transform.rotation;
 
-        switch (gravityAlignmentType) {
-            case GravityAlignmentType.Instantaneous:
-                transform.rotation = targetRotation;
-                break;
-            case GravityAlignmentType.Constant:
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 400 * Time.deltaTime);
-                break;
-            case GravityAlignmentType.Smooth:
-                transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 4 * Time.deltaTime);
-                break;
+            switch (gravityAlignmentType) {
+                case GravityAlignmentType.Instantaneous:
+                    transform.rotation = targetRotation;
+                    break;
+                case GravityAlignmentType.Constant:
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 400 * Time.deltaTime);
+                    break;
+                case GravityAlignmentType.Smooth:
+                    transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 8 * Time.deltaTime);
+                    break;
+            }
         }
 
-        // Termina fisicas --------------------------------------------------------------------------
+        // Physics ends --------------------------------------------------------------------------
 
         UpdateAnimator();
 

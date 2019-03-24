@@ -73,10 +73,9 @@ public class CharacterInput : MonoBehaviour {
     
 
         //Transformar la direccion para que sea relativa a la camara.
-        //Vector3 transDirection = Camera.main.transform.TransformDirection(input);
         Quaternion tempQ = Quaternion.Euler(0f, Camera.main.transform.eulerAngles.y, 0f);
-        //Debug.Log(tempQ);
         Vector3 transDirection = Camera.main.transform.rotation * input;
+        transDirection = Quaternion.FromToRotation(Camera.main.transform.up, -character.GetGravity().normalized) * transDirection;
         
         //Hacer que el Vector no apunte hacia arriba.
         //transDirection = new Vector3(transDirection.x, 0f, transDirection.z).normalized;
