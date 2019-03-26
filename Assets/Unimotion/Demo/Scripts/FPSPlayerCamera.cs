@@ -56,7 +56,7 @@ public class FPSPlayerCamera : MonoBehaviour {
         //transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, transform.localEulerAngles.y, 0f);
         //transform.rotation = target.transform.rotation * transform.rotation;
 
-        transform.rotation = Quaternion.LookRotation(transform.forward, -target.GetGravity().normalized);
+        transform.rotation = Quaternion.LookRotation(transform.forward, target.transform.up);
 
         float maxDistance = 0f;
 

@@ -243,7 +243,7 @@ public class CharacterMotor : MonoBehaviour {
                     transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 400 * Time.deltaTime);
                     break;
                 case GravityAlignmentType.Smooth:
-                    transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 8 * Time.deltaTime);
+                    transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 10 * Time.deltaTime);
                     break;
             }
 
