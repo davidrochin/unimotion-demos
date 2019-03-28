@@ -26,38 +26,27 @@ public class CharacterInput : MonoBehaviour {
 
         if (inputMagnitude > 0.05f) {
             character.Walk(inputVector * inputMagnitude * (Input.GetKey(KeyCode.LeftShift) ? 1.5f : 1f) * (Input.GetKey(KeyCode.LeftAlt) ? 0.5f : 1f));
-            //character.TurnTowards(inputVector);
+            character.TurnTowards(inputVector);
         }
 
         if (Input.GetButtonDown("Jump")) {
             character.Jump();
         }
 
-        if (Input.GetButtonDown("Crouch")) {
-            character.Crouch();
-        }
-
-        if (Input.GetKeyDown(KeyCode.G)) {
-            Physics.gravity = -Physics.gravity;
-        }
-
-        if(Input.GetKeyDown(KeyCode.P)) {
-            Debug.Break();
-        }
-
         if (Input.GetKeyDown(KeyCode.R)) {
             character.velocity = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized * Random.Range(20f, 40f) + Vector3.up * 10f;
         }
 
-        if (Input.GetKeyDown(KeyCode.M)) {
-            GameObject original = gameObject;
-            for (int i = 0; i < 40; i++) {
-                Instantiate(original, transform.position, transform.rotation);
-            }
-        }
-
         if (Input.GetKeyDown(KeyCode.F)) {
             character.AddForce(transform.forward * 500f);
+        }
+
+        if (Input.GetMouseButtonDown(0)) {
+            character.animator.CrossFadeInFixedTime("Attack", 0.5f);
+        }
+
+        if (Input.GetKeyDown(KeyCode.C)) {
+            character.animator.CrossFadeInFixedTime("Evade", 0.5f);
         }
 
     }

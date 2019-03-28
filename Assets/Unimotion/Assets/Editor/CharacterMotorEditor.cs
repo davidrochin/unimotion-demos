@@ -162,13 +162,14 @@ public class CharacterMotorEditor : Editor {
                 if (animator != null && EditorUtility.DisplayDialog("Current parameters will be deleted", "This function creates parameters in the Animator Controller for the Character Motor to fill. If you continue, all other parameters will be deleted.", "Continue", "Cancel")) {
                     AnimatorController ac = (AnimatorController)animator.runtimeAnimatorController;
                     ac.parameters = new AnimatorControllerParameter[0];
-                    ac.AddParameter("Forward Input Magnitude", AnimatorControllerParameterType.Float);
-                    ac.AddParameter("Sideways Input Magnitude", AnimatorControllerParameterType.Float);
-                    ac.AddParameter("Input Magnitude", AnimatorControllerParameterType.Float);
-                    ac.AddParameter("Non Up/Down Input Magnitude", AnimatorControllerParameterType.Float);
+                    ac.AddParameter("Input/Forward", AnimatorControllerParameterType.Float);
+                    ac.AddParameter("Input/Sideways", AnimatorControllerParameterType.Float);
+                    ac.AddParameter("Input/Magnitude", AnimatorControllerParameterType.Float);
+                    ac.AddParameter("Input/Non Up or Down", AnimatorControllerParameterType.Float);
 
-                    ac.AddParameter("Upwards Speed", AnimatorControllerParameterType.Float);
-                    ac.AddParameter("Sideways Speed", AnimatorControllerParameterType.Float);
+                    ac.AddParameter("Speed/Upwards", AnimatorControllerParameterType.Float);
+                    ac.AddParameter("Speed/Sideways", AnimatorControllerParameterType.Float);
+
                     ac.AddParameter("Grounded", AnimatorControllerParameterType.Bool);
                     ac.AddParameter("Sliding", AnimatorControllerParameterType.Bool);
                     ac.AddParameter("Stuck", AnimatorControllerParameterType.Bool);

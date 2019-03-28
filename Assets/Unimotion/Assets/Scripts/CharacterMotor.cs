@@ -672,7 +672,7 @@ public class CharacterMotor : MonoBehaviour {
     }
 
     public void Crouch() {
-        throw new System.NotImplementedException();
+        //throw new System.NotImplementedException();
     }
 
     public bool Stand() {
@@ -686,12 +686,14 @@ public class CharacterMotor : MonoBehaviour {
     }
 
     public void TurnTowards(Vector3 direction, TurnBehaviour behaviour) {
-        if (behaviour == TurnBehaviour.Normal) {
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(direction, -GetGravity().normalized), turnSpeed * Time.deltaTime);
-        } else if (behaviour == TurnBehaviour.Persistant) {
-            persistantTurningDirection = direction;
-        } else if (behaviour == TurnBehaviour.Instant) {
-            transform.rotation = Quaternion.LookRotation(direction, -GetGravity().normalized);
+        if (canTurn) {
+            if (behaviour == TurnBehaviour.Normal) {
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(direction, -GetGravity().normalized), turnSpeed * Time.deltaTime);
+            } else if (behaviour == TurnBehaviour.Persistant) {
+                persistantTurningDirection = direction;
+            } else if (behaviour == TurnBehaviour.Instant) {
+                transform.rotation = Quaternion.LookRotation(direction, -GetGravity().normalized);
+            }
         }
     }
 
@@ -702,22 +704,22 @@ public class CharacterMotor : MonoBehaviour {
 
             // How much the character tries to move forward [0 - 1]
             float forwardMove = Vector3.Dot(inputVectorCached, transform.forward);
-            animator.SetFloat("Forward Input Magnitude", smoothMoveParameters ? Mathf.MoveTowards(animator.GetFloat("Forward Input Magnitude"), forwardMove, Roughness * Time.deltaTime) : forwardMove);
+            animator.SetFloat("Input/Forward", smoothMoveParameters ? Mathf.MoveTowards(animator.GetFloat("Input/Forward"), forwardMove, Roughness * Time.deltaTime) : forwardMove);
 
             // How much the character tries to move sideways [0 - 1]
             float strafeMove = Vector3.Dot(inputVectorCached, transform.right);
-            animator.SetFloat("Sideways Input Magnitude", smoothMoveParameters ? Mathf.MoveTowards(animator.GetFloat("Sideways Input Magnitude"), strafeMove, Roughness * Time.deltaTime) : strafeMove);
+            animator.SetFloat("Input/Sideways", smoothMoveParameters ? Mathf.MoveTowards(animator.GetFloat("Input/Sideways"), strafeMove, Roughness * Time.deltaTime) : strafeMove);
 
             // How much the character tries to move in any direction [0 - 1]
             float anyMove = inputVectorCached.magnitude;
-            animator.SetFloat("Input Magnitude", smoothMoveParameters ? Mathf.MoveTowards(animator.GetFloat("Input Magnitude"), inputVectorCached.magnitude, Roughness * Time.deltaTime) : anyMove);
+            animator.SetFloat("Input/Magnitude", smoothMoveParameters ? Mathf.MoveTowards(animator.GetFloat("Input/Magnitude"), inputVectorCached.magnitude, Roughness * Time.deltaTime) : anyMove);
 
             // How much the character tries to move in any direction, but without taking into account up and down [0 - 1]
             float speed = (inputVectorCached - Vector3.Project(inputVectorCached, -GetGravity().normalized)).magnitude;
-            animator.SetFloat("Non Up/Down Input Magnitude", smoothMoveParameters ? Mathf.MoveTowards(animator.GetFloat("Non Up/Down Input Magnitude"), speed, Roughness * Time.deltaTime) : speed);
+            animator.SetFloat("Input/Non Up or Down", smoothMoveParameters ? Mathf.MoveTowards(animator.GetFloat("Input/Non Up or Down"), speed, Roughness * Time.deltaTime) : speed);
 
-            animator.SetFloat("Upwards Speed", Vector3.Dot(velocity, -GetGravity().normalized));
-            animator.SetFloat("Sideways Speed", (velocity - Vector3.Project(velocity, -GetGravity().normalized)).magnitude);
+            animator.SetFloat("Speed/Upwards", Vector3.Dot(velocity, -GetGravity().normalized));
+            animator.SetFloat("Speed/Sideways", (velocity - Vector3.Project(velocity, -GetGravity().normalized)).magnitude);
 
             // Whether the character is touching valid ground or not
             animator.SetBool("Grounded", Grounded);
