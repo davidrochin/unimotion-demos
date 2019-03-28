@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Unimotion;
 
 [SelectionBase]
 public class VirtualJoystick : MonoBehaviour, IDragHandler {

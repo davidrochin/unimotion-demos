@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Unimotion/Souls/Scenes/main.unity
-    guid: 5f084f2565651ce43b27e8ff6d1ca2b7
+    path: Assets/Unimotion/Demo/Scenes/demo.unity
+    guid: dd3ba2a913e438b4abd382e9d1faf198
   m_configObjects: {}

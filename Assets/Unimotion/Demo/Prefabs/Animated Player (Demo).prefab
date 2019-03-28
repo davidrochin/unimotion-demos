@@ -2947,26 +2947,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 1999045143486084}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee4659e43e29d674e9e5debb5301643e, type: 3}
+  m_Script: {fileID: 454782781, guid: b6170de86907a8742bcd8cf0ee528c66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   canWalk: 1
   walkBehaviour: 0
   walkSpeed: 7
   maxWalkMagnitude: 2
-  walkSmoothness: 5
+  walkSmoothness: 16
   smoothDirection: 1
   smoothSpeed: 1
   slopeLimit: 50
   slopeBehaviour: 0
   canTurn: 1
-  turnBehaviour: 1
+  turnBehaviour: 0
   turnSpeed: 400
   canJump: 1
-  jumpForce: 6
+  jumpForce: 10
   airBehaviour: 0
-  airControl: 2
-  canJumpWhileSliding: 0
+  airControl: 4
+  canJumpWhileSliding: 1
   collisionMask:
     serializedVersion: 2
     m_Bits: 1
@@ -2975,36 +2975,41 @@ MonoBehaviour:
     m_Bits: 1024
   waterMask:
     serializedVersion: 2
-    m_Bits: 16
+    m_Bits: 0
   collisionQuality: 1
   characterCollisionBehaviour: 3
-  characterPushForce: 2
+  characterPushForce: 4
   rigidbodyCollisionBehaviour: 2
   rigidbodyPushForce: 600
   rigidbodyMask:
     serializedVersion: 2
     m_Bits: 2048
+  gravityBehaviour: 0
+  customGravity: {x: 0, y: -9.14, z: 0}
+  alignToGravity: 1
+  gravityAlignmentType: 0
   outputToAnimator: 1
   animator: {fileID: 95606734047883468}
   smoothMoveParameters: 1
   velocity: {x: 0, y: 0, z: 0}
+  fullVelocity: {x: 0, y: 0, z: 0}
   state:
     sliding: 0
-    previouslyGrounded: 1
-    stuck: 1
-    floorAngle: 32.973255
+    previouslyGrounded: 0
+    stuck: 0
+    floorAngle: 0
     floor: {fileID: 0}
     floorCollider: {fileID: 0}
   inputVectorCached: {x: 0, y: 0, z: 0}
   skinWidth: 0.01
   terminalSpeed: 50
   floorFriction: 16
-  airFriction: 4
+  airFriction: 3
   mass: 1
-  debugDirection: {x: 0.14034185, y: 0.8468411, z: 0.51299536}
-  stuckPosition: {x: 29.76857, y: 6.44566, z: -19.986883}
-  debugPoint: {x: 29.746813, y: 7.3243265, z: -20.083006}
-  debugPoint2: {x: 29.746813, y: 7.3243265, z: -20.083006}
+  debugDirection: {x: 0, y: 0, z: 0}
+  stuckPosition: {x: 0, y: 0, z: 0}
+  debugPoint: {x: 0, y: 0, z: 0}
+  debugPoint2: {x: 0, y: 0, z: 0}
 --- !u!114 &114144568754205070
 MonoBehaviour:
   m_ObjectHideFlags: 0

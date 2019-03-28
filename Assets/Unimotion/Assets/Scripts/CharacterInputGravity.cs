@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unimotion;
 
 [AddComponentMenu("Unimotion/Character Input")]
 [RequireComponent(typeof(CharacterMotor))]
