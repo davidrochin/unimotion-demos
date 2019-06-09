@@ -13,9 +13,12 @@ public class CharacterInput : MonoBehaviour {
     CharacterMotor character;
 
     void Awake () {
-        character = GetComponent<CharacterMotor>();
+        RefreshReferences();
     }
 
+    public void RefreshReferences() {
+        character = GetComponent<CharacterMotor>();
+    }
 
     private void Start() {
     }
